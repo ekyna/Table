@@ -1,0 +1,29 @@
+{
+    "name" : "ekyna/table",
+    "description" : "Html table from DBAL",
+    "type" : "component",
+    "authors" : [{
+            "name" : "Etienne Dauvergne",
+            "homepage" : "http://ekyna.com"
+        }
+    ],
+    "homepage" : "https://github.com/ekyna/Table",
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+        "php" : ">=5.3.3"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Ekyna\\Component\\Table" : ""
+        }
+    },
+    "target-dir" : "Ekyna/Component/Table",
+    "minimum-stability" : "dev",
+    "extra" : {
+        "branch-alias" : {
+            "dev-master" : "0.1.x-dev"
+        }
+    }
+}
