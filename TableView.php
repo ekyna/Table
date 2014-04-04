@@ -4,6 +4,7 @@ namespace Ekyna\Component\Table;
 
 class TableView
 {
+    public $name = null;
     public $attr = array();
     
     public $available_filters = array();

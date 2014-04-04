@@ -126,6 +126,7 @@ class TableGenerator
     public function generateView(Table $table)
     {
         $view = new TableView();
+        $view->name = $table->getName();
 
         if(!$table->hasColumns()) {
             throw new RuntimeException('Table has no columns and cannot be generated.');

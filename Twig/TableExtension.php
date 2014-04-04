@@ -8,7 +8,6 @@ use Ekyna\Component\Table\View\Cell;
 use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\AvailableFilter;
 use Ekyna\Component\Table\View\ActiveFilter;
-use Pagerfanta\PagerfantaInterface;
 use Pagerfanta\View\ViewFactoryInterface;
 
 class TableExtension extends \Twig_Extension
@@ -40,18 +39,20 @@ class TableExtension extends \Twig_Extension
      * @param ViewFactoryInterface $viewFactory
      * @param array                $options
      */
-    public function __construct(\Twig_Environment $environment, ViewFactoryInterface $viewFactory, array $defaultOptions = array())
+    public function __construct(\Twig_Environment $environment, ViewFactoryInterface $viewFactory, $template)
     {
         $this->environment = $environment;
         $this->viewFactory = $viewFactory;
         $this->defaultOptions = array_merge(array(
             'class' => null,
-            'template' => 'ekyna_table.html.twig',
-        ), $defaultOptions);
+            'template' => __DIR__.'/../Resources/views/ekyna_table.html.twig',
+        ), array(
+        	'template' => $template
+        ));
     }
 
-    /**
-     * @return array
+     /**
+     * {@inheritdoc}
      */
     public function getFunctions()
     {
@@ -107,27 +108,28 @@ class TableExtension extends \Twig_Extension
     /**
      * Renders pager
      *
-     * @param PagerfantaInterface $pagerfanta
-     * @param string              $viewName
-     * @param array               $options
+     * @param TableView $table
+     * @param string    $viewName
+     * @param array     $options
      *
      * @return string
      */
-    public function renderPager(PagerfantaInterface $pagerfanta, $viewName = 'twitter_bootstrap3', array $options = array())
+    public function renderPager(TableView $table, $viewName = 'twitter_bootstrap3', array $options = array())
     {
+        $pageParam = $table->name.'_page';
         $options = array_merge(array(
-            'pageParameter' => '[page]',
+            'pageParameter' => '['.$pageParam.']',
             'proximity'     => 3,
             'next_message'  => '&raquo;',
             'prev_message'  => '&laquo;',
             'default_view'  => 'default'
         ), $options);
 
-        $routeGenerator = function($page) {
-            return '?page='.$page;
+        $routeGenerator = function($page) use ($pageParam) {
+            return '?'.$pageParam.'='.$page;
         };
         
-        return $this->viewFactory->get($viewName)->render($pagerfanta, $routeGenerator, $options);;
+        return $this->viewFactory->get($viewName)->render($table->pager, $routeGenerator, $options);
     }
 
     /**
