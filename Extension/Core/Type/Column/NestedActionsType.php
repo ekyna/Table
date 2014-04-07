@@ -38,7 +38,7 @@ class NestedActionsType extends ActionsType
     {
         parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
         $disabled = false;
-        if(0 < strlen($options['disable_property_path'])) {
+        if (0 < strlen($options['disable_property_path'])) {
             $disabled = $propertyAccessor->getValue($entity, $options['disable_property_path']);
         }
 
@@ -47,14 +47,14 @@ class NestedActionsType extends ActionsType
             'label'      => 'Ajouter',
             'class'      => 'primary',
         );
-        $newChildButton['icon'] = 'plus';
+        $newChildButton['icon']  = 'plus';
         $newChildButton['class'] = 'success';
-        $moveUpButton['icon'] = 'arrow-up';
-        $moveUpButton['label'] = 'Déplacer vers le haut';
-        $moveDownButton['icon'] = 'arrow-down';
+        $moveUpButton['icon']    = 'arrow-up';
+        $moveUpButton['label']   = 'Déplacer vers le haut';
+        $moveDownButton['icon']  = 'arrow-down';
         $moveDownButton['label'] = 'Déplacer vers le bas';
 
-        if(!$disabled) {
+        if (!$disabled) {
             $parameters = array();
             foreach($options['routes_parameters_map'] as $parameter => $propertyPath) {
                 $parameters[$parameter] = $propertyAccessor->getValue($entity, $propertyPath);
@@ -62,33 +62,44 @@ class NestedActionsType extends ActionsType
             $newChildButton['route'] = $options['new_child_route'];
             $newChildButton['parameters'] = $parameters;
 
-            if(null !== $parent = $propertyAccessor->getValue($entity, $options['parent_property_path'])) {
+            $left = $propertyAccessor->getValue($entity, $options['left_property_path']);
+            $right = $propertyAccessor->getValue($entity, $options['right_property_path']);
 
-                $left = $propertyAccessor->getValue($entity, $options['left_property_path']);
-                $right = $propertyAccessor->getValue($entity, $options['right_property_path']);
+            if (null !== $parent = $propertyAccessor->getValue($entity, $options['parent_property_path'])) {
                 $parentLeft = $propertyAccessor->getValue($parent, $options['left_property_path']);
                 $parentRight = $propertyAccessor->getValue($parent, $options['right_property_path']);
 
-                if($entity->getLeft() === $parent->getLeft() + 1) {
+                if ($entity->getLeft() === $parent->getLeft() + 1) {
                     $moveUpButton['disabled'] = true;
-                }else{
+                } else {
                     $moveUpButton['route'] = $options['move_up_route'];
                     $moveUpButton['parameters'] = $parameters;
                 }
 
-                if($entity->getRight() === $parent->getRight() - 1) {
+                if ($entity->getRight() === $parent->getRight() - 1) {
                     $moveDownButton['disabled'] = true;
-                }else{
+                } else {
                     $moveDownButton['route'] = $options['move_down_route'];
                     $moveDownButton['parameters'] = $parameters;
                 }
+            } else { // Parent is root
+                if (1 === $left) {
+                    $moveUpButton['disabled'] = true;
+                } else {
+                    $moveUpButton['route'] = $options['move_up_route'];
+                    $moveUpButton['parameters'] = $parameters;
+                }
+
+                // TODO: fs last root child => disable
+                $moveDownButton['route'] = $options['move_down_route'];
+                $moveDownButton['parameters'] = $parameters;
             }
         }
         array_unshift($cell->vars['buttons'], $moveDownButton);
         array_unshift($cell->vars['buttons'], $moveUpButton);
         array_unshift($cell->vars['buttons'], $newChildButton);
     }
-    
+
     public function getName()
     {
         return 'nested_actions';
