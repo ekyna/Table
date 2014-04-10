@@ -34,7 +34,10 @@ class DatetimeType extends AbstractFilterType
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
             'id'        => $datas['id'],
-            'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']->format('d/m/Y H:i')),
+            //'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']->format('d/m/Y H:i')),
+            'field'     => $datas['label'],
+            'operator'  => FilterOperator::getLabel($datas['operator']),
+            'value'     => $datas['value']->format('d/m/Y H:i')
         ));
         $view->active_filters[] = $activeFilter;
     }

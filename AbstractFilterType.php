@@ -64,7 +64,10 @@ abstract class AbstractFilterType implements FilterTypeInterface
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
             'id'        => $datas['id'],
-            'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']),
+            //'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']),
+            'field' => $datas['label'],
+            'operator' => FilterOperator::getLabel($datas['operator']),
+            'value' => $datas['value']
         ));
         $view->active_filters[] = $activeFilter;
     }

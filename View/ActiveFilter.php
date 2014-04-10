@@ -8,7 +8,9 @@ class ActiveFilter
         'name'      => null,
         'full_name' => null,
         'id'        => null,
-        'label'     => null,
+        'field'     => null,
+        'operator'  => null,
+        'value'     => null,
     );
     
     public function setVars(array $vars)
