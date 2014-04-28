@@ -2,8 +2,8 @@
 
 namespace Ekyna\Component\Table;
 
-use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
+use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 
 abstract class AbstractTableExtension implements TableExtensionInterface
 {
@@ -30,11 +30,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     public function getTableType($name)
     {
-        if (null === $this->tableTypes) {
-            $this->initTableTypes();
-        }
-
-        if (!isset($this->tableTypes[$name])) {
+        if (!$this->hasTableType($name)) {
             throw new InvalidArgumentException(sprintf('The table type "%s" can not be loaded by this extension', $name));
         }
 
@@ -50,7 +46,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
             $this->initTableTypes();
         }
 
-        return isset($this->tableTypes[$name]);
+        return array_key_exists($name, $this->tableTypes);
     }
 
     /**
@@ -58,11 +54,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     public function getColumnType($name)
     {
-        if (null === $this->columnTypes) {
-            $this->initColumnTypes();
-        }
-
-        if (!isset($this->columnTypes[$name])) {
+        if (!$this->hasColumnType($name)) {
             throw new InvalidArgumentException(sprintf('The column type "%s" can not be loaded by this extension', $name));
         }
 
@@ -78,7 +70,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
             $this->initColumnTypes();
         }
 
-        return isset($this->columnTypes[$name]);
+        return array_key_exists($name, $this->columnTypes);
     }
 
     /**
@@ -86,11 +78,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     public function getFilterType($name)
     {
-        if (null === $this->filterTypes) {
-            $this->initFilterTypes();
-        }
-
-        if (!isset($this->filterTypes[$name])) {
+        if (!$this->hasFilterType($name)) {
             throw new InvalidArgumentException(sprintf('The filter type "%s" can not be loaded by this extension', $name));
         }
 
@@ -106,7 +94,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
             $this->initFilterTypes();
         }
 
-        return isset($this->filterTypes[$name]);
+        return array_key_exists($name, $this->filterTypes);
     }
 
     /**

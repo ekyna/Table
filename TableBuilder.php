@@ -39,6 +39,11 @@ class TableBuilder implements TableBuilderInterface
      * @var array
      */
     private $defaultSort;
+
+    /**
+     * @var \Closure
+     */
+    private $customizeQb;
     
     /**
      * @var integer
@@ -70,6 +75,14 @@ class TableBuilder implements TableBuilderInterface
     {
         $this->defaultSort = array($property, $dir);
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCustomizeQueryBuilder(\Closure $closure = null)
+    {
+        $this->customizeQb = $closure;
     }
 
     /**
@@ -107,7 +120,7 @@ class TableBuilder implements TableBuilderInterface
      */
     public function addColumn($name, $type = null, array $options = array())
     {
-        if(isset($this->columns[$name])) {
+        if(array_key_exists($name, $this->columns)) {
             throw new InvalidArgumentException(sprintf('Column "%s" is allready defined.', $name));
         }
         $this->columns[$name] = array($type, $options);
@@ -119,7 +132,7 @@ class TableBuilder implements TableBuilderInterface
      */
     public function addFilter($name, $type = null, array $options = array())
     {
-        if(isset($this->filters[$name])) {
+        if(array_key_exists($name, $this->filters)) {
             throw new InvalidArgumentException(sprintf('Filter "%s" is allready defined.', $name));
         }
         $this->filters[$name] = array($type, $options);
@@ -151,6 +164,7 @@ class TableBuilder implements TableBuilderInterface
         $table
             ->setMaxPerPage($this->maxPerPage)
             ->setDefaultSort($this->defaultSort)
+            ->setCustomizeQueryBuilder($this->customizeQb)
         ;
 
         return $table;

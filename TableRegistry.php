@@ -71,7 +71,7 @@ class TableRegistry implements TableRegistryInterface
             throw new UnexpectedTypeException($name, 'string');
         }
 
-        if (!isset($this->tableTypes[$name])) {
+        if (!array_key_exists($name, $this->tableTypes)) {
             /** @var TableTypeInterface $type */
             $type = null;
 
@@ -99,7 +99,7 @@ class TableRegistry implements TableRegistryInterface
      */
     public function hasTableType($name)
     {
-        if (isset($this->tableTypes[$name])) {
+        if (array_key_exists($name, $this->tableTypes)) {
             return true;
         }
     
@@ -121,7 +121,7 @@ class TableRegistry implements TableRegistryInterface
             throw new UnexpectedTypeException($name, 'string');
         }
 
-        if (!isset($this->columnTypes[$name])) {
+        if (!array_key_exists($name, $this->columnTypes)) {
             /** @var ColumnTypeInterface $type */
             $type = null;
 
@@ -149,7 +149,7 @@ class TableRegistry implements TableRegistryInterface
      */
     public function hasColumnType($name)
     {
-        if (isset($this->columnTypes[$name])) {
+        if (array_key_exists($name, $this->columnTypes)) {
             return true;
         }
 
@@ -171,7 +171,7 @@ class TableRegistry implements TableRegistryInterface
             throw new UnexpectedTypeException($name, 'string');
         }
 
-        if (!isset($this->filterTypes[$name])) {
+        if (!array_key_exists($name, $this->filterTypes)) {
             /** @var FilterTypeInterface $type */
             $type = null;
 
@@ -199,7 +199,7 @@ class TableRegistry implements TableRegistryInterface
      */
     public function hasFilterType($name)
     {
-        if (isset($this->filterTypes[$name])) {
+        if (array_key_exists($name, $this->filterTypes)) {
             return true;
         }
 
@@ -217,6 +217,6 @@ class TableRegistry implements TableRegistryInterface
      */
     public function getExtensions()
     {
-    	
+    	return $this->extensions;
     }
 }

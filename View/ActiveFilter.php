@@ -12,25 +12,25 @@ class ActiveFilter
         'operator'  => null,
         'value'     => null,
     );
-    
+
     public function setVars(array $vars)
     {
         $this->vars = array_merge($this->vars, $vars);
     }
-    
+
     public function getVars()
     {
         return $this->vars;
     }
-    
+
     public function getVar($key, $default = null)
     {
-        if(isset($this->vars[$key])) {
+        if (array_key_exists($key, $this->vars)) {
             return $this->vars[$key];
         }
         return $default;
     }
-    
+
     public function setVar($key, $value)
     {
         $this->vars[$key] = $value;

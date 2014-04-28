@@ -30,7 +30,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function getTableType($name)
     {
-        if (!isset($this->tableTypeServiceIds[$name])) {
+        if (!$this->hasTableType($name)) {
             throw new InvalidArgumentException(sprintf('The table type "%s" is not registered with the service container.', $name));
         }
 
@@ -53,7 +53,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function hasTableType($name)
     {
-        return isset($this->tableTypeServiceIds[$name]);
+        return array_key_exists($name, $this->tableTypeServiceIds);
     }
 
     /**
@@ -61,7 +61,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function getColumnType($name)
     {
-        if (!isset($this->columnTypeServiceIds[$name])) {
+        if (!$this->hasColumnType($name)) {
             throw new InvalidArgumentException(sprintf('The column field type "%s" is not registered with the service container.', $name));
         }
 
@@ -84,7 +84,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function hasColumnType($name)
     {
-        return isset($this->columnTypeServiceIds[$name]);
+        return array_key_exists($name, $this->columnTypeServiceIds);
     }
 
     /**
@@ -92,7 +92,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function getFilterType($name)
     {
-        if (!isset($this->filterTypeServiceIds[$name])) {
+        if (!$this->hasFilterType($name)) {
             throw new InvalidArgumentException(sprintf('The filter field type "%s" is not registered with the service container.', $name));
         }
 
@@ -115,6 +115,6 @@ class DependencyInjectionExtension implements TableExtensionInterface
      */
     public function hasFilterType($name)
     {
-        return isset($this->filterTypeServiceIds[$name]);
+        return array_key_exists($name, $this->filterTypeServiceIds);
     }
 }

@@ -30,7 +30,12 @@ class Table
     /**
      * @var array
      */
-    private $defaultSort;
+    protected $defaultSort;
+
+    /**
+     * @var \Closure
+     */
+    protected $customizeQb;
 
     /**
      * @var integer
@@ -58,6 +63,17 @@ class Table
     public function getDefaultSort()
     {
         return $this->defaultSort;
+    }
+
+    public function setCustomizeQueryBuilder(\Closure $closure = null)
+    {
+        $this->customizeQb = $closure;
+        return $this;
+    }
+
+    public function getCustomizeQueryBuilder()
+    {
+        return $this->customizeQb;
     }
 
     public function setMaxPerPage($max)

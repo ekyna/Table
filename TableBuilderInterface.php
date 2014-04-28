@@ -4,6 +4,8 @@ namespace Ekyna\Component\Table;
 
 /**
  * TableBuilderInterface
+ *
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 interface TableBuilderInterface
 {
@@ -16,7 +18,16 @@ interface TableBuilderInterface
      * @return TableBuilder
      */
     public function setDefaultSort($property, $dir = 'ASC');
-    
+
+    /**
+     * Sets a "customize query builder" closure, which is applied after filters expressions
+     *
+     * @param \Closure $closure
+     * 
+     * @return TableBuilder
+     */
+    public function setCustomizeQueryBuilder(\Closure $closure = null);
+
     /**
      * Sets max results per page
      * 

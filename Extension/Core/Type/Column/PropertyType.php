@@ -10,7 +10,7 @@ use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
+// use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 
 /**
  * PropertyType

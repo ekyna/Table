@@ -128,7 +128,7 @@ class TableGenerator
         $view = new TableView();
         $view->name = $table->getName();
 
-        if(!$table->hasColumns()) {
+        if (!$table->hasColumns()) {
             throw new RuntimeException('Table has no columns and cannot be generated.');
         }
 
@@ -142,20 +142,24 @@ class TableGenerator
             ->select('a')
             ->from($table->getEntityClass(), 'a');
 
-        if(null !== $sortBy && null !== $sortDir) {
+        if (null !== $sortBy && null !== $sortDir) {
             $queryBuilder->addOrderBy('a.'.$sortBy, $sortDir);
-        }elseif(null !== $sort = $table->getDefaultSort()) {
+        } elseif (null !== $sort = $table->getDefaultSort()) {
             list($sortBy, $sortDir) = $sort;
             $queryBuilder->addOrderBy('a.'.$sortBy, $sortDir);
         }
-        if(count($expressions) > 0) {
+        if (count($expressions) > 0) {
             $expressionCount = 0;
-            foreach($expressions as $expression) {
+            foreach ($expressions as $expression) {
                 $queryBuilder->andWhere($expression);
             }
             $queryBuilder->setParameters($parameters);
         }
 
+        if (null !== $customizeQb = $table->getCustomizeQueryBuilder()) {
+            $customizeQb($queryBuilder);
+        }
+        
         $current_page = $this->getUserVar($table->getName().'_page', 1);
 
         $adapter = new DoctrineORMAdapter($queryBuilder);
@@ -175,9 +179,9 @@ class TableGenerator
         $view->pager = $pager;
 
         $accessor = PropertyAccess::createPropertyAccessor();
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             $row = new Row($entity->getId());
-            foreach($table->getColumns() as $columnOptions) {
+            foreach ($table->getColumns() as $columnOptions) {
                 $cell = new Cell();
                 $type = $this->tableFactory->getColumnType($columnOptions['type']);
                 $type->buildViewCell($cell, $accessor, $entity, $columnOptions);
@@ -211,8 +215,8 @@ class TableGenerator
     {
         $tmp = array();
         $activesFilters = $this->getSession()->get($table->getName().'_filters', array());
-        foreach($activesFilters as $activeFilter) {
-            if($activeFilter['id'] != $filterId) {
+        foreach ($activesFilters as $activeFilter) {
+            if ($activeFilter['id'] != $filterId) {
                 $tmp[] = $activeFilter;
             }
         }
@@ -223,13 +227,13 @@ class TableGenerator
     {
         $expressions = $parameters = array();
 
-        if(null !== $removedFilterId = $this->getUserRequest('remove_filter')) {
+        if (null !== $removedFilterId = $this->getUserRequest('remove_filter')) {
             // Remove an active filter
             $this->removeActiveFilter($table, $removedFilterId);
 
-        }elseif(null !== $requestedFilterFullName = $this->getUserRequest('add_filter')) {
+        } elseif (null !== $requestedFilterFullName = $this->getUserRequest('add_filter')) {
             // Filter widget
-            if(null !== $filterOptions = $table->findFilterByFullName($requestedFilterFullName)) {
+            if (null !== $filterOptions = $table->findFilterByFullName($requestedFilterFullName)) {
                 $type = $this->tableFactory->getFilterType($filterOptions['type']);
 
                 // Build Form
@@ -243,16 +247,16 @@ class TableGenerator
 
                 // Handle request
                 $form->handleRequest($this->getRequest());
-                if($form->isValid()) {
+                if ($form->isValid()) {
                     $this->createActiveFilter($table, $filterOptions, $form->getData());
-                }else{
+                } else {
                     $view->filter_label = $filterOptions['label'];
                     $view->filter_form = $formBuilder->getForm()->createView();
                 }
             }
         }
 
-        foreach($table->getFilters() as $filterOptions) {
+        foreach ($table->getFilters() as $filterOptions) {
             // Filter type
             $type = $this->tableFactory->getFilterType($filterOptions['type']);
 
@@ -264,7 +268,7 @@ class TableGenerator
 
         // Build actives Filters
         $count = 1;
-        foreach($this->getSession()->get($table->getName().'_filters', array()) as $datas) {
+        foreach ($this->getSession()->get($table->getName().'_filters', array()) as $datas) {
             
             $type = $this->tableFactory->getFilterType($datas['type']);
             $type->buildActiveFilters($view, $datas);
@@ -284,11 +288,11 @@ class TableGenerator
         $sortDirs = array(ColumnSort::ASC, ColumnSort::DESC);
 
         // Check if user requested a new column sorting
-        foreach($table->getColumns() as $columnOptions) {
-            if(isset($columnOptions['sortable']) && true === $columnOptions['sortable']) {
+        foreach ($table->getColumns() as $columnOptions) {
+            if (array_key_exists('sortable', $columnOptions) && true === $columnOptions['sortable']) {
                 $key = $columnOptions['full_name'].'_sort';
-                if(in_array($this->getRequest()->query->get($key, false), $sortDirs) ||
-                in_array($this->getRequest()->request->get($key, false), $sortDirs)) {
+                if (in_array($this->getRequest()->query->get($key, false), $sortDirs) ||
+                    in_array($this->getRequest()->request->get($key, false), $sortDirs)) {
                     $newSortedColumnName = $columnOptions['name'];
                     break;
                 }
@@ -296,24 +300,24 @@ class TableGenerator
         }
 
         // If new sorted column purge session sort
-        if(null !== $newSortedColumnName) {
-            foreach($table->getColumns() as $columnOptions) {
-                if($newSortedColumnName !== $columnOptions['name']) {
+        if (null !== $newSortedColumnName) {
+            foreach ($table->getColumns() as $columnOptions) {
+                if ($newSortedColumnName !== $columnOptions['name']) {
                     $this->getSession()->remove($columnOptions['full_name'].'_sort');
                 }
             }
         }
         // Build Columns
-        foreach($table->getColumns() as $columnOptions) {
+        foreach ($table->getColumns() as $columnOptions) {
             $column = new Column();
 
             $type = $this->tableFactory->getColumnType($columnOptions['type']);
             $type->buildViewColumn($column, $this, $columnOptions);
 
             // Sortable columns
-            if(true === $column->getVar('sortable', false)) {
+            if (true === $column->getVar('sortable', false)) {
                 $sort = $column->getVar('sort_dir', ColumnSort::NONE);
-                if(in_array($sort, $sortDirs)) {
+                if (in_array($sort, $sortDirs)) {
                     $sortedColumnName = $columnOptions['name'];
                     $sortBy = $column->getVar('sort_by');
                     $sortDir = strtoupper($sort);

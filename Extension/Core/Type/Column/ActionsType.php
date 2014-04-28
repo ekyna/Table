@@ -54,7 +54,7 @@ class ActionsType extends AbstractColumnType
 
     public function buildTableColumn(Table $table, $name, array $options = array())
     {
-        if(!isset($options['buttons']) || 0 === count($options['buttons']) || (bool) count(array_filter(array_keys($options['buttons']), 'is_string'))) {
+        if(!array_key_exists('buttons', $options) || 0 === count($options['buttons']) || (bool) count(array_filter(array_keys($options['buttons']), 'is_string'))) {
             throw new InvalidArgumentException('The "buttons" options should be defined as an array of button options.');
         }
 
