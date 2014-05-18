@@ -3,7 +3,6 @@
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\AbstractColumnType;
-use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\TableGenerator;
 use Ekyna\Component\Table\View\Column;
@@ -13,10 +12,15 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * ActionsType
+ * ActionsType.
+ *
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class ActionsType extends AbstractColumnType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
@@ -31,7 +35,12 @@ class ActionsType extends AbstractColumnType
         ));
     }
 
-    private function configureButtonOptions(OptionsResolverInterface $resolver)
+    /**
+     * Configures the button options resolver.
+     * 
+     * @param OptionsResolverInterface $resolver
+     */
+    protected function configureButtonOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'label'                 => '',
@@ -52,24 +61,41 @@ class ActionsType extends AbstractColumnType
         ));
     }
 
-    public function buildTableColumn(Table $table, $name, array $options = array())
+    /**
+     * Prepares the buttons.
+     * 
+     * @param Table $table
+     * @param array $buttonsOptions
+     * 
+     * @return array
+     */
+    protected function prepareButtons(Table $table, array $buttonsOptions)
     {
-        if(!array_key_exists('buttons', $options) || 0 === count($options['buttons']) || (bool) count(array_filter(array_keys($options['buttons']), 'is_string'))) {
-            throw new InvalidArgumentException('The "buttons" options should be defined as an array of button options.');
-        }
-
         $buttonResolver = new OptionsResolver();
         $this->configureButtonOptions($buttonResolver);
 
         $tmp = array();
-        foreach($options['buttons'] as $buttonOptions) {
+        foreach($buttonsOptions as $buttonOptions) {
             $tmp[] = $buttonResolver->resolve($buttonOptions);
         }
-        $options['buttons'] = $tmp;
-
-        parent::buildTableColumn($table, $name, $options);
+        return $tmp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function buildTableColumn(Table $table, $name, array $options = array())
+    {
+        $options['buttons'] = $this->prepareButtons($table, $options['buttons']);
+
+        if (0 < count($options['buttons'])) {
+            parent::buildTableColumn($table, $name, $options);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
     {
         parent::buildViewColumn($column, $generator, $options);
@@ -78,6 +104,9 @@ class ActionsType extends AbstractColumnType
     	));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
     {
         parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
@@ -106,6 +135,9 @@ class ActionsType extends AbstractColumnType
         ));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
     	return 'actions';

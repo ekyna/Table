@@ -7,10 +7,15 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * NestedActionsType
+ * NestedActionsType.
+ *
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class NestedActionsType extends ActionsType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
@@ -34,6 +39,9 @@ class NestedActionsType extends ActionsType
         ));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
     {
         parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
@@ -100,6 +108,9 @@ class NestedActionsType extends ActionsType
         array_unshift($cell->vars['buttons'], $newChildButton);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'nested_actions';

@@ -26,7 +26,7 @@ class Column
 
     public function getVar($key, $default = null)
     {
-        if(array_key_exists($key, $this->vars)) {
+        if (array_key_exists($key, $this->vars)) {
             return $this->vars[$key];
         }
         return $default;
