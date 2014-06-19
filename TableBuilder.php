@@ -146,8 +146,9 @@ class TableBuilder implements TableBuilderInterface
     {
         $tableName = $name ?: $this->tableName;
         if(null === $tableName) { 
-            $tableName = strtolower(substr($this->entityClass, strrpos($this->entityClass, '\\') + 1));
+            $tableName = substr($this->entityClass, strrpos($this->entityClass, '\\') + 1);
         }
+        $tableName = preg_replace('/\W/', '_', strtolower($tableName));
 
         $table = new Table($tableName, $this->entityClass);
 
