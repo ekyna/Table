@@ -24,7 +24,7 @@ interface ColumnTypeInterface
     /**
      * Sets Column vars (Called by TableGenerator)
      * 
-     * @param HeadCell       $cell
+     * @param Column         $column
      * @param TableGenerator $generator
      * @param array          $options
      */
@@ -33,7 +33,7 @@ interface ColumnTypeInterface
     /**
      * Sets Cell vars (Called by TableGenerator)
      * 
-     * @param BodyCell         $cell
+     * @param Cell             $cell
      * @param PropertyAccessor $propertyAccessor
      * @param object           $entity
      * @param array            $options

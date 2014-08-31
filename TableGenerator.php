@@ -46,6 +46,7 @@ class TableGenerator
      * @param \Symfony\Component\Form\FormFactory            $formFactory
      * @param \Doctrine\ORM\EntityManager                    $em
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+     * @param string                                         $attributeBagName
      */
     public function __construct(
         TableFactory $tableFactory,
@@ -120,7 +121,9 @@ class TableGenerator
      * Generates a TableView base on given Table
      * 
      * @param \Ekyna\Component\Table\Table $table
-     * 
+     *
+     * @throws \Ekyna\Component\Table\Exception\RuntimeException
+     *
      * @return \Ekyna\Component\Table\TableView
      */
     public function generateView(Table $table)
@@ -159,7 +162,7 @@ class TableGenerator
         if (null !== $customizeQb = $table->getCustomizeQueryBuilder()) {
             $customizeQb($queryBuilder);
         }
-        
+
         $current_page = $this->getUserVar($table->getName().'_page', 1);
 
         $adapter = new DoctrineORMAdapter($queryBuilder);
@@ -196,6 +199,13 @@ class TableGenerator
         return $view;
     }
 
+    /**
+     * Creates an active filter.
+     *
+     * @param Table $table
+     * @param array $filterOptions
+     * @param array $formData
+     */
     private function createActiveFilter(Table $table, $filterOptions, $formData)
     {
         $activesFilters = $this->getSession()->get($table->getName().'_filters', array());
@@ -211,6 +221,12 @@ class TableGenerator
         $this->getSession()->set($table->getName().'_filters', $activesFilters);
     }
 
+    /**
+     * Removes an active filter.
+     *
+     * @param Table $table
+     * @param string $filterId
+     */
     private function removeActiveFilter(Table $table, $filterId)
     {
         $tmp = array();
@@ -222,7 +238,15 @@ class TableGenerator
         }
         $this->getSession()->set($table->getName().'_filters', $tmp);
     }
-    
+
+    /**
+     * Generates the filters.
+     *
+     * @param Table $table
+     * @param TableView $view
+     *
+     * @return array
+     */
     private function generateFilters(Table $table, TableView $view)
     {
         $expressions = $parameters = array();
@@ -282,6 +306,14 @@ class TableGenerator
         return array($expressions, $parameters);
     }
 
+    /**
+     * Generates the columns.
+     *
+     * @param Table $table
+     * @param TableView $view
+     *
+     * @return array
+     */
     private function generateColumns(Table $table, TableView $view)
     {
         $sortBy = $sortDir = $sortedColumnName = $newSortedColumnName = null;

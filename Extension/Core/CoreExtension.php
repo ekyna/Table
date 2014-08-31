@@ -28,6 +28,7 @@ class CoreExtension extends AbstractTableExtension
         	new Type\Column\TextType,
             new Type\Column\NumberType,
             new Type\Column\DatetimeType,
+            new Type\Column\ImageType,
             new Type\Column\AnchorType,
             new Type\Column\ActionsType,
         );

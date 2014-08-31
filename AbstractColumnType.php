@@ -9,10 +9,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * AbstractColumnType
+ * Class AbstractColumnType
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractColumnType implements ColumnTypeInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -28,6 +33,9 @@ abstract class AbstractColumnType implements ColumnTypeInterface
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildTableColumn(Table $table, $name, array $options = array())
     {
         $resolver = new OptionsResolver();
@@ -42,6 +50,9 @@ abstract class AbstractColumnType implements ColumnTypeInterface
         return $resolvedOptions;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
     {
         $column->setVars(array(
@@ -50,6 +61,9 @@ abstract class AbstractColumnType implements ColumnTypeInterface
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
     {
         $cell->setVars(array(

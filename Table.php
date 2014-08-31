@@ -44,6 +44,7 @@ class Table
 
     /**
      * @param string $name
+     * @param string $entityClass
      */
     public function __construct($name, $entityClass)
     {
