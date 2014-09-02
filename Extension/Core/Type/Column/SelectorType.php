@@ -3,6 +3,7 @@
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\AbstractColumnType;
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -20,6 +21,7 @@ class SelectorType extends AbstractColumnType
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults(array(
             'multiple' => false,
         ));
@@ -32,9 +34,9 @@ class SelectorType extends AbstractColumnType
     /**
      * {@inheritdoc}
      */
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
 
         $cell->setVars(array(
             'multiple' => $options['multiple'],

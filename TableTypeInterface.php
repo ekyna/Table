@@ -2,29 +2,28 @@
 
 namespace Ekyna\Component\Table;
 
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 interface TableTypeInterface
 {
     /**
-     * Builds the table
+     * Builds the table.
      * 
      * @param TableBuilderInterface $builder
      */
     public function buildTable(TableBuilderInterface $builder);
 
     /**
-     * Create a table view
-     * 
-     * @return TableView
+     * Sets the default options.
+     *
+     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
-    public function createView();
+    public function setDefaultOptions(OptionsResolverInterface $resolver);
 
     /**
-     * Returns the entity class
-     */
-    public function getEntityClass();
-
-    /**
-     * Returns the type name
+     * Returns the type name.
+     *
+     * @return string
      */
     public function getName();
 }

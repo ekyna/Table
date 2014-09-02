@@ -2,15 +2,20 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * AnchorType
+ * Class AnchorType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Column
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class AnchorType extends PropertyType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
@@ -25,12 +30,15 @@ class AnchorType extends PropertyType
         ));
     }
 
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
         $parameters = array();
         foreach($options['route_parameters_map'] as $parameter => $propertyPath) {
-            $parameters[$parameter] = $propertyAccessor->getValue($entity, $propertyPath);
+            $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
         }
         $cell->setVars(array(
             'route'      => $options['route_name'],
@@ -38,6 +46,9 @@ class AnchorType extends PropertyType
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'anchor';

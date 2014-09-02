@@ -2,13 +2,14 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * NestedActionsType.
- *
+ * Class NestedActionsType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class NestedActionsType extends ActionsType
@@ -42,12 +43,13 @@ class NestedActionsType extends ActionsType
     /**
      * {@inheritDoc}
      */
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
+
         $disabled = false;
         if (0 < strlen($options['disable_property_path'])) {
-            $disabled = $propertyAccessor->getValue($entity, $options['disable_property_path']);
+            $disabled = $table->getCurrentRowData($options['disable_property_path']);
         }
 
         $newChildButton = $moveUpButton = $moveDownButton = array(
@@ -65,26 +67,27 @@ class NestedActionsType extends ActionsType
         if (!$disabled) {
             $parameters = array();
             foreach($options['routes_parameters_map'] as $parameter => $propertyPath) {
-                $parameters[$parameter] = $propertyAccessor->getValue($entity, $propertyPath);
+                $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }
             $newChildButton['route'] = $options['new_child_route'];
             $newChildButton['parameters'] = $parameters;
 
-            $left = $propertyAccessor->getValue($entity, $options['left_property_path']);
-            $right = $propertyAccessor->getValue($entity, $options['right_property_path']);
+            $left = $table->getCurrentRowData($options['left_property_path']);
+            $right = $table->getCurrentRowData($options['right_property_path']);
 
-            if (null !== $parent = $propertyAccessor->getValue($entity, $options['parent_property_path'])) {
-                $parentLeft = $propertyAccessor->getValue($parent, $options['left_property_path']);
-                $parentRight = $propertyAccessor->getValue($parent, $options['right_property_path']);
+            if (null !== $parent = $table->getCurrentRowData($options['parent_property_path'])) {
+                $accessor = $table->getPropertyAccessor();
+                $parentLeft = $accessor->getValue($parent, $options['left_property_path']);
+                $parentRight = $accessor->getValue($parent, $options['right_property_path']);
 
-                if ($entity->getLeft() === $parent->getLeft() + 1) {
+                if ($left === $parentLeft + 1) {
                     $moveUpButton['disabled'] = true;
                 } else {
                     $moveUpButton['route'] = $options['move_up_route'];
                     $moveUpButton['parameters'] = $parameters;
                 }
 
-                if ($entity->getRight() === $parent->getRight() - 1) {
+                if ($right === $parentRight - 1) {
                     $moveDownButton['disabled'] = true;
                 } else {
                     $moveDownButton['route'] = $options['move_down_route'];

@@ -13,42 +13,41 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 interface ColumnTypeInterface
 {
     /**
-     * Adds a column to the given table (Called by TableBuilder via TableFactory)
+     * Adds a column to the given table configuration.
      * 
+     * @param TableConfig $table
+     * @param string      $name
+     * @param array       $options
+     */
+    public function buildTableColumn(TableConfig $table, $name, array $options = array());
+
+    /**
+     * Builds the view column.
+     * 
+     * @param Column $column
      * @param Table  $table
-     * @param string $name
      * @param array  $options
      */
-    public function buildTableColumn(Table $table, $name, array $options = array());
+    public function buildViewColumn(Column $column, Table $table, array $options);
 
     /**
-     * Sets Column vars (Called by TableGenerator)
+     * Builds the view cell.
      * 
-     * @param Column         $column
-     * @param TableGenerator $generator
-     * @param array          $options
+     * @param Cell   $cell
+     * @param Table  $table
+     * @param array  $options
      */
-    public function buildViewColumn(Column $column, TableGenerator $generator, array $options);
+    public function buildViewCell(Cell $cell, Table $table, array $options);
 
     /**
-     * Sets Cell vars (Called by TableGenerator)
-     * 
-     * @param Cell             $cell
-     * @param PropertyAccessor $propertyAccessor
-     * @param object           $entity
-     * @param array            $options
-     */
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options);
-
-    /**
-     * Configure options
+     * Configures the options.
      * 
      * @param OptionsResolverInterface $resolver
      */
     public function configureOptions(OptionsResolverInterface $resolver);
 
     /**
-     * Returns column type name
+     * Returns column type name.
      * 
      * @return string
      */

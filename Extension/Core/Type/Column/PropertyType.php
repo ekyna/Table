@@ -3,22 +3,26 @@
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\AbstractColumnType;
-use Ekyna\Component\Table\TableGenerator;
-use Ekyna\Component\Table\Util\ColumnSort;
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * PropertyType
+ * Class PropertyType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Column
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class PropertyType extends AbstractColumnType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults(array(
             'sortable'      => false,
             'filterable'    => false,
@@ -37,25 +41,32 @@ abstract class PropertyType extends AbstractColumnType
         ));
     }
 
-    public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildViewColumn(Column $column, Table $table, array $options)
     {
-        parent::buildViewColumn($column, $generator, $options);
-        $sort = $options['sortable'] ? $generator->getUserVar($options['full_name'].'_sort', ColumnSort::NONE) : ColumnSort::NONE;
+        parent::buildViewColumn($column, $table, $options);
+
     	$column->setVars(array(
         	'label'    => $options['label'],
         	'sortable' => $options['sortable'],
         	'sort_by'  => $options['property_path'],
-        	'sort_dir' => $generator->getUserVar($options['full_name'].'_sort', ColumnSort::NONE),
-    	    'sorted'   => $sort !== ColumnSort::NONE,
+        	'sort_dir' => $options['sort_dir'],
+    	    'sorted'   => $options['sorted'],
     	));
     }
 
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
 
         $cell->setVars(array(
-            'value'  => $propertyAccessor->getValue($entity, $options['property_path']),
+            'value'  => $table->getCurrentRowData($options['property_path']),
+            'sorted' => $options['sorted'],
         ));
     }
 }

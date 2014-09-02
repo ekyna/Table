@@ -4,14 +4,14 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\Util\FilterOperator;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * TextType
  */
 class TextType extends AbstractFilterType
 {
-    public function buildFilterFrom(FormBuilder $form, array $options)
+    public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
             ->add('operator', 'choice', array(

@@ -2,7 +2,7 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
-use Ekyna\Component\Table\TableGenerator;
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Column;
 
 /**
@@ -12,15 +12,21 @@ use Ekyna\Component\Table\View\Column;
  */
 class ImageType extends PropertyType
 {
-    public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
+    /**
+     * {@inheritDoc}
+     */
+    public function buildViewColumn(Column $column, Table $table, array $options)
     {
-        parent::buildViewColumn($column, $generator, $options);
+        parent::buildViewColumn($column, $table, $options);
 
         $column->setVar('sortable', false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'image';
     }
-} 
+}

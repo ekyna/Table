@@ -10,10 +10,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * AbstractFilterType
+ * Class AbstractFilterType
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractFilterType implements FilterTypeInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -37,18 +42,24 @@ abstract class AbstractFilterType implements FilterTypeInterface
         ));
     }
 
-    public function buildTableFilter(Table $table, $name, array $options = array())
+    /**
+     * {@inheritdoc}
+     */
+    public function buildTableFilter(TableConfig $config, $name, array $options = array())
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
 
         $options['name'] = $name;
-        $options['full_name'] = sprintf('%s_%s', $table->getName(), $name);
+        $options['full_name'] = sprintf('%s_%s', $config->getName(), $name);
         $resolvedOptions = $resolver->resolve($options);
 
-        $table->addFilter($resolvedOptions);
+        $config->addFilter($resolvedOptions);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildAvailableFilter(AvailableFilter $filter, array $options)
     {
         $filter->setVars(array(
@@ -58,16 +69,18 @@ abstract class AbstractFilterType implements FilterTypeInterface
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildActiveFilters(TableView $view, array $datas)
     {
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
             'id'        => $datas['id'],
-            //'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']),
-            'field' => $datas['label'],
-            'operator' => FilterOperator::getLabel($datas['operator']),
-            'value' => $datas['value']
+            'field'     => $datas['label'],
+            'operator'  => FilterOperator::getLabel($datas['operator']),
+            'value'     => $datas['value']
         ));
         $view->active_filters[] = $activeFilter;
     }

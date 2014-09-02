@@ -36,16 +36,16 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildTableColumn(Table $table, $name, array $options = array())
+    public function buildTableColumn(TableConfig $config, $name, array $options = array())
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
 
         $options['name'] = $name;
-        $options['full_name'] = sprintf('%s_%s', $table->getName(), $name);
+        $options['full_name'] = sprintf('%s_%s', $config->getName(), $name);
         $resolvedOptions = $resolver->resolve($options);
 
-        $table->addColumn($resolvedOptions);
+        $config->addColumn($resolvedOptions);
 
         return $resolvedOptions;
     }
@@ -53,7 +53,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
+    public function buildViewColumn(Column $column, Table $table, array $options)
     {
         $column->setVars(array(
             'name'      => $options['name'],
@@ -64,7 +64,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
         $cell->setVars(array(
             'type' => $options['type'],

@@ -4,16 +4,21 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\Util\FilterOperator;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\View\ActiveFilter;
 
 /**
- * DatetimeType
+ * Class DatetimeType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Filter
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class DatetimeType extends AbstractFilterType
 {
-    public function buildFilterFrom(FormBuilder $form, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
             ->add('operator', 'choice', array(
@@ -28,13 +33,15 @@ class DatetimeType extends AbstractFilterType
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildActiveFilters(TableView $view, array $datas)
     {
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
             'id'        => $datas['id'],
-            //'label'     => sprintf('<strong>%s</strong> %s "%s"', $datas['label'], FilterOperator::getLabel($datas['operator']), $datas['value']->format('d/m/Y H:i')),
             'field'     => $datas['label'],
             'operator'  => FilterOperator::getLabel($datas['operator']),
             'value'     => $datas['value']->format('d/m/Y H:i')
@@ -42,6 +49,9 @@ class DatetimeType extends AbstractFilterType
         $view->active_filters[] = $activeFilter;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getOperators()
     {
         return array(
@@ -53,6 +63,9 @@ class DatetimeType extends AbstractFilterType
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
     	return 'datetime';

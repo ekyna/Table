@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\AbstractColumnType;
 use Ekyna\Component\Table\Table;
-use Ekyna\Component\Table\TableGenerator;
+use Ekyna\Component\Table\TableConfig;
 use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -12,8 +12,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * ActionsType.
- *
+ * Class ActionsType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class ActionsType extends AbstractColumnType
@@ -24,6 +24,7 @@ class ActionsType extends AbstractColumnType
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults(array(
             'label'   => '',
             'buttons' => array(),
@@ -63,13 +64,13 @@ class ActionsType extends AbstractColumnType
 
     /**
      * Prepares the buttons.
-     * 
-     * @param Table $table
+     *
+     * @param TableConfig $config
      * @param array $buttonsOptions
      * 
      * @return array
      */
-    protected function prepareButtons(Table $table, array $buttonsOptions)
+    protected function prepareButtons(TableConfig $config, array $buttonsOptions)
     {
         $buttonResolver = new OptionsResolver();
         $this->configureButtonOptions($buttonResolver);
@@ -84,21 +85,22 @@ class ActionsType extends AbstractColumnType
     /**
      * {@inheritDoc}
      */
-    public function buildTableColumn(Table $table, $name, array $options = array())
+    public function buildTableColumn(TableConfig $config, $name, array $options = array())
     {
-        $options['buttons'] = $this->prepareButtons($table, $options['buttons']);
+        $options['buttons'] = $this->prepareButtons($config, $options['buttons']);
 
         if (0 < count($options['buttons'])) {
-            parent::buildTableColumn($table, $name, $options);
+            parent::buildTableColumn($config, $name, $options);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function buildViewColumn(Column $column, TableGenerator $generator, array $options)
+    public function buildViewColumn(Column $column, Table $table, array $options)
     {
-        parent::buildViewColumn($column, $generator, $options);
+        parent::buildViewColumn($column, $table, $options);
+
     	$column->setVars(array(
         	'label' => $options['label'],
     	));
@@ -107,19 +109,19 @@ class ActionsType extends AbstractColumnType
     /**
      * {@inheritDoc}
      */
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
 
         $buttons = array();
         foreach($options['buttons'] as $buttonOptions) {
             $parameters = array();
             foreach($buttonOptions['route_parameters_map'] as $parameter => $propertyPath) {
-                $parameters[$parameter] = $propertyAccessor->getValue($entity, $propertyPath);
+                $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }
             $disabled = $buttonOptions['disabled'];
             if(0 < strlen($buttonOptions['disable_property_path'])) {
-                $disabled = $propertyAccessor->getValue($entity, $buttonOptions['disable_property_path']);
+                $disabled = $table->getCurrentRowData($buttonOptions['disable_property_path']);
             }
             $buttons[] = array(
                 'disabled'   => $disabled,

@@ -2,15 +2,25 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
+use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
+/**
+ * Class NestedAnchorType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Column
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class NestedAnchorType extends AnchorType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolverInterface $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults(array(
             'right_property_path'  => 'right',
             'parent_property_path' => 'parent',
@@ -21,20 +31,27 @@ class NestedAnchorType extends AnchorType
         ));
     }
 
-    public function buildViewCell(Cell $cell, PropertyAccessor $propertyAccessor, $entity, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        parent::buildViewCell($cell, $propertyAccessor, $entity, $options);
+        parent::buildViewCell($cell, $table, $options);
+
         $cell->setVars(array(
-        	'tree' => $this->getParentTreeClasses($entity, $propertyAccessor, $options)
+        	'tree' => $this->getParentTreeClasses($table->getCurrentRowData(), $table->getPropertyAccessor(), $options)
         ));
     }
 
-    private function getParentTreeClasses($entity, PropertyAccessor $propertyAccessor, array $options, $level = 0)
+    /**
+     * {@inheritdoc}
+     */
+    private function getParentTreeClasses($data, PropertyAccessor $propertyAccessor, array $options, $level = 0)
     {
-        if(null !== $parent = $propertyAccessor->getValue($entity, $options['parent_property_path'])) {
+        if(null !== $parent = $propertyAccessor->getValue($data, $options['parent_property_path'])) {
             $classes = $this->getParentTreeClasses($parent, $propertyAccessor, $options, $level+1);
 
-            $right = $propertyAccessor->getValue($entity, $options['right_property_path']);
+            $right = $propertyAccessor->getValue($data, $options['right_property_path']);
             $parentRight = $propertyAccessor->getValue($parent, $options['right_property_path']);
 
             if($right === $parentRight - 1) {
@@ -47,6 +64,9 @@ class NestedAnchorType extends AnchorType
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'nested_anchor';
