@@ -25,6 +25,7 @@ class CoreExtension extends AbstractTableExtension
     protected function loadColumnTypes()
     {
         return array(
+        	new Type\Column\SelectorType,
         	new Type\Column\TextType,
             new Type\Column\NumberType,
             new Type\Column\DatetimeType,

@@ -23,11 +23,14 @@ class SelectorType extends AbstractColumnType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(array(
-            'multiple' => false,
+            'multiple'      => false,
+            'property_path' => null,
+            'data_map'      => null,
         ));
-        $resolver->setRequired(array('multiple'));
         $resolver->setAllowedTypes(array(
-            'multiple' => 'bool',
+            'multiple'      => 'bool',
+            'property_path' => array('null', 'string'),
+            'data_map'      => array('null', 'array'),
         ));
     }
 
@@ -38,9 +41,25 @@ class SelectorType extends AbstractColumnType
     {
         parent::buildViewCell($cell, $table, $options);
 
+        if (0 < strlen($options['property_path'])) {
+            $value = $table->getCurrentRowData($options['property_path']);
+        } else {
+            $value = $table->getCurrentRowKey();
+        }
+
+        $data = array();
+        if (is_array($options['data_map'])) {
+            foreach($options['data_map'] as $key => $property_path) {
+                $data[(is_string($key) ? $key : $property_path)] = (string) $table->getCurrentRowData($property_path);
+            }
+        }
+
         $cell->setVars(array(
-            'multiple' => $options['multiple'],
-            'selected' => false,
+            'input_type' => $options['multiple'] ? 'checkbox' : 'radio',
+            'input_name' => $options['full_name'],
+            'value'      => $value,
+            'data'       => $data,
+            'selected'   => false,
         ));
     }
 

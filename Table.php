@@ -48,11 +48,6 @@ final class Table
     private $entityManager;
 
     /**
-     * @var \Doctrine\ORM\QueryBuilder
-     */
-    private $queryBuilder;
-
-    /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     private $propertyAccessor;
@@ -165,6 +160,16 @@ final class Table
     }
 
     /**
+     * Sets the request.
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->requestHelper->setRequest($request);
+    }
+
+    /**
      * Sets the propertyAccessor.
      *
      * @return \Symfony\Component\PropertyAccess\PropertyAccessorInterface
@@ -190,6 +195,16 @@ final class Table
     }
 
     /**
+     * Returns the current row key.
+     *
+     * @return mixed
+     */
+    public function getCurrentRowKey()
+    {
+        return key($this->data->current());
+    }
+
+    /**
      * Creates and returns the table view.
      *
      * @param Request $request
@@ -198,16 +213,22 @@ final class Table
      */
     public function createView(Request $request = null)
     {
-        $this->requestHelper->setRequest($request);
+        if (null !== $request) {
+            $this->requestHelper->setRequest($request);
+        }
 
         $view = new TableView();
         $view->name = $this->getName();
+        $view->options = array(
+            'selector' => $this->config->getSelector(),
+        );
+        $view->selection_form = $this->config->getSelector();
 
         if (!$this->config->hasColumns()) {
             throw new RuntimeException('Table has no columns and cannot be generated.');
         }
 
-        // TODO What if data already set ?
+        // TODO What if data is already set ?
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('a')
             ->from($this->config->getDataClass(), 'a');
@@ -225,7 +246,7 @@ final class Table
         $pager = new Pagerfanta($adapter);
         $pager
             ->setNormalizeOutOfRangePages(true)
-            ->setMaxPerPage($this->config->getNbPerPage())
+            ->setMaxPerPage($this->config->getMaxPerPage())
             ->setCurrentPage($current_page)
         ;
 
@@ -435,7 +456,7 @@ final class Table
         $this->data->first();
         while ($this->data->current()) {
 
-            $row = new Row($this->getCurrentRowData('id'));
+            $row = new Row($this->getCurrentRowData('id')); // TODO getCurrentRowKey() ?
 
             foreach ($columns as $columnOptions) {
                 $cell = new Cell();

@@ -3,7 +3,7 @@
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
-use Ekyna\Component\Table\Exception\RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -100,24 +100,21 @@ class TableBuilder implements TableBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTable()
+    public function getTable(Request $request = null)
     {
         $tableConfig = new TableConfig($this->options['name']);
 
         $defaultSort = null;
         if (is_string($this->options['default_sort'])) {
-            if (!preg_match('#[a-z_]+ ASC|DESC#', $this->options['default_sort'])) {
-                throw new \InvalidArgumentException('The "default_sort" option must be formatted as "column_name ASC|DESC".');
+            if (!preg_match('#[a-z_]+ asc|desc#', $this->options['default_sort'])) {
+                throw new \InvalidArgumentException('The "default_sort" option must be formatted as "column_name asc|desc".');
             }
             $defaultSort = explode(' ', $this->options['default_sort']);
         } elseif (is_array($this->options['default_sort'])) {
-            if (!(is_string($this->options['default_sort'][0]) && !in_array($this->options['default_sort'][1], array('ASC', 'DESC')))) {
-                throw new \InvalidArgumentException('The "default_sort" option must be formatted as ["column_name", "ASC"|"DESC"].');
+            if (!(is_string($this->options['default_sort'][0]) && in_array($this->options['default_sort'][1], array('asc', 'desc')))) {
+                throw new \InvalidArgumentException('The "default_sort" option must be formatted as ["column_name", "asc"|"desc"].');
             }
             $defaultSort = $this->options['default_sort'];
-        }
-        if (null !== $defaultSort && !array_key_exists($defaultSort[0], $this->columns)) {
-            throw new \InvalidArgumentException(sprintf('Column "%s" not found (table default_sort option).', $defaultSort[0]));
         }
 
         if (null !== $this->options['data_class'] && !class_exists($this->options['data_class'])) {
@@ -127,9 +124,21 @@ class TableBuilder implements TableBuilderInterface
         $tableConfig
             ->setDataClass($this->options['data_class'])
             ->setDefaultSort($defaultSort)
-            ->setNbPerPage($this->options['nb_per_page'])
+            ->setMaxPerPage($this->options['max_per_page'])
             ->setCustomizeQb($this->options['customize_qb'])
+            ->setSelector($this->options['selector'])
+            ->setSelectorConfig($this->options['selector_config'])
         ;
+
+        // TODO Batch actions
+
+        if ($tableConfig->getSelector()) {
+            $selectorConfig = $tableConfig->getSelectorConfig();
+            if (true === $this->options['multiple']) {
+                $selectorConfig['multiple'] = true;
+            }
+            $this->factory->createColumn($tableConfig, 'selector', 'selector', $selectorConfig);
+        }
 
         foreach($this->columns as $name => $definition) {
             list($type, $options) = $definition;
@@ -149,6 +158,7 @@ class TableBuilder implements TableBuilderInterface
             ->setFactory($this->factory)
             ->setEntityManager($em)
             ->setData($this->options['data'])
+            ->setRequest($request)
         ;
 
         return $table;

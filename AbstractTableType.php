@@ -22,23 +22,29 @@ abstract class AbstractTableType implements TableTypeInterface
         };
 
         $resolver->setDefaults(array(
-            'name'         => $this->getName(),
-            'data'         => null,
-            'data_class'   => $dataClass,
-            'em'           => null,
-            'default_sort' => null,
-            'nb_per_page'  => 15,
-            'customize_qb' => null,
+            'name'            => $this->getName(),
+            'data'            => null,
+            'data_class'      => $dataClass,
+            'em'              => null,
+            'default_sort'    => null,
+            'max_per_page'    => 15,
+            'customize_qb'    => null,
+            'selector'        => false,
+            'multiple'        => false,
+            'selector_config' => null,
         ));
 
         $resolver->setAllowedTypes(array(
-            'name'         => 'string',
-            'data'         => array('null', 'array', 'Doctrine\Common\Collections\Collection'),
-            'data_class'   => 'string',
-            'em'           => array('null', 'Doctrine\Common\Persistence\ObjectManager'),
-            'default_sort' => array('null', 'string'),
-            'nb_per_page'  => 'int',
-            'customize_qb' => array('null', 'callable'),
+            'name'            => 'string',
+            'data'            => array('null', 'array', 'Doctrine\Common\Collections\Collection'),
+            'data_class'      => 'string',
+            'em'              => array('null', 'Doctrine\Common\Persistence\ObjectManager'),
+            'default_sort'    => array('null', 'array', 'string'),
+            'max_per_page'    => 'int',
+            'customize_qb'    => array('null', 'callable'),
+            'selector'        => 'bool',
+            'multiple'        => 'bool',
+            'selector_config' => array('null', 'array'),
         ));
 
         $resolver->setRequired(array('data_class', 'name'));

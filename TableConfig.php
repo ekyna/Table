@@ -37,12 +37,22 @@ class TableConfig
     /**
      * @var integer
      */
-    protected $nbPerPage;
+    protected $maxPerPage;
 
     /**
      * @var callable
      */
     protected $customizeQb;
+
+    /**
+     * @var boolean
+     */
+    protected $selector = false;
+
+    /**
+     * @var array
+     */
+    protected $selectorConfig;
 
     /**
      * Constructor.
@@ -183,25 +193,25 @@ class TableConfig
     }
 
     /**
-     * Sets the nbPerPage.
+     * Sets the maxPerPage.
      *
-     * @param int $nbPerPage
+     * @param int $maxPerPage
      * @return TableConfig
      */
-    public function setNbPerPage($nbPerPage)
+    public function setMaxPerPage($maxPerPage)
     {
-        $this->nbPerPage = $nbPerPage;
+        $this->maxPerPage = $maxPerPage;
         return $this;
     }
 
     /**
-     * Returns the nbPerPage.
+     * Returns the maxPerPage.
      *
      * @return int
      */
-    public function getNbPerPage()
+    public function getMaxPerPage()
     {
-        return $this->nbPerPage;
+        return $this->maxPerPage;
     }
 
     /**
@@ -224,5 +234,49 @@ class TableConfig
     public function getCustomizeQb()
     {
         return $this->customizeQb;
+    }
+
+    /**
+     * Sets the selector.
+     *
+     * @param boolean $selector
+     * @return TableConfig
+     */
+    public function setSelector($selector)
+    {
+        $this->selector = $selector;
+        return $this;
+    }
+
+    /**
+     * Returns the selector.
+     *
+     * @return boolean
+     */
+    public function getSelector()
+    {
+        return $this->selector;
+    }
+
+    /**
+     * Sets the selectorConfig.
+     *
+     * @param array $selectorConfig
+     * @return TableConfig
+     */
+    public function setSelectorConfig(array $selectorConfig = null)
+    {
+        $this->selectorConfig = $selectorConfig;
+        return $this;
+    }
+
+    /**
+     * Returns the selectorConfig.
+     *
+     * @return array
+     */
+    public function getSelectorConfig()
+    {
+        return $this->selectorConfig;
     }
 }
