@@ -240,19 +240,19 @@ final class Table
             $customizeQb($queryBuilder);
         }
 
-        $current_page = $this->requestHelper->getVar($this->getName().'_page', 1);
+        $currentPage = $this->requestHelper->getVar($this->getName().'_page', 1);
 
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $pager = new Pagerfanta($adapter);
         $pager
             ->setNormalizeOutOfRangePages(true)
             ->setMaxPerPage($this->config->getMaxPerPage())
-            ->setCurrentPage($current_page)
+            ->setCurrentPage($currentPage)
         ;
 
         $this->setData($pager->getCurrentPageResults());
 
-        if($current_page != $pager->getCurrentPage()) {
+        if($currentPage != $pager->getCurrentPage()) {
             $this->requestHelper->setVar($this->getName().'_page', $pager->getCurrentPage());
         }
 

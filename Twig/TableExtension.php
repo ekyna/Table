@@ -37,7 +37,7 @@ class TableExtension extends \Twig_Extension
      * 
      * @param \Twig_Environment    $environment
      * @param ViewFactoryInterface $viewFactory
-     * @param array                $options
+     * @param string               $template
      */
     public function __construct(\Twig_Environment $environment, ViewFactoryInterface $viewFactory, $template)
     {
@@ -91,8 +91,7 @@ class TableExtension extends \Twig_Extension
     /**
      * Renders a cell
      *
-     * @param array $vars
-     * @param array $options
+     * @param Cell $cell
      *
      * @return string
      */
@@ -135,7 +134,7 @@ class TableExtension extends \Twig_Extension
     /**
      * Generates a column sort path
      * 
-     * @param ColumnInterface $column
+     * @param Column $column
      * 
      * @return string
      */
