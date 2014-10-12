@@ -228,16 +228,20 @@ final class Table
             throw new RuntimeException('Table has no columns and cannot be generated.');
         }
 
-        // TODO What if data is already set ?
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('a')
-            ->from($this->config->getDataClass(), 'a');
+        $class = $this->config->getDataClass();
+        $alias = strtolower(substr($class, strrpos($class, '\\')+1, 1));
 
-        $this->generateFilters($queryBuilder, $view);
-        $this->generateColumns($queryBuilder, $view);
+        // TODO What if data is already set ?
+        $queryBuilder = $this->entityManager
+            ->createQueryBuilder()
+            ->select($alias)
+            ->from($this->config->getDataClass(), $alias);
+
+        $this->generateFilters($queryBuilder, $view, $alias);
+        $this->generateColumns($queryBuilder, $view, $alias);
 
         if (null !== $customizeQb = $this->config->getCustomizeQb()) {
-            $customizeQb($queryBuilder);
+            $customizeQb($queryBuilder, $alias);
         }
 
         $currentPage = $this->requestHelper->getVar($this->getName().'_page', 1);
@@ -306,8 +310,9 @@ final class Table
      *
      * @param QueryBuilder $queryBuilder
      * @param TableView    $view
+     * @param string       $alias
      */
-    private function generateFilters(QueryBuilder $queryBuilder, TableView $view)
+    private function generateFilters(QueryBuilder $queryBuilder, TableView $view, $alias)
     {
         if (null !== $removedFilterId = $this->requestHelper->getRequestVar('remove_filter')) {
             // Remove an active filter
@@ -356,7 +361,7 @@ final class Table
             $type->buildActiveFilters($view, $datas);
 
             // Configures the query builder.
-            $queryBuilder->andWhere(sprintf('%s.%s %s ?%s', 'a', $datas['property_path'], FilterOperator::getExpression($datas['operator']), $count));
+            $queryBuilder->andWhere(sprintf('%s.%s %s ?%s', $alias, $datas['property_path'], FilterOperator::getExpression($datas['operator']), $count));
             $queryBuilder->setParameter($count, FilterOperator::formatValue($datas['operator'], $datas['value']));
 
             $count++;
@@ -368,8 +373,9 @@ final class Table
      *
      * @param QueryBuilder $queryBuilder
      * @param TableView $view
+     * @param string       $alias
      */
-    private function generateColumns(QueryBuilder $queryBuilder, TableView $view)
+    private function generateColumns(QueryBuilder $queryBuilder, TableView $view, $alias)
     {
         $sortDirs = array(ColumnSort::ASC, ColumnSort::DESC);
         $newSortedColumnName = null;
@@ -412,7 +418,7 @@ final class Table
     	            $columnOptions['sorted']   = true;
 
                     // Configure query builder.
-                    $queryBuilder->addOrderBy('a.'.$columnOptions['property_path'], strtoupper($sortDir));
+                    $queryBuilder->addOrderBy($alias.'.'.$columnOptions['property_path'], strtoupper($sortDir));
                     $userSort = true;
 
                     // Stores user sorting in session.
@@ -432,7 +438,7 @@ final class Table
         // Default sort if not user sorted.
         if (!$userSort && null !== $sort = $this->config->getDefaultSort()) {
             list($sortBy, $sortDir) = $sort;
-            $queryBuilder->addOrderBy('a.'.$sortBy, $sortDir);
+            $queryBuilder->addOrderBy($alias.'.'.$sortBy, $sortDir);
         }
     }
 

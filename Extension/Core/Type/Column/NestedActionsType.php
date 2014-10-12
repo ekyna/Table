@@ -101,7 +101,7 @@ class NestedActionsType extends ActionsType
                     $moveUpButton['parameters'] = $parameters;
                 }
 
-                // TODO: fs last root child => disable
+                // TODO: if last root child => disable
                 $moveDownButton['route'] = $options['move_down_route'];
                 $moveDownButton['parameters'] = $parameters;
             }
