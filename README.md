@@ -5,7 +5,5 @@ This component aims to provide Html table generation from DBAL, designed like Sy
 It allows for multiple filters on the same property, column sorting and pagination.
 
 ## Instation / Configuration
-Through ekyna/TableBundle
+See [ekyna/TableBundle](https://github.com/ekyna/TableBundle)
 
-## Creating a TableType
-TODO
