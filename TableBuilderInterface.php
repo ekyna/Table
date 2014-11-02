@@ -3,8 +3,8 @@
 namespace Ekyna\Component\Table;
 
 /**
- * TableBuilderInterface
- *
+ * Interface TableBuilderInterface
+ * @package Ekyna\Component\Table
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 interface TableBuilderInterface

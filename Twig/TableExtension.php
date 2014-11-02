@@ -10,6 +10,11 @@ use Ekyna\Component\Table\View\AvailableFilter;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Pagerfanta\View\ViewFactoryInterface;
 
+/**
+ * Class TableExtension
+ * @package Ekyna\Component\Table\Twig
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class TableExtension extends \Twig_Extension
 {
     /**
@@ -45,13 +50,13 @@ class TableExtension extends \Twig_Extension
         $this->viewFactory = $viewFactory;
         $this->defaultOptions = array_merge(array(
             'class' => null,
-            'template' => __DIR__.'/../Resources/views/ekyna_table.html.twig',
+            'template' => __DIR__.'/../Resources/views/table.html.twig',
         ), array(
         	'template' => $template
         ));
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function getFunctions()
@@ -98,9 +103,9 @@ class TableExtension extends \Twig_Extension
     public function renderCell(Cell $cell)
     {
         $block = $cell->vars['type'].'_cell';
-        if(!$this->template->hasBlock($block)) {
+        /*if(!$this->template->hasBlock($block)) {
             $block = 'text_cell';
-        }
+        }*/
         return trim($this->template->renderBlock($block, array('vars' => $cell->vars)));
     }
 

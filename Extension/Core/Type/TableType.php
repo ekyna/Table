@@ -3,9 +3,23 @@
 namespace Ekyna\Component\Table\Extension\Core\Type;
 
 use Ekyna\Component\Table\AbstractTableType;
+use Ekyna\Component\Table\TableBuilderInterface;
 
+/**
+ * Class TableType
+ * @package Ekyna\Component\Table\Extension\Core\Type
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class TableType extends AbstractTableType
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function buildTable(TableBuilderInterface $builder)
+    {
+
+    }
+
     /**
      * Returns the type name
      */

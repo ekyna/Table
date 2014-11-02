@@ -2,6 +2,11 @@
 
 namespace Ekyna\Component\Table;
 
+/**
+ * Interface TableRegistryInterface
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 interface TableRegistryInterface
 {
     /**

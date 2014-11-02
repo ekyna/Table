@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table;
 
+use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Ekyna\Component\Table\View\AvailableFilter;
@@ -12,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Class AbstractFilterType
  * @package Ekyna\Component\Table
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author Ã‰tienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractFilterType implements FilterTypeInterface
 {
@@ -72,7 +73,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildActiveFilters(TableView $view, array $datas)
+    public function buildActiveFilter(TableView $view, array $datas, array $options)
     {
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
@@ -83,5 +84,18 @@ abstract class AbstractFilterType implements FilterTypeInterface
             'value'     => $datas['value']
         ));
         $view->active_filters[] = $activeFilter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function applyFilter(QueryBuilder $qb, array $datas)
+    {
+        $alias = $qb->getRootAliases()[0];
+        //var_dump($datas['value']);
+        $qb->andWhere(FilterOperator::buildExpression($alias.'.'.$datas['property_path'], $datas['operator'], $datas['value']));
+
+        //$queryBuilder->andWhere(sprintf('%s.%s %s ?%s', $alias, $datas['property_path'], FilterOperator::getExpression($datas['operator']), $count));
+        //$queryBuilder->setParameter($count, FilterOperator::formatValue($datas['operator'], $datas['value']));
     }
 }

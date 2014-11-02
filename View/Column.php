@@ -4,6 +4,11 @@ namespace Ekyna\Component\Table\View;
 
 use Ekyna\Component\Table\Util\ColumnSort;
 
+/**
+ * Class Column
+ * @package Ekyna\Component\Table\View
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class Column
 {
     private $vars = array(

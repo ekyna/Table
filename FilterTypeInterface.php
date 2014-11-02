@@ -2,10 +2,16 @@
 
 namespace Ekyna\Component\Table;
 
+use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\View\AvailableFilter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Interface FilterTypeInterface
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 interface FilterTypeInterface
 {
     /**
@@ -16,7 +22,7 @@ interface FilterTypeInterface
     public function configureOptions(OptionsResolverInterface $resolver);
     
     /**
-     * Adds a filter to the given table (Called by TableBuilder via TableFactory)
+     * Adds a filter to the given table
      * 
      * @param TableConfig $config
      * @param string      $name
@@ -25,7 +31,7 @@ interface FilterTypeInterface
     public function buildTableFilter(TableConfig $config, $name, array $options = array());
 
     /**
-     * Sets available filter vars (Called by TableGenerator)
+     * Sets available filter vars
      *
      * @param AvailableFilter $filter
      * @param array           $options
@@ -33,15 +39,22 @@ interface FilterTypeInterface
     public function buildAvailableFilter(AvailableFilter $filter, array $options);
 
     /**
-     * Adds active filter (Called by TableGenerator)
+     * Adds active filter
      * and returns criteria
      * 
      * @param TableView $view
      * @param array     $datas
-     * 
-     * @return array
+     * @param array     $options
      */
-    public function buildActiveFilters(TableView $view, array $datas);
+    public function buildActiveFilter(TableView $view, array $datas, array $options);
+
+    /**
+     * Applies the filter to the query builder.
+     *
+     * @param QueryBuilder $qb
+     * @param array        $datas
+     */
+    public function applyFilter(QueryBuilder $qb, array $datas);
 
     /**
      * Creates the filter form widget

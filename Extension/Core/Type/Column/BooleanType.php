@@ -1,17 +1,16 @@
 <?php
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
-
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class AnchorType
+ * Class BooleanType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class AnchorType extends PropertyType
+class BooleanType extends PropertyType
 {
     /**
      * {@inheritdoc}
@@ -20,13 +19,15 @@ class AnchorType extends PropertyType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(
+            'true_label' => 'ekyna_core.value.yes',
+            'false_label' => 'ekyna_core.value.no',
             'route_name' => null,
-            'route_parameters_map' => array(),
+            'route_parameters_map' => null,
         ));
         $resolver->setRequired(array('route_name'));
         $resolver->setAllowedTypes(array(
-            'route_name'           => 'string',
-            'route_parameters_map' => 'array',
+            'route_name'           => array('null', 'string'),
+            'route_parameters_map' => array('null', 'array'),
         ));
     }
 
@@ -37,10 +38,13 @@ class AnchorType extends PropertyType
     {
         parent::buildViewCell($cell, $table, $options);
         $parameters = array();
-        foreach($options['route_parameters_map'] as $parameter => $propertyPath) {
-            $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
+        if (is_array($options['route_parameters_map'])) {
+            foreach ($options['route_parameters_map'] as $parameter => $propertyPath) {
+                $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
+            }
         }
         $cell->setVars(array(
+            'label'      => $cell->vars['value'] ? $options['true_label'] : $options['false_label'],
             'route'      => $options['route_name'],
             'parameters' => $parameters,
         ));
@@ -51,6 +55,6 @@ class AnchorType extends PropertyType
      */
     public function getName()
     {
-        return 'anchor';
+        return 'boolean';
     }
-}
+} 

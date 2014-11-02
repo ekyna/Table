@@ -4,6 +4,11 @@ namespace Ekyna\Component\Table;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Interface TableTypeInterface
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 interface TableTypeInterface
 {
     /**

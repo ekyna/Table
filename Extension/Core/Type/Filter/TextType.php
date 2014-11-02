@@ -7,7 +7,9 @@ use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * TextType
+ * Class TextType
+ * @package Ekyna\Component\Table\Extension\Core\Type\Filter
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class TextType extends AbstractFilterType
 {

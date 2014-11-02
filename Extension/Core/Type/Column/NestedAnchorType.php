@@ -10,7 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * Class NestedAnchorType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author Ã‰tienne Dauvergne <contact@ekyna.com>
  */
 class NestedAnchorType extends AnchorType
 {

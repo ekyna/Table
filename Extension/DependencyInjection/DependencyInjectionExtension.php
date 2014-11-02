@@ -6,6 +6,11 @@ use Ekyna\Component\Table\TableExtensionInterface;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class DependencyInjectionExtension
+ * @package Ekyna\Component\Table\Extension\DependencyInjection
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class DependencyInjectionExtension implements TableExtensionInterface
 {
     private $container;

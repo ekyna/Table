@@ -3,17 +3,17 @@
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\AbstractFilterType;
-use Ekyna\Component\Table\Util\FilterOperator;
-use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\TableView;
+use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class DatetimeType
+ * Class BooleanType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class DatetimeType extends AbstractFilterType
+class BooleanType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -25,12 +25,13 @@ class DatetimeType extends AbstractFilterType
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
             ))
-            ->add('value', 'datetime', array(
+            ->add('value', 'choice', array(
                 'label' => false,
-                'input'  => 'datetime',
-                'widget' => 'single_text',
-            ))
-        ;
+                'choices' => array(
+                    true => 'ekyna_core.value.yes',
+                    false => 'ekyna_core.value.no',
+                )
+            ));
     }
 
     /**
@@ -41,10 +42,10 @@ class DatetimeType extends AbstractFilterType
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
-            'id'        => $datas['id'],
-            'field'     => $datas['label'],
-            'operator'  => FilterOperator::getLabel($datas['operator']),
-            'value'     => $datas['value']->format('d/m/Y H:i')
+            'id' => $datas['id'],
+            'field' => $datas['label'],
+            'operator' => FilterOperator::getLabel($datas['operator']),
+            'value' => $datas['value'] ? 'ekyna_core.value.yes' : 'ekyna_core.value.no',
         ));
         $view->active_filters[] = $activeFilter;
     }
@@ -57,10 +58,6 @@ class DatetimeType extends AbstractFilterType
         return array(
             FilterOperator::EQUAL,
             FilterOperator::NOT_EQUAL,
-            FilterOperator::LOWER_THAN,
-            FilterOperator::LOWER_THAN_OR_EQUAL,
-            FilterOperator::GREATER_THAN,
-            FilterOperator::GREATER_THAN_OR_EQUAL,
         );
     }
 
@@ -69,6 +66,6 @@ class DatetimeType extends AbstractFilterType
      */
     public function getName()
     {
-    	return 'datetime';
+        return 'boolean';
     }
 }

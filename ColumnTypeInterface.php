@@ -8,7 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * ColumnTypeInterface
+ * Interface ColumnTypeInterface
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 interface ColumnTypeInterface
 {

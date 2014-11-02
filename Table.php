@@ -4,13 +4,10 @@ namespace Ekyna\Component\Table;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\Exception\RuntimeException;
 use Ekyna\Component\Table\Request\RequestHelper;
 use Ekyna\Component\Table\Util\ColumnSort;
-use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\AvailableFilter;
 use Ekyna\Component\Table\View\Cell;
 use Ekyna\Component\Table\View\Column;
@@ -237,8 +234,8 @@ final class Table
             ->select($alias)
             ->from($this->config->getDataClass(), $alias);
 
-        $this->generateFilters($queryBuilder, $view, $alias);
-        $this->generateColumns($queryBuilder, $view, $alias);
+        $this->generateFilters($queryBuilder, $view);
+        $this->generateColumns($queryBuilder, $view);
 
         if (null !== $customizeQb = $this->config->getCustomizeQb()) {
             $customizeQb($queryBuilder, $alias);
@@ -275,6 +272,11 @@ final class Table
      */
     private function createActiveFilter($filterOptions, $formData)
     {
+        // TODO real form validation
+        if (empty($formData['value'])) {
+            return;
+        }
+
         $activesFilters = $this->requestHelper->getSessionVar($this->getName().'_filters', array());
         $activesFilters[] = array(
             'full_name'     => $filterOptions['full_name'],
@@ -310,9 +312,8 @@ final class Table
      *
      * @param QueryBuilder $queryBuilder
      * @param TableView    $view
-     * @param string       $alias
      */
-    private function generateFilters(QueryBuilder $queryBuilder, TableView $view, $alias)
+    private function generateFilters(QueryBuilder $queryBuilder, TableView $view)
     {
         if (null !== $removedFilterId = $this->requestHelper->getRequestVar('remove_filter')) {
             // Remove an active filter
@@ -343,28 +344,30 @@ final class Table
             }
         }
 
+        // Build available filters
         foreach ($this->config->getFilters() as $filterOptions) {
             // Filter type
             $type = $this->factory->getFilterType($filterOptions['type']);
 
-            // Build available filters
+            // Build available filter
             $availableFilter = new AvailableFilter();
             $type->buildAvailableFilter($availableFilter, $filterOptions);
             $view->available_filters[] = $availableFilter;
         }
 
         // Build actives Filters
-        $count = 1;
         foreach ($this->requestHelper->getSessionVar($this->getName().'_filters', array()) as $datas) {
-
+            // Filter type
             $type = $this->factory->getFilterType($datas['type']);
-            $type->buildActiveFilters($view, $datas);
 
-            // Configures the query builder.
-            $queryBuilder->andWhere(sprintf('%s.%s %s ?%s', $alias, $datas['property_path'], FilterOperator::getExpression($datas['operator']), $count));
-            $queryBuilder->setParameter($count, FilterOperator::formatValue($datas['operator'], $datas['value']));
+            if (null === $options = $this->config->findFilterByFullName($datas['full_name'])) {
+                throw new RuntimeException(sprintf('Filter "%s" not found.', $datas['full_name']));
+            }
 
-            $count++;
+            // Build actives Filter
+            $type->buildActiveFilter($view, $datas, $options);
+            // Configure query builder
+            $type->applyFilter($queryBuilder, $datas);
         }
     }
 
@@ -373,9 +376,8 @@ final class Table
      *
      * @param QueryBuilder $queryBuilder
      * @param TableView $view
-     * @param string       $alias
      */
-    private function generateColumns(QueryBuilder $queryBuilder, TableView $view, $alias)
+    private function generateColumns(QueryBuilder $queryBuilder, TableView $view)
     {
         $sortDirs = array(ColumnSort::ASC, ColumnSort::DESC);
         $newSortedColumnName = null;
@@ -401,6 +403,8 @@ final class Table
                 }
             }
         }
+
+        $alias = $queryBuilder->getRootAliases()[0];
 
         // Configure columns options.
         $userSort = false;

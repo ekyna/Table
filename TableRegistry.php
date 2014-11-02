@@ -7,7 +7,9 @@ use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 
 /**
- * TableRegistry
+ * Class TableRegistry
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class TableRegistry implements TableRegistryInterface
 {

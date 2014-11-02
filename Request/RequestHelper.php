@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class RequestHelper
  * @package Ekyna\Component\Table\Request
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author Ã‰tienne Dauvergne <contact@ekyna.com>
  */
 class RequestHelper
 {

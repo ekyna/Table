@@ -2,6 +2,11 @@
 
 namespace Ekyna\Component\Table;
 
+/**
+ * Class TableView
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class TableView
 {
     public $name = null;

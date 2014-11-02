@@ -5,7 +5,9 @@ namespace Ekyna\Component\Table\Extension\Core;
 use Ekyna\Component\Table\AbstractTableExtension;
 
 /**
- * CoreExtension
+ * Class CoreExtension
+ * @package Ekyna\Component\Table\Extension\Core
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class CoreExtension extends AbstractTableExtension
 {
@@ -28,6 +30,7 @@ class CoreExtension extends AbstractTableExtension
         	new Type\Column\SelectorType,
         	new Type\Column\TextType,
             new Type\Column\NumberType,
+            new Type\Column\BooleanType,
             new Type\Column\DatetimeType,
             new Type\Column\ImageType,
             new Type\Column\AnchorType,
@@ -44,6 +47,8 @@ class CoreExtension extends AbstractTableExtension
             new Type\Filter\TextType,
             new Type\Filter\NumberType,
             new Type\Filter\DatetimeType,
+            new Type\Filter\BooleanType,
+            //new Type\Filter\EntityType,
         );
     }
 }

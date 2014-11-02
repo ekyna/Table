@@ -5,6 +5,11 @@ namespace Ekyna\Component\Table;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 
+/**
+ * Class AbstractTableExtension
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 abstract class AbstractTableExtension implements TableExtensionInterface
 {
     /**

@@ -1,11 +1,14 @@
 <?php
 
 namespace Ekyna\Component\Table;
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormFactory;
 
 /**
- * TableFactory
+ * Class TableFactory
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class TableFactory
 {

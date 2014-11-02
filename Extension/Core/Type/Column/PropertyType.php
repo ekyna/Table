@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Class PropertyType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author Ã‰tienne Dauvergne <contact@ekyna.com>
  */
 abstract class PropertyType extends AbstractColumnType
 {

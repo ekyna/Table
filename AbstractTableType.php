@@ -5,6 +5,11 @@ namespace Ekyna\Component\Table;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class AbstractTableType
+ * @package Ekyna\Component\Table
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 abstract class AbstractTableType implements TableTypeInterface
 {
     /**

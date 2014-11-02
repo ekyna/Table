@@ -2,6 +2,11 @@
 
 namespace Ekyna\Component\Table\View;
 
+/**
+ * Class ActiveFilter
+ * @package Ekyna\Component\Table\View
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
 class ActiveFilter
 {
     private $vars = array(

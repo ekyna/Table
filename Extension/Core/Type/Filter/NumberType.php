@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Class NumberType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author Ã‰tienne Dauvergne <contact@ekyna.com>
  */
 class NumberType extends AbstractFilterType
 {
