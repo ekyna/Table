@@ -106,7 +106,7 @@ class TableExtension extends \Twig_Extension
         /*if(!$this->template->hasBlock($block)) {
             $block = 'text_cell';
         }*/
-        return trim($this->template->renderBlock($block, array('vars' => $cell->vars)));
+        return trim($this->template->renderBlock($block, $cell->vars));
     }
 
     /**

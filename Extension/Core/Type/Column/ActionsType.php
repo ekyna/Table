@@ -48,6 +48,7 @@ class ActionsType extends AbstractColumnType
             'icon'                  => '',
             'class'                 => 'default',
             'route_name'            => null,
+            'route_parameters'      => array(),
             'route_parameters_map'  => array(),
             'disabled'              => false,
             'disable_property_path' => '',
@@ -56,6 +57,7 @@ class ActionsType extends AbstractColumnType
         $resolver->setAllowedTypes(array(
             'label'                 => 'string',
             'route_name'            => 'string',
+            'route_parameters'      => 'array',
             'route_parameters_map'  => 'array',
             'disabled'              => 'bool',
             'disable_property_path' => 'string',
@@ -115,7 +117,7 @@ class ActionsType extends AbstractColumnType
 
         $buttons = array();
         foreach($options['buttons'] as $buttonOptions) {
-            $parameters = array();
+            $parameters = $buttonOptions['route_parameters'];
             foreach($buttonOptions['route_parameters_map'] as $parameter => $propertyPath) {
                 $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }

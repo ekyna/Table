@@ -110,54 +110,53 @@
 
 {% block selector_cell %}
 <td class="selector">
-    <input type="{{ vars.input_type }}" name="{{ vars.input_name }}" value="{{ vars.value }}"{% if vars.selected %} checked{% endif %} data-element='{{ vars.data|json_encode }}' />
+    <input type="{{ input_type }}" name="{{ input_name }}" value="{{ value }}"{% if selected %} checked{% endif %} data-element='{{ data|json_encode }}' />
 </td>
 {% endblock selector_cell %}
 
 {% block text_cell %}
-<td{% if vars.sorted %} class="sorted"{% endif %}>{{ vars.value }}</td>
+<td{% if sorted %} class="sorted"{% endif %}>{{ value }}</td>
 {% endblock text_cell %}
 
 {% block number_cell %}{{ block('text_cell') }}{% endblock number_cell %}
 
 {% block boolean_cell %}
-    <td{% if vars.sorted %} class="sorted"{% endif %}>
-        {% set class = vars.value ? 'label-success' : 'label-danger' %}
-        {% if vars.route is not sameas(null) %}
-            <a href="{{ path(vars.route, vars.parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
+    <td{% if sorted %} class="sorted"{% endif %}>
+        {% if route is not sameas(null) %}
+            <a href="{{ path(route, parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
         {% else %}
             <span class="label {{ class }}">{{ block('boolean_cell_value') }}</span>
         {% endif %}
     </td>
 {% endblock boolean_cell %}
 
-{% block boolean_cell_value %}{{ vars.label }}{% endblock boolean_cell_value %}
+{% block boolean_cell_value %}{{ label }}{% endblock boolean_cell_value %}
 
 {% block datetime_cell %}
-<td{% if vars.sorted %} class="sorted"{% endif %}>
-    {% if vars.value is sameas(null) %}
+<td{% if sorted %} class="sorted"{% endif %}>
+    {% if value is sameas(null) %}
         -
     {% else %}
-        {{ vars.value|localizeddate(vars.date_format, vars.time_format) }}
+        {{ value|localizeddate(date_format, time_format) }}
     {% endif %}
 </td>
 {% endblock datetime_cell %}
 
 {% block image_cell %}
 <td>
-    <img alt="thumbnail" src="{{ vars.value }}" />
+    <img alt="thumbnail" src="{{ value }}" />
 </td>
 {% endblock image_cell %}
 
 {% block anchor_cell %}
-<td{% if vars.sorted %} class="sorted"{% endif %}>
-    <a href="{{ path(vars.route, vars.parameters) }}">{{ vars.value }}</a>
+<td{% if sorted %} class="sorted"{% endif %}>
+    <a href="{{ path(route, parameters) }}">{{ value }}</a>
 </td>
 {% endblock anchor_cell %}
 
 {% block actions_cell %}
 <td class="actions">
-{% for button in vars.buttons %}
+{% for button in buttons %}
 	{% if button.disabled %}
 	    <a href="javascript:void(0)" class="btn btn-xs btn-{{ button.class }} disabled">{{ block('action_button_label') }}</a>
 	{% else %}
@@ -177,7 +176,7 @@
 
 {% block nested_anchor_cell %}
 <td class="nested">
-    {% for class in vars.tree %}<i{% if class|length > 0 %} class="{{ class }}"{% endif %}></i>{% endfor -%}
-    <a href="{{ path(vars.route, vars.parameters) }}">{{ vars.value }}</a>
+    {% for class in tree %}<i{% if class|length > 0 %} class="{{ class }}"{% endif %}></i>{% endfor -%}
+    <a href="{{ path(route, parameters) }}">{{ value }}</a>
 </td>
 {% endblock nested_anchor_cell %}

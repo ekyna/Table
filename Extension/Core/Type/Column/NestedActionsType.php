@@ -28,7 +28,8 @@ class NestedActionsType extends ActionsType
             'new_child_route'       => null,
             'move_up_route'         => null,
             'move_down_route'       => null,
-            'routes_parameters_map' => null,
+            'routes_parameters'     => array(),
+            'routes_parameters_map' => array(),
         ));
         $resolver->setRequired(array('move_up_route', 'move_down_route', 'new_child_route', 'routes_parameters_map'));
         $resolver->setAllowedTypes(array(
@@ -65,7 +66,7 @@ class NestedActionsType extends ActionsType
         $moveDownButton['label'] = 'Déplacer vers le bas';
 
         if (!$disabled) {
-            $parameters = array();
+            $parameters = $options['routes_parameters'];
             foreach($options['routes_parameters_map'] as $parameter => $propertyPath) {
                 $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }

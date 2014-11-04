@@ -19,15 +19,23 @@ class BooleanType extends PropertyType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults(array(
-            'true_label' => 'ekyna_core.value.yes',
+            'true_label'  => 'ekyna_core.value.yes',
             'false_label' => 'ekyna_core.value.no',
-            'route_name' => null,
-            'route_parameters_map' => null,
+            'true_class'  => 'label-success',
+            'false_class' => 'label-danger',
+            'route_name'  => null,
+            'route_parameters' => array(),
+            'route_parameters_map' => array(),
         ));
         $resolver->setRequired(array('route_name'));
         $resolver->setAllowedTypes(array(
-            'route_name'           => array('null', 'string'),
-            'route_parameters_map' => array('null', 'array'),
+            'true_label'  => 'string',
+            'false_label' => 'string',
+            'true_class'  => 'string',
+            'false_class' => 'string',
+            'route_name'  => array('null', 'string'),
+            'route_parameters' => 'array',
+            'route_parameters_map' => 'array',
         ));
     }
 
@@ -37,14 +45,15 @@ class BooleanType extends PropertyType
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
         parent::buildViewCell($cell, $table, $options);
-        $parameters = array();
-        if (is_array($options['route_parameters_map'])) {
-            foreach ($options['route_parameters_map'] as $parameter => $propertyPath) {
-                $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
-            }
+
+        $parameters = $options['route_parameters'];
+        foreach ($options['route_parameters_map'] as $key => $propertyPath) {
+            $parameters[$key] = $table->getCurrentRowData($propertyPath);
         }
+
         $cell->setVars(array(
             'label'      => $cell->vars['value'] ? $options['true_label'] : $options['false_label'],
+            'class'      => $cell->vars['value'] ? $options['true_class'] : $options['false_class'],
             'route'      => $options['route_name'],
             'parameters' => $parameters,
         ));

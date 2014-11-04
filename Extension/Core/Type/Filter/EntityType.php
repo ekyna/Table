@@ -10,6 +10,7 @@ use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Class EntityType
@@ -42,11 +43,15 @@ class EntityType extends AbstractFilterType
 
         $resolver
             ->setDefaults(array(
-                'class' => null,
+                'class'         => null,
+                'property'      => null,
+                'query_builder' => null,
             ))
             ->setRequired(array('class'))
             ->setAllowedTypes(array(
-                'class' => 'string',
+                'class'         => 'string',
+                'property'      => array('null', 'string'),
+                'query_builder' => array('null', 'closure'),
             ))
         ;
     }
@@ -63,8 +68,10 @@ class EntityType extends AbstractFilterType
             ))
             ->add(
                 $builder->create('value', 'entity', array(
-                    'class' => $options['class'],
-                    'multiple' => true,
+                    'class'         => $options['class'],
+                    'multiple'      => true,
+                    'property'      => $options['property'],
+                    'query_builder' => $options['query_builder'],
                 ))->addModelTransformer(
                     new IdentifierToObjectTransformer($this->em->getRepository($options['class']))
                 )
@@ -81,8 +88,20 @@ class EntityType extends AbstractFilterType
 
         $entities = $repo->findBy(array('id' => $datas['value']));
         $values = [];
+
+        if (0 < strlen($property = $options['property'])) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $transform = function($entity) use ($accessor, $property) {
+                return $accessor->getValue($entity, $property);
+            };
+        } else {
+            $transform = function($entity) {
+                return (string) $entity;
+            };
+        }
+
         foreach($entities as $entity) {
-            $values[] = (string) $entity;
+            $values[] = $transform($entity);
         }
 
         $activeFilter = new ActiveFilter();
