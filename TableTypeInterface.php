@@ -15,8 +15,9 @@ interface TableTypeInterface
      * Builds the table.
      * 
      * @param TableBuilderInterface $builder
+     * @param array                 $options
      */
-    public function buildTable(TableBuilderInterface $builder);
+    public function buildTable(TableBuilderInterface $builder, array $options = array());
 
     /**
      * Sets the default options.

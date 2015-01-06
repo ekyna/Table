@@ -4,7 +4,6 @@ namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class TableBuilder
@@ -41,13 +40,16 @@ class TableBuilder implements TableBuilderInterface
     /**
      * Constructor.
      * @param TableTypeInterface $type
+     * @param array              $options
      */
-    public function __construct(TableTypeInterface $type)
+    public function __construct(TableTypeInterface $type, array $options)
     {
         $this->type = $type;
 
         $this->columns = array();
         $this->filters = array();
+
+        $this->options = $options;
     }
 
     /**
@@ -87,34 +89,23 @@ class TableBuilder implements TableBuilderInterface
     }
 
     /**
-     * @param array $options
-     */
-    public function setOptions(array $options = array())
-    {
-        $resolver = new OptionsResolver();
-        $this->type->setDefaultOptions($resolver);
-
-        $this->options = $resolver->resolve($options);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getTable(Request $request = null)
     {
         $tableConfig = new TableConfig($this->options['name']);
 
-        $defaultSort = null;
-        if (is_string($this->options['default_sort'])) {
-            if (!preg_match('#[a-z_]+ asc|desc#', $this->options['default_sort'])) {
-                throw new \InvalidArgumentException('The "default_sort" option must be formatted as "column_name asc|desc".');
+        $defaultSorts = [];
+        $defaultSortsConfig = $this->options['default_sorts'];
+        if (is_string($defaultSortsConfig)) {
+            $defaultSortsConfig = array($defaultSortsConfig);
+        }
+        //var_dump($defaultSortsConfig);
+        foreach($defaultSortsConfig as $defaultSort) {
+            if (!preg_match('#^[a-z_]+ asc|desc$#i', $defaultSort)) {
+                throw new \InvalidArgumentException('The "default_sorts" option must be an array of string formatted as "column_name asc|desc".');
             }
-            $defaultSort = explode(' ', $this->options['default_sort']);
-        } elseif (is_array($this->options['default_sort'])) {
-            if (!(is_string($this->options['default_sort'][0]) && in_array($this->options['default_sort'][1], array('asc', 'desc')))) {
-                throw new \InvalidArgumentException('The "default_sort" option must be formatted as ["column_name", "asc"|"desc"].');
-            }
-            $defaultSort = $this->options['default_sort'];
+            $defaultSorts[] = $defaultSort;
         }
 
         if (null !== $this->options['data_class'] && !class_exists($this->options['data_class'])) {
@@ -123,7 +114,7 @@ class TableBuilder implements TableBuilderInterface
 
         $tableConfig
             ->setDataClass($this->options['data_class'])
-            ->setDefaultSort($defaultSort)
+            ->setDefaultSorts($defaultSorts)
             ->setMaxPerPage($this->options['max_per_page'])
             ->setCustomizeQb($this->options['customize_qb'])
             ->setSelector($this->options['selector'])

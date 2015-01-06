@@ -15,7 +15,7 @@ abstract class AbstractTableType implements TableTypeInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function buildTable(TableBuilderInterface $builder);
+    abstract public function buildTable(TableBuilderInterface $builder, array $options = array());
 
     /**
      * {@inheritdoc}
@@ -31,7 +31,7 @@ abstract class AbstractTableType implements TableTypeInterface
             'data'            => null,
             'data_class'      => $dataClass,
             'em'              => null,
-            'default_sort'    => null,
+            'default_sorts'   => array(),
             'max_per_page'    => 15,
             'customize_qb'    => null,
             'selector'        => false,
@@ -44,7 +44,7 @@ abstract class AbstractTableType implements TableTypeInterface
             'data'            => array('null', 'array', 'Doctrine\Common\Collections\Collection'),
             'data_class'      => 'string',
             'em'              => array('null', 'Doctrine\Common\Persistence\ObjectManager'),
-            'default_sort'    => array('null', 'array', 'string'),
+            'default_sorts'   => 'array',
             'max_per_page'    => 'int',
             'customize_qb'    => array('null', 'callable'),
             'selector'        => 'bool',

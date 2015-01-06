@@ -32,7 +32,7 @@ class TableConfig
     /**
      * @var array
      */
-    protected $defaultSort;
+    protected $defaultSorts;
 
     /**
      * @var integer
@@ -60,6 +60,8 @@ class TableConfig
     public function __construct($name)
     {
         $this->name = preg_replace('#[^a-zA-Z_]#', '_', $name);
+
+        $this->defaultSorts = array();
 
         $this->columns = array();
         $this->filters = array();
@@ -173,12 +175,12 @@ class TableConfig
     /**
      * Sets the default sort.
      *
-     * @param array $defaultSort
+     * @param array $defaultSorts
      * @return TableConfig
      */
-    public function setDefaultSort(array $defaultSort = null)
+    public function setDefaultSorts(array $defaultSorts = array())
     {
-        $this->defaultSort = $defaultSort;
+        $this->defaultSorts = $defaultSorts;
         return $this;
     }
 
@@ -187,9 +189,9 @@ class TableConfig
      *
      * @return array
      */
-    public function getDefaultSort()
+    public function getDefaultSorts()
     {
-        return $this->defaultSort;
+        return $this->defaultSorts;
     }
 
     /**

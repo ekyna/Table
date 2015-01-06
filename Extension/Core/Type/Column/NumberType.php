@@ -9,6 +9,8 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
  */
 class NumberType extends PropertyType
 {
+    // TODO precision, (twig) number_format
+
     public function getName()
     {
     	return 'number';

@@ -4,6 +4,7 @@ namespace Ekyna\Component\Table;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class TableFactory
@@ -113,13 +114,15 @@ class TableFactory
     {
         $type = $type instanceof TableTypeInterface ? $type : $this->getTableType($type);
 
-        $builder = new TableBuilder($type);
+        // TODO wrong place
+        $resolver = new OptionsResolver();
+        $type->setDefaultOptions($resolver);
+        $resolvedOptions = $resolver->resolve($options);
 
-        $builder
-            ->setFactory($this)
-            ->setOptions($options)
-        ;
-        $type->buildTable($builder);
+        $builder = new TableBuilder($type, $resolvedOptions);
+        $builder->setFactory($this);
+
+        $type->buildTable($builder, $resolvedOptions);
 
         return $builder;
     }

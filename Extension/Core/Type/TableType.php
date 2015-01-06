@@ -15,7 +15,7 @@ class TableType extends AbstractTableType
     /**
      * {@inheritdoc}
      */
-    public function buildTable(TableBuilderInterface $builder)
+    public function buildTable(TableBuilderInterface $builder, array $options = array())
     {
 
     }

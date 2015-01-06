@@ -440,9 +440,12 @@ final class Table
         unset($columnOptions);
 
         // Default sort if not user sorted.
-        if (!$userSort && null !== $sort = $this->config->getDefaultSort()) {
-            list($sortBy, $sortDir) = $sort;
-            $queryBuilder->addOrderBy($alias.'.'.$sortBy, $sortDir);
+        $defaultSorts = $this->config->getDefaultSorts();
+        if (!$userSort && !empty($defaultSorts)) {
+            foreach($defaultSorts as $defaultSort) {
+                list($sortBy, $sortDir) = explode(' ', $defaultSort);
+                $queryBuilder->addOrderBy($alias . '.' . $sortBy, $sortDir);
+            }
         }
     }
 
