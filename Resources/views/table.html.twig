@@ -176,7 +176,19 @@
 
 {% block nested_anchor_cell %}
 <td class="nested">
-    {% for class in tree %}<i{% if class|length > 0 %} class="{{ class }}"{% endif %}></i>{% endfor -%}
+    {#% for class in tree %}<i{% if class|length > 0 %} class="{{ class }}"{% endif %}></i>{% endfor -%}
+	{% if children_ids|length > 0 -%}
+		<a href="javascript: void(0);" class="toggle toggle-close" data-children="{{ children_ids|json_encode }}"></a>
+	{%- else -%}
+		<i class="no-children"></i>
+	{%- endif %#}
+	{%- for node in nodes %}
+		{%- if node.type == 'button' -%}
+		<a href="javascript: void(0);" class="{{ node.class }}" data-children="{{ node.children }}"></a>
+		{%- else -%}
+		<i class="{{ node.class }}"></i>
+		{%- endif -%}
+	{% endfor -%}
     <a href="{{ path(route, parameters) }}">{{ value }}</a>
 </td>
 {% endblock nested_anchor_cell %}

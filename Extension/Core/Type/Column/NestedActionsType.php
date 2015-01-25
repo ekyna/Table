@@ -31,12 +31,21 @@ class NestedActionsType extends ActionsType
             'routes_parameters'     => array(),
             'routes_parameters_map' => array(),
         ));
-        $resolver->setRequired(array('move_up_route', 'move_down_route', 'new_child_route', 'routes_parameters_map'));
+        $resolver->setRequired(array(
+            'move_up_route',
+            'move_down_route',
+            'new_child_route',
+            'routes_parameters_map',
+        ));
         $resolver->setAllowedTypes(array(
             'disable_property_path' => 'string',
+            'left_property_path'    => 'string',
+            'right_property_path'   => 'string',
+            'parent_property_path'  => 'string',
             'new_child_route'       => 'string',
             'move_up_route'         => 'string',
             'move_down_route'       => 'string',
+            'routes_parameters'     => 'array',
             'routes_parameters_map' => 'array',
         ));
     }
@@ -94,17 +103,9 @@ class NestedActionsType extends ActionsType
                     $moveDownButton['route'] = $options['move_down_route'];
                     $moveDownButton['parameters'] = $parameters;
                 }
-            } else { // Parent is root
-                if (1 === $left) {
-                    $moveUpButton['disabled'] = true;
-                } else {
-                    $moveUpButton['route'] = $options['move_up_route'];
-                    $moveUpButton['parameters'] = $parameters;
-                }
-
-                // TODO: if last root child => disable
-                $moveDownButton['route'] = $options['move_down_route'];
-                $moveDownButton['parameters'] = $parameters;
+            } else { // Roots can't be moved
+                $moveUpButton['disabled'] = true;
+                $moveDownButton['disabled'] = true;
             }
         }
         array_unshift($cell->vars['buttons'], $moveDownButton);
