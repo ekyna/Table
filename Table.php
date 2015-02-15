@@ -234,12 +234,12 @@ final class Table
             ->select($alias)
             ->from($this->config->getDataClass(), $alias);
 
-        $this->generateFilters($queryBuilder, $view);
-        $this->generateColumns($queryBuilder, $view);
-
         if (null !== $customizeQb = $this->config->getCustomizeQb()) {
             $customizeQb($queryBuilder, $alias);
         }
+
+        $this->generateFilters($queryBuilder, $view);
+        $this->generateColumns($queryBuilder, $view);
 
         $currentPage = $this->requestHelper->getVar($this->getName().'_page', 1);
 
