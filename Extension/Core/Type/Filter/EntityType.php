@@ -110,7 +110,7 @@ class EntityType extends AbstractFilterType
             'id'        => $datas['id'],
             'field'     => $datas['label'],
             'operator'  => FilterOperator::getLabel($datas['operator']),
-            'value'     => implode(', ', $values)
+            'value'     => $values
         ));
         $view->active_filters[] = $activeFilter;
     }

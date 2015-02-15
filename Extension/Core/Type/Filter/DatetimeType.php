@@ -38,13 +38,16 @@ class DatetimeType extends AbstractFilterType
      */
     public function buildActiveFilter(TableView $view, array $datas, array $options)
     {
+        /** @var \DateTime $date */
+        $date = $datas['value'];
+
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
             'full_name' => $datas['full_name'],
             'id'        => $datas['id'],
             'field'     => $datas['label'],
             'operator'  => FilterOperator::getLabel($datas['operator']),
-            'value'     => $datas['value']->format('d/m/Y H:i')
+            'value'     => $date->format('d/m/Y H:i')
         ));
         $view->active_filters[] = $activeFilter;
     }
