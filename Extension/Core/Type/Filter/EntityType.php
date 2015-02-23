@@ -68,6 +68,7 @@ class EntityType extends AbstractFilterType
             ))
             ->add(
                 $builder->create('value', 'entity', array(
+                    'label'         => false,
                     'class'         => $options['class'],
                     'multiple'      => true,
                     'property'      => $options['property'],
