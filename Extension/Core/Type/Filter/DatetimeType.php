@@ -2,6 +2,8 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,6 +52,19 @@ class DatetimeType extends AbstractFilterType
             'value'     => $date->format('d/m/Y H:i')
         ));
         $view->active_filters[] = $activeFilter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function applyFilter(QueryBuilder $qb, array $datas)
+    {
+        self::$filterCount++;
+        $alias = $qb->getRootAliases()[0];
+        $qb
+            ->andWhere(FilterOperator::buildExpression($alias.'.'.$datas['property_path'], $datas['operator'], ':filter_'.self::$filterCount))
+            ->setParameter('filter_'.self::$filterCount, $datas['value'], Type::DATETIME)
+        ;
     }
 
     /**

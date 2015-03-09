@@ -28,8 +28,8 @@ class BooleanType extends AbstractFilterType
             ->add('value', 'choice', array(
                 'label' => false,
                 'choices' => array(
-                    true => 'ekyna_core.value.yes',
-                    false => 'ekyna_core.value.no',
+                    '1' => 'ekyna_core.value.yes',
+                    '0' => 'ekyna_core.value.no',
                 )
             ));
     }

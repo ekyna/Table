@@ -80,43 +80,69 @@ final class FilterOperator
      *
      * @param $property
      * @param $operator
-     * @param $value
+     * @param $parameter
      * @return Expr\Comparison|Expr\Func
      */
-    public static function buildExpression($property, $operator, $value)
+    public static function buildExpression($property, $operator, $parameter)
     {
         self::isValid($operator, true);
 
         $expr = new Expr();
         switch(intval($operator)) {
         	case 2  :
-                return $expr->neq($property, $value);
+                return $expr->neq($property, $parameter);
         	case 3  :
-                return $expr->lt($property, $value);
+                return $expr->lt($property, $parameter);
         	case 4  :
-                return $expr->lte($property, $value);
+                return $expr->lte($property, $parameter);
         	case 5  :
-                return $expr->gt($property, $value);
+                return $expr->gt($property, $parameter);
         	case 6  :
-                return $expr->gte($property, $value);
+                return $expr->gte($property, $parameter);
         	case 7  :
-                return $expr->in($property, $value);
+                return $expr->in($property, $parameter);
         	case 8  :
-                return $expr->notIn($property, $value);
+                return $expr->notIn($property, $parameter);
             case 9  :
-                return $expr->like($property, $expr->literal(sprintf('%%%s%%', $value)));
+                return $expr->like($property, $parameter);
         	case 10  :
-                return $expr->notLike($property, $expr->literal(sprintf('%%%s%%', $value)));
+                return $expr->notLike($property, $parameter);
         	case 11  :
-                return $expr->like($property, $expr->literal(sprintf('%s%%', $value)));
+                return $expr->like($property, $parameter);
         	case 12  :
-                return $expr->notLike($property, $expr->literal(sprintf('%s%%', $value)));
+                return $expr->notLike($property, $parameter);
         	case 13  :
-                return $expr->like($property, $expr->literal(sprintf('%%%s', $value)));
+                return $expr->like($property, $parameter);
         	case 14  :
-                return $expr->notLike($property, $expr->literal(sprintf('%%%s', $value)));
+                return $expr->notLike($property, $parameter);
             default  :
-                return $expr->eq($property, $value);
+                return $expr->eq($property, $parameter);
+        }
+    }
+
+    /**
+     * Builds the parameter value.
+     *
+     * @param $operator
+     * @param $value
+     * @return Expr\Literal
+     */
+    public static function buildParameter($operator, $value)
+    {
+        self::isValid($operator, true);
+
+        switch(intval($operator)) {
+            case 9  :
+            case 10  :
+                return sprintf('%%%s%%', $value);
+            case 11  :
+            case 12  :
+                return sprintf('%s%%', $value);
+            case 13  :
+            case 14  :
+                return sprintf('%%%s', $value);
+            default  :
+                return $value;
         }
     }
 

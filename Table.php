@@ -243,6 +243,10 @@ final class Table
 
         $currentPage = $this->requestHelper->getVar($this->getName().'_page', 1);
 
+        /*$dql = $queryBuilder->getQuery()->getDQL();
+        var_dump($dql);
+        exit();*/
+
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $pager = new Pagerfanta($adapter);
         $pager
@@ -273,7 +277,8 @@ final class Table
     private function createActiveFilter($filterOptions, $formData)
     {
         // TODO real form validation
-        if (empty($formData['value'])) {
+        $value = $formData['value'];
+        if (null === $value || (is_array($value) && empty($value))) {
             return;
         }
 
@@ -285,7 +290,7 @@ final class Table
             'property_path' => $filterOptions['property_path'],
             'label'         => $filterOptions['label'],
             'operator'      => $formData['operator'],
-            'value'         => $formData['value'],
+            'value'         => $value,
         );
         $this->requestHelper->setVar($this->getName().'_filters', $activesFilters);
     }

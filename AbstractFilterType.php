@@ -17,6 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 abstract class AbstractFilterType implements FilterTypeInterface
 {
+    static protected $filterCount = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -91,11 +93,11 @@ abstract class AbstractFilterType implements FilterTypeInterface
      */
     public function applyFilter(QueryBuilder $qb, array $datas)
     {
+        self::$filterCount++;
         $alias = $qb->getRootAliases()[0];
-        //var_dump($datas['value']);
-        $qb->andWhere(FilterOperator::buildExpression($alias.'.'.$datas['property_path'], $datas['operator'], $datas['value']));
-
-        //$queryBuilder->andWhere(sprintf('%s.%s %s ?%s', $alias, $datas['property_path'], FilterOperator::getExpression($datas['operator']), $count));
-        //$queryBuilder->setParameter($count, FilterOperator::formatValue($datas['operator'], $datas['value']));
+        $qb
+            ->andWhere(FilterOperator::buildExpression($alias.'.'.$datas['property_path'], $datas['operator'], ':filter_'.self::$filterCount))
+            ->setParameter('filter_'.self::$filterCount, FilterOperator::buildParameter($datas['operator'], $datas['value']))
+        ;
     }
 }
