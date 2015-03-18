@@ -25,8 +25,8 @@ class DatetimeType extends PropertyType
 
         $resolver
             ->setDefaults(array(
-                'date_format' => 'medium',
-                'time_format' => 'medium',
+                'date_format' => 'short',
+                'time_format' => 'short',
             ))
             ->setAllowedValues(array(
                 'date_format' => $formats,
