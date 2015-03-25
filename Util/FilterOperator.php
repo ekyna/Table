@@ -37,7 +37,7 @@ final class FilterOperator
     public static function isValid($operator, $throwException = false)
     {
         $operator = intval($operator);
-        if($operator > 0 && $operator <= 14) {
+        if($operator > 0 && $operator <= self::NOT_END_WITH) {
             return true;
         }
         if($throwException) {
@@ -58,23 +58,23 @@ final class FilterOperator
 
         // TODO translations
         switch(intval($operator)) {
-        	case 2  : return 'est différent de';
-        	case 3  : return 'est inférieur à';
-        	case 4  : return 'est inférieur ou égal à';
-        	case 5  : return 'est supérieur à';
-        	case 6  : return 'est supérieur ou égal à';
-        	case 7  : return 'est parmis';
-        	case 8  : return 'n\'est pas parmis';
-        	case 9  : return 'contient';
-        	case 10  : return 'ne contient pas';
-        	case 11  : return 'commence par';
-        	case 12  : return 'ne commence pas par';
-        	case 13  : return 'se termine par';
-        	case 14  : return 'ne se termine pas par';
-            default  : return 'est égal à';
+            case self::NOT_EQUAL:             return 'est différent de';
+            case self::LOWER_THAN:            return 'est inférieur à';
+            case self::LOWER_THAN_OR_EQUAL:   return 'est inférieur ou égal à';
+            case self::GREATER_THAN:          return 'est supérieur à';
+            case self::GREATER_THAN_OR_EQUAL: return 'est supérieur ou égal à';
+            case self::IN:                    return 'est parmis';
+            case self::NOT_IN:                return 'n\'est pas parmis';
+            case self::LIKE:                  return 'contient';
+            case self::NOT_LIKE:              return 'ne contient pas';
+            case self::START_WITH:            return 'commence par';
+            case self::NOT_START_WITH:        return 'ne commence pas par';
+            case self::END_WITH:              return 'se termine par';
+            case self::NOT_END_WITH:          return 'ne se termine pas par';
+            default:                          return 'est égal à';
         }
     }
-
+    
     /**
      * Builds the orm expression.
      *
@@ -89,31 +89,31 @@ final class FilterOperator
 
         $expr = new Expr();
         switch(intval($operator)) {
-        	case 2  :
+            case self::NOT_EQUAL:
                 return $expr->neq($property, $parameter);
-        	case 3  :
+            case self::LOWER_THAN:
                 return $expr->lt($property, $parameter);
-        	case 4  :
+            case self::LOWER_THAN_OR_EQUAL:
                 return $expr->lte($property, $parameter);
-        	case 5  :
+            case self::GREATER_THAN:
                 return $expr->gt($property, $parameter);
-        	case 6  :
+            case self::GREATER_THAN_OR_EQUAL:
                 return $expr->gte($property, $parameter);
-        	case 7  :
+            case self::IN:
                 return $expr->in($property, $parameter);
-        	case 8  :
+            case self::NOT_IN:
                 return $expr->notIn($property, $parameter);
-            case 9  :
+            case self::LIKE:
                 return $expr->like($property, $parameter);
-        	case 10  :
+            case self::NOT_LIKE:
                 return $expr->notLike($property, $parameter);
-        	case 11  :
+            case self::START_WITH:
                 return $expr->like($property, $parameter);
-        	case 12  :
+            case self::NOT_START_WITH:
                 return $expr->notLike($property, $parameter);
-        	case 13  :
+            case self::END_WITH:
                 return $expr->like($property, $parameter);
-        	case 14  :
+            case self::NOT_END_WITH:
                 return $expr->notLike($property, $parameter);
             default  :
                 return $expr->eq($property, $parameter);
@@ -132,16 +132,16 @@ final class FilterOperator
         self::isValid($operator, true);
 
         switch(intval($operator)) {
-            case 9  :
-            case 10  :
+            case self::LIKE:
+            case self::NOT_LIKE:
                 return sprintf('%%%s%%', $value);
-            case 11  :
-            case 12  :
+            case self::START_WITH:
+            case self::NOT_START_WITH:
                 return sprintf('%s%%', $value);
-            case 13  :
-            case 14  :
+            case self::END_WITH:
+            case self::NOT_END_WITH:
                 return sprintf('%%%s', $value);
-            default  :
+            default:
                 return $value;
         }
     }
