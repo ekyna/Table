@@ -103,13 +103,13 @@ class TableBuilder implements TableBuilderInterface
         //var_dump($defaultSortsConfig);
         foreach($defaultSortsConfig as $defaultSort) {
             if (!preg_match('#^[a-z_]+ asc|desc$#i', $defaultSort)) {
-                throw new \InvalidArgumentException('The "default_sorts" option must be an array of string formatted as "column_name asc|desc".');
+                throw new \InvalidArgumentException('The "default_sorts" option must be an array of strings formatted as "column_name asc|desc".');
             }
             $defaultSorts[] = $defaultSort;
         }
 
         if (null !== $this->options['data_class'] && !class_exists($this->options['data_class'])) {
-            throw new \InvalidArgumentException(sprintf('The class "%s" dose not exists (table data_class option).', $this->options['data_class']));
+            throw new \InvalidArgumentException(sprintf('The class "%s" does not exist (table data_class option).', $this->options['data_class']));
         }
 
         $tableConfig
