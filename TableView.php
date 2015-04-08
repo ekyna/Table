@@ -12,6 +12,7 @@ class TableView
     public $name = null;
     public $options = array();
     public $attr = array();
+    public $vars = array();
 
     public $available_filters = array();
     public $active_filters = array();

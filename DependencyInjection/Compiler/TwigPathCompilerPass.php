@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class TwigPathCompilerPass
- * @package Ekyna\Component\Characteristics\DependencyInjection\Compiler
+ * @package Ekyna\Component\Table\DependencyInjection\Compiler
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class TwigPathCompilerPass implements CompilerPassInterface

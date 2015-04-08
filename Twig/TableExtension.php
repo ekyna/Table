@@ -14,6 +14,7 @@ use Pagerfanta\View\ViewFactoryInterface;
  * Class TableExtension
  * @package Ekyna\Component\Table\Twig
  * @author Étienne Dauvergne <contact@ekyna.com>
+ * @deprecated
  */
 class TableExtension extends \Twig_Extension
 {

@@ -7,3 +7,5 @@ It allows for multiple filters on the same property, column sorting and paginati
 ## Instation / Configuration
 See [ekyna/TableBundle](https://github.com/ekyna/TableBundle)
 
+TODO:
+ * Ask Bernhard Schussek about author annontation.
