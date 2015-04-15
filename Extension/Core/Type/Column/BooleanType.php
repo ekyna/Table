@@ -1,6 +1,7 @@
 <?php
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
+
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

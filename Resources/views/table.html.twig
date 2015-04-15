@@ -131,16 +131,20 @@
 {% block number_cell %}{{ block('text_cell') }}{% endblock number_cell %}
 
 {% block boolean_cell %}
-    <td{% if sorted %} class="sorted"{% endif %}>
-        {% if route is not sameas(null) %}
-            <a href="{{ path(route, parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
-        {% else %}
-            <span class="label {{ class }}">{{ block('boolean_cell_value') }}</span>
-        {% endif %}
-    </td>
+<td{% if sorted %} class="sorted"{% endif %}>
+    {% if route is not sameas(null) %}
+        <a href="{{ path(route, parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
+    {% else %}
+        <span class="label {{ class }}">{{ block('boolean_cell_value') }}</span>
+    {% endif %}
+</td>
 {% endblock boolean_cell %}
 
 {% block boolean_cell_value %}{{ label }}{% endblock boolean_cell_value %}
+
+{% block choice_cell %}
+<td{% if sorted %} class="sorted"{% endif %}>{{ label|raw }}</td>
+{% endblock choice_cell %}
 
 {% block datetime_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
