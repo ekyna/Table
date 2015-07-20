@@ -13,6 +13,8 @@
     ],
     "require" : {
         "php" : ">=5.3.3",
+        "symfony/intl": "~2.3",
+        "symfony/form": "2.5.*",
         "white-october/pagerfanta-bundle": "1.0.*"
     },
     "autoload" : {

@@ -31,6 +31,7 @@ class CoreExtension extends AbstractTableExtension
         	new Type\Column\TextType,
             new Type\Column\NumberType,
             new Type\Column\ChoiceType,
+            new Type\Column\CountryType,
             new Type\Column\BooleanType,
             new Type\Column\DatetimeType,
             new Type\Column\ImageType,
@@ -50,7 +51,7 @@ class CoreExtension extends AbstractTableExtension
             new Type\Filter\DatetimeType,
             new Type\Filter\BooleanType,
             new Type\Filter\ChoiceType,
-            //new Type\Filter\EntityType,
+            new Type\Filter\CountryType,
         );
     }
 }
