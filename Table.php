@@ -16,6 +16,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAccessException;
 
 /**
  * Class Table
@@ -188,7 +189,11 @@ final class Table
         if(null === $keyOrProperty) {
             return $this->data->current();
         }
-        return $this->propertyAccessor->getValue($this->data->current(), $keyOrProperty);
+        try {
+            return $this->propertyAccessor->getValue($this->data->current(), $keyOrProperty);
+        } catch(PropertyAccessException $e) {
+        }
+        return null;
     }
 
     /**
