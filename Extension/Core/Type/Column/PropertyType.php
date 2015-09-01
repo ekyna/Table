@@ -37,7 +37,7 @@ abstract class PropertyType extends AbstractColumnType
         $resolver->setAllowedTypes(array(
             'sortable'      => 'bool',
             'label'         => 'string',
-            'property_path' => 'string',
+            'property_path' => array('null', 'string'),
         ));
     }
 
