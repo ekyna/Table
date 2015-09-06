@@ -62,12 +62,12 @@ class TableExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'ekyna_table_render' => new \Twig_Function_Method($this, 'render', array('is_safe' => array('html'))),
-            'ekyna_table_cell' => new \Twig_Function_Method($this, 'renderCell', array('is_safe' => array('html'))),
-            'ekyna_table_pager' => new \Twig_Function_Method($this, 'renderPager', array('is_safe' => array('html'))),
-            'ekyna_table_sort_path' => new \Twig_Function_Method($this, 'generateSortPath', array('is_safe' => array('html'))),
-            'ekyna_table_filter_add_path' => new \Twig_Function_Method($this, 'generateFilterAddPath', array('is_safe' => array('html'))),
-            'ekyna_table_filter_remove_path' => new \Twig_Function_Method($this, 'generateFilterRemovePath', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_render', array($this, 'render'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_cell', array($this, 'renderCell'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_pager', array($this, 'renderPager'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_sort_path', array($this, 'generateSortPath'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_filter_add_path', array($this, 'generateFilterAddPath'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ekyna_table_filter_remove_path', array($this, 'generateFilterRemovePath'), array('is_safe' => array('html'))),
         );
     }
 

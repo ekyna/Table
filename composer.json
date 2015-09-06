@@ -18,12 +18,10 @@
         "white-october/pagerfanta-bundle": "1.0.*"
     },
     "autoload" : {
-        "psr-0" : {
-            "Ekyna\\Component\\Table" : ""
+        "psr-4" : {
+            "Ekyna\\Component\\Table\\" : ""
         }
     },
-    "target-dir" : "Ekyna/Component/Table",
-    "minimum-stability" : "dev",
     "extra" : {
         "branch-alias" : {
             "dev-master" : "0.3.x-dev"
