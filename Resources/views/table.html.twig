@@ -166,8 +166,10 @@
 <td{% if sorted %} class="sorted"{% endif %}>
 	{% if value is sameas(null) %}
 		-
-	{% else %}
+	{% elseif route is defined %}
     	<a href="{{ path(route, parameters) }}">{{ value }}</a>
+    {% else %}
+        {{ value }}
 	{% endif %}
 </td>
 {% endblock anchor_cell %}

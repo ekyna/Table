@@ -42,9 +42,19 @@ class AnchorType extends PropertyType
     {
         parent::buildViewCell($cell, $table, $options);
 
-        $parameters = $options['route_parameters'];
-        foreach($options['route_parameters_map'] as $parameter => $propertyPath) {
-            $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
+        if (!empty($options['route_parameters_map'])) {
+            $parameters = [];
+            foreach($options['route_parameters_map'] as $parameter => $propertyPath) {
+                if (null !== $value = $table->getCurrentRowData($propertyPath)) {
+                    $parameters[$parameter] = $value;
+                }
+            }
+            if (0 < count(array_diff_key($options['route_parameters_map'], $parameters))) {
+                return;
+            }
+            $parameters = array_replace($parameters, $options['route_parameters']);
+        } else {
+            $parameters = $options['route_parameters'];
         }
 
         $cell->setVars(array(
