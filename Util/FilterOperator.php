@@ -26,18 +26,21 @@ final class FilterOperator
     const NOT_START_WITH        = 12;
     const END_WITH              = 13;
     const NOT_END_WITH          = 14;
+    const IS_NULL               = 15;
+    const IS_NOT_NULL           = 16;
 
+    
     /**
      * Returns whether the operator is valid or not.
      *
-     * @param $operator
+     * @param string $operator
      * @param bool $throwException
      * @return bool
      */
     public static function isValid($operator, $throwException = false)
     {
         $operator = intval($operator);
-        if($operator > 0 && $operator <= self::NOT_END_WITH) {
+        if($operator > 0 && $operator <= self::IS_NOT_NULL) {
             return true;
         }
         if($throwException) {
@@ -49,7 +52,7 @@ final class FilterOperator
     /**
      * Returns the label for the given operator.
      *
-     * @param $operator
+     * @param string $operator
      * @return string
      */
     public static function getLabel($operator)
@@ -78,12 +81,12 @@ final class FilterOperator
     /**
      * Builds the orm expression.
      *
-     * @param $property
-     * @param $operator
-     * @param $parameter
+     * @param string $property
+     * @param string $operator
+     * @param string $parameter
      * @return Expr\Comparison|Expr\Func
      */
-    public static function buildExpression($property, $operator, $parameter)
+    public static function buildExpression($property, $operator, $parameter = null)
     {
         self::isValid($operator, true);
 
@@ -115,6 +118,10 @@ final class FilterOperator
                 return $expr->like($property, $parameter);
             case self::NOT_END_WITH:
                 return $expr->notLike($property, $parameter);
+            case self::IS_NULL:
+                return $expr->isNull($property);
+            case self::IS_NOT_NULL:
+                return $expr->isNotNull($property);
             default  :
                 return $expr->eq($property, $parameter);
         }
@@ -123,8 +130,8 @@ final class FilterOperator
     /**
      * Builds the parameter value.
      *
-     * @param $operator
-     * @param $value
+     * @param string $operator
+     * @param mixed $value
      * @return Expr\Literal
      */
     public static function buildParameter($operator, $value)
@@ -147,12 +154,12 @@ final class FilterOperator
     }
 
     /**
-     * Returns the available operator choices.
+     * Returns the available operators choices.
      *
-     * @param $operators
+     * @param array $operators
      * @return array
      */
-    public static function getChoices($operators)
+    public static function getChoices(array $operators)
     {
         $choices = array();
         foreach($operators as $operator) {

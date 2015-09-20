@@ -43,18 +43,19 @@ interface FilterTypeInterface
      * and returns criteria
      * 
      * @param TableView $view
-     * @param array     $datas
+     * @param array     $data
      * @param array     $options
      */
-    public function buildActiveFilter(TableView $view, array $datas, array $options);
+    public function buildActiveFilter(TableView $view, array $data, array $options);
 
     /**
      * Applies the filter to the query builder.
      *
      * @param QueryBuilder $qb
-     * @param array        $datas
+     * @param array        $data
+     * @param array        $options
      */
-    public function applyFilter(QueryBuilder $qb, array $datas);
+    public function applyFilter(QueryBuilder $qb, array $data, array $options);
 
     /**
      * Creates the filter form widget

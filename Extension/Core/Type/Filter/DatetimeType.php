@@ -38,17 +38,17 @@ class DatetimeType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function buildActiveFilter(TableView $view, array $datas, array $options)
+    public function buildActiveFilter(TableView $view, array $data, array $options)
     {
         /** @var \DateTime $date */
-        $date = $datas['value'];
+        $date = $data['value'];
 
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
-            'full_name' => $datas['full_name'],
-            'id'        => $datas['id'],
-            'field'     => $datas['label'],
-            'operator'  => FilterOperator::getLabel($datas['operator']),
+            'full_name' => $data['full_name'],
+            'id'        => $data['id'],
+            'field'     => $data['label'],
+            'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $date->format('d/m/Y H:i')
         ));
         $view->active_filters[] = $activeFilter;
@@ -57,13 +57,21 @@ class DatetimeType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function applyFilter(QueryBuilder $qb, array $datas)
+    public function applyFilter(QueryBuilder $qb, array $data, array $options)
     {
         self::$filterCount++;
         $alias = $qb->getRootAliases()[0];
         $qb
-            ->andWhere(FilterOperator::buildExpression($alias.'.'.$datas['property_path'], $datas['operator'], ':filter_'.self::$filterCount))
-            ->setParameter('filter_'.self::$filterCount, $datas['value'], Type::DATETIME)
+            ->andWhere(FilterOperator::buildExpression(
+                $alias.'.'.$data['property_path'],
+                $data['operator'],
+                ':filter_'.self::$filterCount
+            ))
+            ->setParameter(
+                'filter_'.self::$filterCount,
+                $data['value'],
+                Type::DATETIME
+            )
         ;
     }
 

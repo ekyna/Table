@@ -83,11 +83,11 @@ class EntityType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function buildActiveFilter(TableView $view, array $datas, array $options)
+    public function buildActiveFilter(TableView $view, array $data, array $options)
     {
         $repo = $this->em->getRepository($options['class']);
 
-        $entities = $repo->findBy(array('id' => $datas['value']));
+        $entities = $repo->findBy(array('id' => $data['value']));
         $values = [];
 
         if (0 < strlen($property = $options['property'])) {
@@ -107,10 +107,10 @@ class EntityType extends AbstractFilterType
 
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
-            'full_name' => $datas['full_name'],
-            'id'        => $datas['id'],
-            'field'     => $datas['label'],
-            'operator'  => FilterOperator::getLabel($datas['operator']),
+            'full_name' => $data['full_name'],
+            'id'        => $data['id'],
+            'field'     => $data['label'],
+            'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $values
         ));
         $view->active_filters[] = $activeFilter;

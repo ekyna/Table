@@ -60,9 +60,9 @@ class ChoiceType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function buildActiveFilter(TableView $view, array $datas, array $options)
+    public function buildActiveFilter(TableView $view, array $data, array $options)
     {
-        $value = $datas['value'];
+        $value = $data['value'];
         $choices = $options['choices'];
         $transform = function($v) use ($choices) {
             if (array_key_exists($v, $choices)) {
@@ -79,10 +79,10 @@ class ChoiceType extends AbstractFilterType
 
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars(array(
-            'full_name' => $datas['full_name'],
-            'id'        => $datas['id'],
-            'field'     => $datas['label'],
-            'operator'  => FilterOperator::getLabel($datas['operator']),
+            'full_name' => $data['full_name'],
+            'id'        => $data['id'],
+            'field'     => $data['label'],
+            'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $value,
         ));
         $view->active_filters[] = $activeFilter;

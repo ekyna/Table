@@ -366,18 +366,18 @@ final class Table
         }
 
         // Build actives Filters
-        foreach ($this->requestHelper->getSessionVar($this->getName().'_filters', array()) as $datas) {
+        foreach ($this->requestHelper->getSessionVar($this->getName().'_filters', array()) as $data) {
             // Filter type
-            $type = $this->factory->getFilterType($datas['type']);
+            $type = $this->factory->getFilterType($data['type']);
 
-            if (null === $options = $this->config->findFilterByFullName($datas['full_name'])) {
-                throw new RuntimeException(sprintf('Filter "%s" not found.', $datas['full_name']));
+            if (null === $options = $this->config->findFilterByFullName($data['full_name'])) {
+                throw new RuntimeException(sprintf('Filter "%s" not found.', $data['full_name']));
             }
 
             // Build actives Filter
-            $type->buildActiveFilter($view, $datas, $options);
+            $type->buildActiveFilter($view, $data, $options);
             // Configure query builder
-            $type->applyFilter($queryBuilder, $datas);
+            $type->applyFilter($queryBuilder, $data, $options);
         }
     }
 
