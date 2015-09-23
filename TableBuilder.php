@@ -46,8 +46,8 @@ class TableBuilder implements TableBuilderInterface
     {
         $this->type = $type;
 
-        $this->columns = array();
-        $this->filters = array();
+        $this->columns = [];
+        $this->filters = [];
 
         $this->options = $options;
     }
@@ -67,24 +67,24 @@ class TableBuilder implements TableBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function addColumn($name, $type = null, array $options = array())
+    public function addColumn($name, $type = null, array $options = [])
     {
         if(array_key_exists($name, $this->columns)) {
             throw new InvalidArgumentException(sprintf('Column "%s" is already defined.', $name));
         }
-        $this->columns[$name] = array($type, $options);
+        $this->columns[$name] = [$type, $options];
         return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addFilter($name, $type = null, array $options = array())
+    public function addFilter($name, $type = null, array $options = [])
     {
         if(array_key_exists($name, $this->filters)) {
             throw new InvalidArgumentException(sprintf('Filter "%s" is already defined.', $name));
         }
-        $this->filters[$name] = array($type, $options);
+        $this->filters[$name] = [$type, $options];
         return $this;
     }
 
@@ -98,7 +98,7 @@ class TableBuilder implements TableBuilderInterface
         $defaultSorts = [];
         $defaultSortsConfig = $this->options['default_sorts'];
         if (is_string($defaultSortsConfig)) {
-            $defaultSortsConfig = array($defaultSortsConfig);
+            $defaultSortsConfig = [$defaultSortsConfig];
         }
         //var_dump($defaultSortsConfig);
         foreach($defaultSortsConfig as $defaultSort) {

@@ -9,11 +9,11 @@ namespace Ekyna\Component\Table\View;
  */
 class AvailableFilter
 {
-    private $vars = array(
+    private $vars = [
         'name'      => null,
         'full_name' => null,
         'label'     => null,
-    );
+    ];
 
     public function setVars(array $vars)
     {

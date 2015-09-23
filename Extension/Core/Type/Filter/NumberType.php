@@ -19,13 +19,13 @@ class NumberType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
-            ->add('value', 'number', array(
+            ])
+            ->add('value', 'number', [
                 'label' => false
-            ))
+            ])
         ;
     }
 
@@ -34,13 +34,13 @@ class NumberType extends AbstractFilterType
      */
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::EQUAL,
             FilterOperator::LOWER_THAN,
             FilterOperator::LOWER_THAN_OR_EQUAL,
             FilterOperator::GREATER_THAN,
             FilterOperator::GREATER_THAN_OR_EQUAL,
-        );
+        ];
     }
 
     /**

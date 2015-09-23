@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class NestedActionsType
@@ -17,10 +17,10 @@ class NestedActionsType extends ActionsType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'disable_property_path' => '',
             'left_property_path'    => 'left',
             'right_property_path'   => 'right',
@@ -28,16 +28,16 @@ class NestedActionsType extends ActionsType
             'new_child_route'       => null,
             'move_up_route'         => null,
             'move_down_route'       => null,
-            'routes_parameters'     => array(),
-            'routes_parameters_map' => array(),
-        ));
-        $resolver->setRequired(array(
+            'routes_parameters'     => [],
+            'routes_parameters_map' => [],
+        ]);
+        $resolver->setRequired([
             'move_up_route',
             'move_down_route',
             'new_child_route',
             'routes_parameters_map',
-        ));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setAllowedTypes([
             'disable_property_path' => 'string',
             'left_property_path'    => 'string',
             'right_property_path'   => 'string',
@@ -47,7 +47,7 @@ class NestedActionsType extends ActionsType
             'move_down_route'       => 'string',
             'routes_parameters'     => 'array',
             'routes_parameters_map' => 'array',
-        ));
+        ]);
     }
 
     /**
@@ -62,11 +62,11 @@ class NestedActionsType extends ActionsType
             $disabled = $table->getCurrentRowData($options['disable_property_path']);
         }
 
-        $newChildButton = $moveUpButton = $moveDownButton = array(
+        $newChildButton = $moveUpButton = $moveDownButton = [
             'disabled'   => $disabled,
             'label'      => 'Ajouter',
             'class'      => 'primary',
-        );
+        ];
         $newChildButton['icon']  = 'plus';
         $newChildButton['class'] = 'success';
         $moveUpButton['icon']    = 'arrow-up';

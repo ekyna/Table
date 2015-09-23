@@ -8,7 +8,6 @@ use Ekyna\Component\Table\View\ActiveFilter;
 use Ekyna\Component\Table\View\AvailableFilter;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Class AbstractFilterType
@@ -22,9 +21,9 @@ abstract class AbstractFilterType implements FilterTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'name'          => null,
             'full_name'     => null,
             'type'          => $this->getName(),
@@ -34,21 +33,21 @@ abstract class AbstractFilterType implements FilterTypeInterface
             'property_path' => function (Options $options) {
                 return $options['name'];
             },
-        ));
-        $resolver->setRequired(array('name', 'full_name', 'type', 'label', 'property_path'));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setRequired(['name', 'full_name', 'type', 'label', 'property_path']);
+        $resolver->setAllowedTypes([
             'name'          => 'string',
             'full_name'     => 'string',
             'type'          => 'string',
             'label'         => 'string',
             'property_path' => 'string',
-        ));
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildTableFilter(TableConfig $config, $name, array $options = array())
+    public function buildTableFilter(TableConfig $config, $name, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
@@ -65,11 +64,11 @@ abstract class AbstractFilterType implements FilterTypeInterface
      */
     public function buildAvailableFilter(AvailableFilter $filter, array $options)
     {
-        $filter->setVars(array(
+        $filter->setVars([
             'name'      => $options['name'],
             'full_name' => $options['full_name'],
             'label'     => $options['label'],
-        ));
+        ]);
     }
 
     /**
@@ -78,13 +77,13 @@ abstract class AbstractFilterType implements FilterTypeInterface
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
         $activeFilter = new ActiveFilter();
-        $activeFilter->setVars(array(
+        $activeFilter->setVars([
             'full_name' => $data['full_name'],
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $data['value']
-        ));
+        ]);
         $view->active_filters[] = $activeFilter;
     }
 

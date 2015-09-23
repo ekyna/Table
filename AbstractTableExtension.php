@@ -109,7 +109,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     protected function loadTableTypes()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -119,7 +119,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     protected function loadColumnTypes()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -129,7 +129,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     protected function loadFilterTypes()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     private function initTableTypes()
     {
-        $this->tableTypes = array();
+        $this->tableTypes = [];
 
         foreach ($this->loadTableTypes() as $type) {
             if (!$type instanceof TableTypeInterface) {
@@ -157,7 +157,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     private function initColumnTypes()
     {
-        $this->columnTypes = array();
+        $this->columnTypes = [];
 
         foreach ($this->loadColumnTypes() as $type) {
             if (!$type instanceof ColumnTypeInterface) {
@@ -175,7 +175,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      */
     private function initFilterTypes()
     {
-        $this->filterTypes = array();
+        $this->filterTypes = [];
 
         foreach ($this->loadFilterTypes() as $type) {
             if (!$type instanceof FilterTypeInterface) {

@@ -132,7 +132,7 @@
 
 {% block boolean_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
-    {% if route is not sameas(null) %}
+    {% if route is not same as(null) %}
         <a href="{{ path(route, parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
     {% else %}
         <span class="label {{ class }}">{{ block('boolean_cell_value') }}</span>
@@ -148,7 +148,7 @@
 
 {% block datetime_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
-    {% if value is sameas(null) %}
+    {% if value is same as(null) %}
         -
     {% else %}
         {{ value|localizeddate(date_format, time_format) }}
@@ -164,7 +164,7 @@
 
 {% block anchor_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
-	{% if value is sameas(null) %}
+	{% if value is same as(null) %}
 		-
 	{% elseif route is defined %}
     	<a href="{{ path(route, parameters) }}">{{ value }}</a>

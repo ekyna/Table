@@ -16,26 +16,26 @@ class TextType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
-            ->add('value', 'text', array(
+            ])
+            ->add('value', 'text', [
                 'label' => false
-            ))
+            ])
         ;
     }
 
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::LIKE,
             FilterOperator::NOT_LIKE,
             FilterOperator::START_WITH,
             FilterOperator::NOT_START_WITH,
             FilterOperator::END_WITH,
             FilterOperator::NOT_START_WITH
-        );
+        ];
     }
 
     public function getName()

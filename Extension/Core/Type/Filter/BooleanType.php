@@ -8,7 +8,7 @@ use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class BooleanType
@@ -25,20 +25,20 @@ class BooleanType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'mode' => self::MODE_DEFAULT,
-            ))
-            ->setAllowedTypes(array(
+            ])
+            ->setAllowedTypes([
                 'mode' => 'string',
-            ))
-            ->setAllowedValues(array(
-                'mode' => array(self::MODE_DEFAULT, self::MODE_IS_NULL, self::MODE_IS_NOT_NULL),
-            ))
+            ])
+            ->setAllowedValues([
+                'mode' => [self::MODE_DEFAULT, self::MODE_IS_NULL, self::MODE_IS_NOT_NULL],
+            ])
         ;
     }
 
@@ -48,17 +48,17 @@ class BooleanType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
-            ->add('value', 'choice', array(
+            ])
+            ->add('value', 'choice', [
                 'label' => false,
-                'choices' => array(
+                'choices' => [
                     '1' => 'ekyna_core.value.yes',
                     '0' => 'ekyna_core.value.no',
-                )
-            ));
+                ]
+            ]);
     }
 
     /**
@@ -67,13 +67,13 @@ class BooleanType extends AbstractFilterType
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
         $activeFilter = new ActiveFilter();
-        $activeFilter->setVars(array(
+        $activeFilter->setVars([
             'full_name' => $data['full_name'],
             'id' => $data['id'],
             'field' => $data['label'],
             'operator' => FilterOperator::getLabel($data['operator']),
             'value' => $data['value'] ? 'ekyna_core.value.yes' : 'ekyna_core.value.no',
-        ));
+        ]);
         $view->active_filters[] = $activeFilter;
     }
 
@@ -114,10 +114,10 @@ class BooleanType extends AbstractFilterType
      */
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::EQUAL,
             FilterOperator::NOT_EQUAL,
-        );
+        ];
     }
 
     /**

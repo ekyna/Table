@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\View\Cell;
 use Ekyna\Component\Table\View\Column;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
@@ -21,7 +21,7 @@ interface ColumnTypeInterface
      * @param string      $name
      * @param array       $options
      */
-    public function buildTableColumn(TableConfig $table, $name, array $options = array());
+    public function buildTableColumn(TableConfig $table, $name, array $options = []);
 
     /**
      * Builds the view column.
@@ -44,9 +44,9 @@ interface ColumnTypeInterface
     /**
      * Configures the options.
      * 
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolverInterface $resolver);
+    public function configureOptions(OptionsResolver $resolver);
 
     /**
      * Returns column type name.

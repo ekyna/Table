@@ -23,15 +23,15 @@ class DatetimeType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
-            ->add('value', 'datetime', array(
+            ])
+            ->add('value', 'datetime', [
                 'label' => false,
                 'input'  => 'datetime',
                 'widget' => 'single_text',
-            ))
+            ])
         ;
     }
 
@@ -44,13 +44,13 @@ class DatetimeType extends AbstractFilterType
         $date = $data['value'];
 
         $activeFilter = new ActiveFilter();
-        $activeFilter->setVars(array(
+        $activeFilter->setVars([
             'full_name' => $data['full_name'],
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $date->format('d/m/Y H:i')
-        ));
+        ]);
         $view->active_filters[] = $activeFilter;
     }
 
@@ -80,14 +80,14 @@ class DatetimeType extends AbstractFilterType
      */
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::EQUAL,
             FilterOperator::NOT_EQUAL,
             FilterOperator::LOWER_THAN,
             FilterOperator::LOWER_THAN_OR_EQUAL,
             FilterOperator::GREATER_THAN,
             FilterOperator::GREATER_THAN_OR_EQUAL,
-        );
+        ];
     }
 
     /**

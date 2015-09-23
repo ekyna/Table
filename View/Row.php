@@ -10,7 +10,7 @@ namespace Ekyna\Component\Table\View;
 class Row
 {
     public $entityId;
-    public $cells = array();
+    public $cells = [];
 
     public function __construct($entityId)
     {

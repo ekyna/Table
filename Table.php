@@ -221,9 +221,9 @@ final class Table
 
         $view = new TableView();
         $view->name = $this->getName();
-        $view->options = array(
+        $view->options = [
             'selector' => $this->config->getSelector(),
-        );
+        ];
         $view->selection_form = $this->config->getSelector();
 
         if (!$this->config->hasColumns()) {
@@ -287,8 +287,8 @@ final class Table
             return;
         }
 
-        $activesFilters = $this->requestHelper->getSessionVar($this->getName().'_filters', array());
-        $activesFilters[] = array(
+        $activesFilters = $this->requestHelper->getSessionVar($this->getName().'_filters', []);
+        $activesFilters[] = [
             'full_name'     => $filterOptions['full_name'],
             'id'            => uniqid(),
             'type'          => $filterOptions['type'],
@@ -296,7 +296,7 @@ final class Table
             'label'         => $filterOptions['label'],
             'operator'      => $formData['operator'],
             'value'         => $value,
-        );
+        ];
         $this->requestHelper->setVar($this->getName().'_filters', $activesFilters);
     }
 
@@ -307,8 +307,8 @@ final class Table
      */
     private function removeActiveFilter($filterId)
     {
-        $tmp = array();
-        $activesFilters = $this->requestHelper->getSessionVar($this->getName().'_filters', array());
+        $tmp = [];
+        $activesFilters = $this->requestHelper->getSessionVar($this->getName().'_filters', []);
         foreach ($activesFilters as $activeFilter) {
             if ($activeFilter['id'] != $filterId) {
                 $tmp[] = $activeFilter;
@@ -338,9 +338,9 @@ final class Table
                 $formBuilder = $this->factory->getFormFactory()->createBuilder();
                 $type->buildFilterFrom($formBuilder, $filterOptions);
                 $form = $formBuilder
-                    ->add('add_filter', 'hidden', array(
+                    ->add('add_filter', 'hidden', [
                         'data' => $filterOptions['full_name']
-                    ))
+                    ])
                     ->getForm();
 
                 // Handle request
@@ -366,7 +366,7 @@ final class Table
         }
 
         // Build actives Filters
-        foreach ($this->requestHelper->getSessionVar($this->getName().'_filters', array()) as $data) {
+        foreach ($this->requestHelper->getSessionVar($this->getName().'_filters', []) as $data) {
             // Filter type
             $type = $this->factory->getFilterType($data['type']);
 
@@ -389,7 +389,7 @@ final class Table
      */
     private function generateColumns(QueryBuilder $queryBuilder, TableView $view)
     {
-        $sortDirs = array(ColumnSort::ASC, ColumnSort::DESC);
+        $sortDirs = [ColumnSort::ASC, ColumnSort::DESC];
         $newSortedColumnName = null;
         $columns = $this->config->getColumns();
 
@@ -466,7 +466,7 @@ final class Table
      */
     private function generateCells(TableView $view)
     {
-        $sortDirs = array(ColumnSort::ASC, ColumnSort::DESC);
+        $sortDirs = [ColumnSort::ASC, ColumnSort::DESC];
         $columns = $this->config->getColumns();
 
         foreach ($columns as &$columnOptions) {

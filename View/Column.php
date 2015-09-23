@@ -11,13 +11,13 @@ use Ekyna\Component\Table\Util\ColumnSort;
  */
 class Column
 {
-    private $vars = array(
+    private $vars = [
         'name'      => null,
         'full_name' => null,
         'label'     => null,
     	'sortable'  => false,
     	'sort_dir'  => ColumnSort::NONE
-    );
+    ];
 
     public function setVars(array $vars)
     {

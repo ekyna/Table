@@ -4,9 +4,7 @@ namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\View\Cell;
 use Ekyna\Component\Table\View\Column;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Class AbstractColumnType
@@ -18,25 +16,25 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'name'      => null,
             'full_name' => null,
             'type'      => $this->getName(),
-        ));
-        $resolver->setRequired(array('name', 'full_name', 'type'));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setRequired(['name', 'full_name', 'type']);
+        $resolver->setAllowedTypes([
             'name'      => 'string',
             'full_name' => 'string',
             'type'      => 'string',
-        ));
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildTableColumn(TableConfig $config, $name, array $options = array())
+    public function buildTableColumn(TableConfig $config, $name, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
@@ -55,10 +53,10 @@ abstract class AbstractColumnType implements ColumnTypeInterface
      */
     public function buildViewColumn(Column $column, Table $table, array $options)
     {
-        $column->setVars(array(
+        $column->setVars([
             'name'      => $options['name'],
             'full_name' => $options['full_name'],
-        ));
+        ]);
     }
 
     /**
@@ -66,8 +64,8 @@ abstract class AbstractColumnType implements ColumnTypeInterface
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
-        $cell->setVars(array(
+        $cell->setVars([
             'type' => $options['type'],
-        ));
+        ]);
     }
 }

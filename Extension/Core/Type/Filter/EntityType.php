@@ -9,7 +9,7 @@ use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -37,22 +37,22 @@ class EntityType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'class'         => null,
                 'property'      => null,
                 'query_builder' => null,
-            ))
-            ->setRequired(array('class'))
-            ->setAllowedTypes(array(
+            ])
+            ->setRequired(['class'])
+            ->setAllowedTypes([
                 'class'         => 'string',
-                'property'      => array('null', 'string'),
-                'query_builder' => array('null', 'closure'),
-            ))
+                'property'      => ['null', 'string'],
+                'query_builder' => ['null', 'closure'],
+            ])
         ;
     }
 
@@ -62,18 +62,18 @@ class EntityType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
+            ])
             ->add(
-                $builder->create('value', 'entity', array(
+                $builder->create('value', 'entity', [
                     'label'         => false,
                     'class'         => $options['class'],
                     'multiple'      => true,
                     'property'      => $options['property'],
                     'query_builder' => $options['query_builder'],
-                ))->addModelTransformer(
+                ])->addModelTransformer(
                     new IdentifierToObjectTransformer($this->em->getRepository($options['class']))
                 )
             );
@@ -87,7 +87,7 @@ class EntityType extends AbstractFilterType
     {
         $repo = $this->em->getRepository($options['class']);
 
-        $entities = $repo->findBy(array('id' => $data['value']));
+        $entities = $repo->findBy(['id' => $data['value']]);
         $values = [];
 
         if (0 < strlen($property = $options['property'])) {
@@ -106,13 +106,13 @@ class EntityType extends AbstractFilterType
         }
 
         $activeFilter = new ActiveFilter();
-        $activeFilter->setVars(array(
+        $activeFilter->setVars([
             'full_name' => $data['full_name'],
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $values
-        ));
+        ]);
         $view->active_filters[] = $activeFilter;
     }
 
@@ -121,10 +121,10 @@ class EntityType extends AbstractFilterType
      */
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::IN,
             FilterOperator::NOT_IN,
-        );
+        ];
     }
 
     /**

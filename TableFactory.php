@@ -76,7 +76,7 @@ class TableFactory
      * @param string      $type
      * @param array       $options
      */
-    public function createColumn(TableConfig $config, $name, $type = null, array $options = array())
+    public function createColumn(TableConfig $config, $name, $type = null, array $options = [])
     {
         if(null === $type) {
             $type = 'text';
@@ -93,7 +93,7 @@ class TableFactory
      * @param string      $type
      * @param array       $options
      */
-    public function createFilter(TableConfig $config, $name, $type = null, array $options = array())
+    public function createFilter(TableConfig $config, $name, $type = null, array $options = [])
     {
         if(null === $type) {
             $type = 'text';
@@ -110,13 +110,13 @@ class TableFactory
      *
      * @return \Ekyna\Component\Table\TableBuilder
      */
-    public function createBuilder($type = 'table', array $options = array())
+    public function createBuilder($type = 'table', array $options = [])
     {
         $type = $type instanceof TableTypeInterface ? $type : $this->getTableType($type);
 
         // TODO wrong place
         $resolver = new OptionsResolver();
-        $type->setDefaultOptions($resolver);
+        $type->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
 
         $builder = new TableBuilder($type, $resolvedOptions);

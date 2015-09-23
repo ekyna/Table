@@ -10,19 +10,19 @@ namespace Ekyna\Component\Table;
 class TableView
 {
     public $name = null;
-    public $options = array();
-    public $attr = array();
+    public $options = [];
+    public $attr = [];
 
-    public $available_filters = array();
-    public $active_filters = array();
+    public $available_filters = [];
+    public $active_filters = [];
 
     public $filter_label = null;
     public $filter_form = null;
 
     public $selection_form = false;
 
-    public $columns = array();
-    public $rows = array();
+    public $columns = [];
+    public $rows = [];
 
     public $pager = null;
 }

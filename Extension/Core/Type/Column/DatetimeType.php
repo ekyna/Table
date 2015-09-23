@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
@@ -17,25 +17,25 @@ class DatetimeType extends PropertyType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $formats = ['none', 'short', 'medium', 'long', 'full'];
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'date_format' => 'short',
                 'time_format' => 'short',
-            ))
-            ->setAllowedValues(array(
+            ])
+            ->setAllowedValues([
                 'date_format' => $formats,
                 'time_format' => $formats,
-            ))
-            ->setAllowedTypes(array(
+            ])
+            ->setAllowedTypes([
                 'date_format' => 'string',
                 'time_format' => 'string',
-            ))
+            ])
         ;
     }
 
@@ -45,11 +45,11 @@ class DatetimeType extends PropertyType
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
         parent::buildViewCell($cell, $table, $options);
-        $cell->setVars(array(
+        $cell->setVars([
             //'value'  => $table->getCurrentRowData($options['property_path'])->format('d/m/Y H:i'),
             'date_format' => $options['date_format'],
             'time_format' => $options['time_format'],
-        ));
+        ]);
     }
 
     /**

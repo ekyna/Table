@@ -9,11 +9,11 @@ namespace Ekyna\Component\Table\View;
  */
 class Cell
 {
-    public $vars = array(
+    public $vars = [
         'value'  => null,
         'type'   => null,
     	'sorted' => false
-    );
+    ];
 
     public function setVars(array $vars)
     {

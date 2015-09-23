@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AnchorType
@@ -16,22 +16,22 @@ class AnchorType extends PropertyType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'route_name'           => null,
-                'route_parameters'     => array(),
-                'route_parameters_map' => array(),
-            ))
-            ->setRequired(array('route_name'))
-            ->setAllowedTypes(array(
+                'route_parameters'     => [],
+                'route_parameters_map' => [],
+            ])
+            ->setRequired(['route_name'])
+            ->setAllowedTypes([
                 'route_name'           => 'string',
                 'route_parameters'     => 'array',
                 'route_parameters_map' => 'array',
-            ))
+            ])
         ;
     }
 
@@ -57,10 +57,10 @@ class AnchorType extends PropertyType
             $parameters = $options['route_parameters'];
         }
 
-        $cell->setVars(array(
+        $cell->setVars([
             'route'      => $options['route_name'],
             'parameters' => $parameters,
-        ));
+        ]);
     }
 
     /**

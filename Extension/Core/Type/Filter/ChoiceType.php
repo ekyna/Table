@@ -9,7 +9,7 @@ use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -22,18 +22,18 @@ class ChoiceType extends AbstractFilterType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'choices' => null,
-            ))
-            ->setRequired(array('choices'))
-            ->setAllowedTypes(array(
+            ])
+            ->setRequired(['choices'])
+            ->setAllowedTypes([
                 'choices' => 'array',
-            ))
+            ])
         ;
     }
 
@@ -43,16 +43,16 @@ class ChoiceType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('operator', 'choice', array(
+            ->add('operator', 'choice', [
                 'label' => false,
                 'choices' => FilterOperator::getChoices($this->getOperators())
-            ))
+            ])
             ->add(
-                $builder->create('value', 'choice', array(
+                $builder->create('value', 'choice', [
                     'label'    => false,
                     'multiple' => true,
                     'choices'  => $options['choices'],
-                ))
+                ])
             );
         ;
     }
@@ -78,13 +78,13 @@ class ChoiceType extends AbstractFilterType
         }
 
         $activeFilter = new ActiveFilter();
-        $activeFilter->setVars(array(
+        $activeFilter->setVars([
             'full_name' => $data['full_name'],
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
             'value'     => $value,
-        ));
+        ]);
         $view->active_filters[] = $activeFilter;
     }
 
@@ -93,10 +93,10 @@ class ChoiceType extends AbstractFilterType
      */
     public function getOperators()
     {
-        return array(
+        return [
             FilterOperator::IN,
             FilterOperator::NOT_IN,
-        );
+        ];
     }
 
     /**

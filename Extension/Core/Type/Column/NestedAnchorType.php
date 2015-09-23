@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 use Doctrine\Common\Collections\Collection;
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -18,22 +18,22 @@ class NestedAnchorType extends AnchorType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'left_property_path'  => 'left',
             'right_property_path'  => 'right',
             'parent_property_path' => 'parent',
             'children_property_path' => 'children',
-        ));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setAllowedTypes([
             'left_property_path'  => 'string',
             'right_property_path'  => 'string',
             'parent_property_path' => 'string',
             'children_property_path' => 'string',
-        ));
+        ]);
     }
 
     /**
@@ -45,9 +45,9 @@ class NestedAnchorType extends AnchorType
 
         $data = $table->getCurrentRowData();
 
-        $cell->setVars(array(
+        $cell->setVars([
         	'nodes' => $this->getTreeNodes($data, $table->getPropertyAccessor(), $options),
-        ));
+        ]);
     }
 
     /**
@@ -85,11 +85,11 @@ class NestedAnchorType extends AnchorType
                 $classes[] = 'continue';
             }
 
-            $nodes[] = array(
+            $nodes[] = [
                 'type'  => $type,
                 'class' => implode(' ', $classes),
                 'children' => json_encode($childrenIds),
-            );
+            ];
         }
 
         return $nodes;
@@ -114,7 +114,7 @@ class NestedAnchorType extends AnchorType
                 }, $children);
             }
         }
-        return array();
+        return [];
     }
 
     /**

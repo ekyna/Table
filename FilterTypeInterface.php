@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table;
 use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\View\AvailableFilter;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Interface FilterTypeInterface
@@ -17,9 +17,9 @@ interface FilterTypeInterface
     /**
      * Configure options
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolverInterface $resolver);
+    public function configureOptions(OptionsResolver $resolver);
     
     /**
      * Adds a filter to the given table
@@ -28,7 +28,7 @@ interface FilterTypeInterface
      * @param string      $name
      * @param array       $options
      */
-    public function buildTableFilter(TableConfig $config, $name, array $options = array());
+    public function buildTableFilter(TableConfig $config, $name, array $options = []);
 
     /**
      * Sets available filter vars

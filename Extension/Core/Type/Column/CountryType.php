@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\Intl\Intl;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CountryType
@@ -17,14 +17,14 @@ class CountryType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'choices' => Intl::getRegionBundle()->getCountryNames(),
-            ))
+            ])
         ;
     }
 
@@ -40,10 +40,10 @@ class CountryType extends ChoiceType
             $label = Intl::getRegionBundle()->getCountryName($cell->vars['value']);
         }
 
-        $cell->setVars(array(
+        $cell->setVars([
             'label' =>  $label,
             'type'  => 'choice',
-        ));
+        ]);
     }
 
     /**

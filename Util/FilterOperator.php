@@ -161,7 +161,7 @@ final class FilterOperator
      */
     public static function getChoices(array $operators)
     {
-        $choices = array();
+        $choices = [];
         foreach($operators as $operator) {
             $choices[$operator] = self::getLabel($operator);
         }

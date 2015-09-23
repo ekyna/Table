@@ -7,8 +7,6 @@ use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\TableConfig;
 use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -21,47 +19,47 @@ class ActionsType extends AbstractColumnType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'label'   => '',
-            'buttons' => array(),
-        ));
-        $resolver->setRequired(array('buttons'));
-        $resolver->setAllowedTypes(array(
+            'buttons' => [],
+        ]);
+        $resolver->setRequired(['buttons']);
+        $resolver->setAllowedTypes([
             'label'   => 'string',
             'buttons' => 'array',
-        ));
+        ]);
     }
 
     /**
      * Configures the button options resolver.
      * 
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    protected function configureButtonOptions(OptionsResolverInterface $resolver)
+    protected function configureButtonOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'label'                 => '',
             'icon'                  => '',
             'class'                 => 'default',
             'route_name'            => null,
-            'route_parameters'      => array(),
-            'route_parameters_map'  => array(),
+            'route_parameters'      => [],
+            'route_parameters_map'  => [],
             'disabled'              => false,
             'disable_property_path' => '',
-        ));
-        $resolver->setRequired(array('label', 'route_name', 'route_parameters_map'));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setRequired(['label', 'route_name', 'route_parameters_map']);
+        $resolver->setAllowedTypes([
             'label'                 => 'string',
             'route_name'            => 'string',
             'route_parameters'      => 'array',
             'route_parameters_map'  => 'array',
             'disabled'              => 'bool',
             'disable_property_path' => 'string',
-        ));
+        ]);
     }
 
     /**
@@ -77,7 +75,7 @@ class ActionsType extends AbstractColumnType
         $buttonResolver = new OptionsResolver();
         $this->configureButtonOptions($buttonResolver);
 
-        $tmp = array();
+        $tmp = [];
         foreach($buttonsOptions as $buttonOptions) {
             $tmp[] = $buttonResolver->resolve($buttonOptions);
         }
@@ -87,7 +85,7 @@ class ActionsType extends AbstractColumnType
     /**
      * {@inheritDoc}
      */
-    public function buildTableColumn(TableConfig $config, $name, array $options = array())
+    public function buildTableColumn(TableConfig $config, $name, array $options = [])
     {
         $options['buttons'] = $this->prepareButtons($config, $options['buttons']);
 
@@ -103,9 +101,9 @@ class ActionsType extends AbstractColumnType
     {
         parent::buildViewColumn($column, $table, $options);
 
-    	$column->setVars(array(
+    	$column->setVars([
         	'label' => $options['label'],
-    	));
+    	]);
     }
 
     /**
@@ -115,7 +113,7 @@ class ActionsType extends AbstractColumnType
     {
         parent::buildViewCell($cell, $table, $options);
 
-        $buttons = array();
+        $buttons = [];
         foreach($options['buttons'] as $buttonOptions) {
             $parameters = $buttonOptions['route_parameters'];
             foreach($buttonOptions['route_parameters_map'] as $parameter => $propertyPath) {
@@ -125,18 +123,18 @@ class ActionsType extends AbstractColumnType
             if(0 < strlen($buttonOptions['disable_property_path'])) {
                 $disabled = $table->getCurrentRowData($buttonOptions['disable_property_path']);
             }
-            $buttons[] = array(
+            $buttons[] = [
                 'disabled'   => $disabled,
                 'label'      => $buttonOptions['label'],
                 'icon'       => $buttonOptions['icon'],
             	'class'      => $buttonOptions['class'],
             	'route'      => $buttonOptions['route_name'],
                 'parameters' => $parameters,
-            );
+            ];
         }
-        $cell->setVars(array(
+        $cell->setVars([
             'buttons' => $buttons,
-        ));
+        ]);
     }
 
     /**

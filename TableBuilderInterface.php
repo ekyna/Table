@@ -20,7 +20,7 @@ interface TableBuilderInterface
      * 
      * @return TableBuilder
      */
-    public function addColumn($name, $type = null, array $options = array());
+    public function addColumn($name, $type = null, array $options = []);
 
     /**
      * Adds a filter definition
@@ -33,7 +33,7 @@ interface TableBuilderInterface
      * 
      * @return TableBuilder
      */
-    public function addFilter($name, $type = null, array $options = array());
+    public function addFilter($name, $type = null, array $options = []);
 
     /**
      * Returns the Table

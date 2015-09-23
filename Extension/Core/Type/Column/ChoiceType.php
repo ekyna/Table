@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ChoiceType
@@ -16,18 +16,18 @@ class ChoiceType extends PropertyType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'choices' => null,
-            ))
-            ->setRequired(array('choices'))
-            ->setAllowedTypes(array(
+            ])
+            ->setRequired(['choices'])
+            ->setAllowedTypes([
                 'choices' => 'array',
-            ))
+            ])
         ;
     }
 
@@ -43,7 +43,7 @@ class ChoiceType extends PropertyType
             $label = $options['choices'][$cell->vars['value']];
         }
 
-        $cell->setVars(array('label' =>  $label));
+        $cell->setVars(['label' =>  $label]);
     }
 
     /**

@@ -16,9 +16,9 @@ class CoreExtension extends AbstractTableExtension
      */
     protected function loadTableTypes()
     {
-        return array(
+        return [
         	new Type\TableType
-        );
+        ];
     }
 
     /**
@@ -26,7 +26,7 @@ class CoreExtension extends AbstractTableExtension
      */
     protected function loadColumnTypes()
     {
-        return array(
+        return [
         	new Type\Column\SelectorType,
         	new Type\Column\TextType,
             new Type\Column\NumberType,
@@ -37,7 +37,7 @@ class CoreExtension extends AbstractTableExtension
             new Type\Column\ImageType,
             new Type\Column\AnchorType,
             new Type\Column\ActionsType,
-        );
+        ];
     }
 
     /**
@@ -45,13 +45,13 @@ class CoreExtension extends AbstractTableExtension
      */
     protected function loadFilterTypes()
     {
-        return array(
+        return [
             new Type\Filter\TextType,
             new Type\Filter\NumberType,
             new Type\Filter\DatetimeType,
             new Type\Filter\BooleanType,
             new Type\Filter\ChoiceType,
             new Type\Filter\CountryType,
-        );
+        ];
     }
 }

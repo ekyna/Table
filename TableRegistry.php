@@ -17,29 +17,29 @@ class TableRegistry implements TableRegistryInterface
      * Extensions
      * @var TableExtensionInterface[] An array of TableExtensionInterface
      */
-    private $extensions = array();
+    private $extensions = [];
 
     /**
      * @var array
      */
-    private $tableTypes = array();
+    private $tableTypes = [];
 
     /**
      * @var array
      */
-    private $columnTypes = array();
+    private $columnTypes = [];
 
     /**
      * @var array
      */
-    private $filterTypes = array();
+    private $filterTypes = [];
 
     /**
      * Constructor
      *
      * @param TableExtensionInterface[] $extensions An array of TableExtensionInterface
      */
-    public function __construct(array $extensions = array())
+    public function __construct(array $extensions = [])
     {
         $this->addExtensions($extensions);
     }
@@ -54,7 +54,7 @@ class TableRegistry implements TableRegistryInterface
     public function addExtensions($extensions)
     {
         if(!is_array($extensions)) {
-            $extensions = array($extensions);
+            $extensions = [$extensions];
         }
         foreach ($extensions as $extension) {
             if (!$extension instanceof TableExtensionInterface) {

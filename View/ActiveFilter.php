@@ -9,14 +9,14 @@ namespace Ekyna\Component\Table\View;
  */
 class ActiveFilter
 {
-    private $vars = array(
+    private $vars = [
         'name'      => null,
         'full_name' => null,
         'id'        => null,
         'field'     => null,
         'operator'  => null,
         'value'     => null,
-    );
+    ];
 
     public function setVars(array $vars)
     {

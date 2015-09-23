@@ -3,7 +3,7 @@
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Symfony\Component\Intl\Intl;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CountryType
@@ -15,14 +15,14 @@ class CountryType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'choices' => Intl::getRegionBundle()->getCountryNames(),
-            ))
+            ])
         ;
     }
 

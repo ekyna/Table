@@ -7,7 +7,7 @@ use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\Cell;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PropertyType
@@ -19,11 +19,11 @@ abstract class PropertyType extends AbstractColumnType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'sortable'      => false,
             'filterable'    => false,
             'label'         => function (Options $options) {
@@ -32,13 +32,13 @@ abstract class PropertyType extends AbstractColumnType
             'property_path' => function (Options $options) {
                 return $options['name'];
             },
-        ));
-        $resolver->setRequired(array('sortable', 'label', 'property_path'));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setRequired(['sortable', 'label', 'property_path']);
+        $resolver->setAllowedTypes([
             'sortable'      => 'bool',
             'label'         => 'string',
-            'property_path' => array('null', 'string'),
-        ));
+            'property_path' => ['null', 'string'],
+        ]);
     }
 
     /**
@@ -48,13 +48,13 @@ abstract class PropertyType extends AbstractColumnType
     {
         parent::buildViewColumn($column, $table, $options);
 
-    	$column->setVars(array(
+    	$column->setVars([
         	'label'    => $options['label'],
         	'sortable' => $options['sortable'],
         	'sort_by'  => $options['property_path'],
         	'sort_dir' => $options['sort_dir'],
     	    'sorted'   => $options['sorted'],
-    	));
+    	]);
     }
 
     /**
@@ -64,9 +64,9 @@ abstract class PropertyType extends AbstractColumnType
     {
         parent::buildViewCell($cell, $table, $options);
 
-        $cell->setVars(array(
+        $cell->setVars([
             'value'  => $table->getCurrentRowData($options['property_path']),
             'sorted' => $options['sorted'],
-        ));
+        ]);
     }
 }

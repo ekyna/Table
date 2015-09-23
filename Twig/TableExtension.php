@@ -48,12 +48,12 @@ class TableExtension extends \Twig_Extension
     {
         $this->environment = $environment;
         $this->viewFactory = $viewFactory;
-        $this->defaultOptions = array_merge(array(
+        $this->defaultOptions = array_merge([
             'class' => null,
             'template' => __DIR__.'/../Resources/views/table.html.twig',
-        ), array(
+        ], [
         	'template' => $template
-        ));
+        ]);
     }
 
     /**
@@ -61,14 +61,14 @@ class TableExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('ekyna_table_render', array($this, 'render'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ekyna_table_cell', array($this, 'renderCell'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ekyna_table_pager', array($this, 'renderPager'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ekyna_table_sort_path', array($this, 'generateSortPath'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ekyna_table_filter_add_path', array($this, 'generateFilterAddPath'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ekyna_table_filter_remove_path', array($this, 'generateFilterRemovePath'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFunction('ekyna_table_render', [$this, 'render'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ekyna_table_cell', [$this, 'renderCell'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ekyna_table_pager', [$this, 'renderPager'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ekyna_table_sort_path', [$this, 'generateSortPath'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ekyna_table_filter_add_path', [$this, 'generateFilterAddPath'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ekyna_table_filter_remove_path', [$this, 'generateFilterRemovePath'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
@@ -79,7 +79,7 @@ class TableExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function render(TableView $table, array $options = array())
+    public function render(TableView $table, array $options = [])
     {
         $options = array_merge($this->defaultOptions, $options);
 
@@ -90,7 +90,7 @@ class TableExtension extends \Twig_Extension
             $this->template = $this->environment->loadTemplate($template);
         }
 
-        return $this->template->renderBlock('table', array('table' => $table, 'options' => $options));
+        return $this->template->renderBlock('table', ['table' => $table, 'options' => $options]);
     }
 
     /**
@@ -118,16 +118,16 @@ class TableExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function renderPager(TableView $table, $viewName = 'twitter_bootstrap3', array $options = array())
+    public function renderPager(TableView $table, $viewName = 'twitter_bootstrap3', array $options = [])
     {
         $pageParam = $table->name.'_page';
-        $options = array_merge(array(
+        $options = array_merge([
             'pageParameter' => '['.$pageParam.']',
             'proximity'     => 3,
             'next_message'  => '&raquo;',
             'prev_message'  => '&laquo;',
             'default_view'  => 'default'
-        ), $options);
+        ], $options);
 
         $routeGenerator = function($page) use ($pageParam) {
             return '?'.$pageParam.'='.$page;

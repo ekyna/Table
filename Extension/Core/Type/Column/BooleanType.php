@@ -4,7 +4,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class BooleanType
@@ -16,28 +16,28 @@ class BooleanType extends PropertyType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'true_label'  => 'ekyna_core.value.yes',
             'false_label' => 'ekyna_core.value.no',
             'true_class'  => 'label-success',
             'false_class' => 'label-danger',
             'route_name'  => null,
-            'route_parameters' => array(),
-            'route_parameters_map' => array(),
-        ));
-        $resolver->setRequired(array('route_name'));
-        $resolver->setAllowedTypes(array(
+            'route_parameters' => [],
+            'route_parameters_map' => [],
+        ]);
+        $resolver->setRequired(['route_name']);
+        $resolver->setAllowedTypes([
             'true_label'  => 'string',
             'false_label' => 'string',
             'true_class'  => 'string',
             'false_class' => 'string',
-            'route_name'  => array('null', 'string'),
+            'route_name'  => ['null', 'string'],
             'route_parameters' => 'array',
             'route_parameters_map' => 'array',
-        ));
+        ]);
     }
 
     /**
@@ -52,12 +52,12 @@ class BooleanType extends PropertyType
             $parameters[$key] = $table->getCurrentRowData($propertyPath);
         }
 
-        $cell->setVars(array(
+        $cell->setVars([
             'label'      => $cell->vars['value'] ? $options['true_label'] : $options['false_label'],
             'class'      => $cell->vars['value'] ? $options['true_class'] : $options['false_class'],
             'route'      => $options['route_name'],
             'parameters' => $parameters,
-        ));
+        ]);
     }
 
     /**

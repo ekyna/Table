@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 use Ekyna\Component\Table\AbstractColumnType;
 use Ekyna\Component\Table\Table;
 use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
@@ -18,20 +18,20 @@ class SelectorType extends AbstractColumnType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'multiple'      => false,
             'property_path' => null,
             'data_map'      => null,
-        ));
-        $resolver->setAllowedTypes(array(
+        ]);
+        $resolver->setAllowedTypes([
             'multiple'      => 'bool',
-            'property_path' => array('null', 'string'),
-            'data_map'      => array('null', 'array'),
-        ));
+            'property_path' => ['null', 'string'],
+            'data_map'      => ['null', 'array'],
+        ]);
     }
 
     /**
@@ -47,20 +47,20 @@ class SelectorType extends AbstractColumnType
             $value = $table->getCurrentRowKey();
         }
 
-        $data = array();
+        $data = [];
         if (is_array($options['data_map'])) {
             foreach($options['data_map'] as $key => $property_path) {
                 $data[(is_string($key) ? $key : $property_path)] = (string) $table->getCurrentRowData($property_path);
             }
         }
 
-        $cell->setVars(array(
+        $cell->setVars([
             'input_type' => $options['multiple'] ? 'checkbox' : 'radio',
             'input_name' => $options['full_name'],
             'value'      => $value,
             'data'       => $data,
             'selected'   => false,
-        ));
+        ]);
     }
 
     /**

@@ -61,10 +61,10 @@ class TableConfig
     {
         $this->name = preg_replace('#[^a-zA-Z_]#', '_', $name);
 
-        $this->defaultSorts = array();
+        $this->defaultSorts = [];
 
-        $this->columns = array();
-        $this->filters = array();
+        $this->columns = [];
+        $this->filters = [];
     }
 
     /**
@@ -178,7 +178,7 @@ class TableConfig
      * @param array $defaultSorts
      * @return TableConfig
      */
-    public function setDefaultSorts(array $defaultSorts = array())
+    public function setDefaultSorts(array $defaultSorts = [])
     {
         $this->defaultSorts = $defaultSorts;
         return $this;
