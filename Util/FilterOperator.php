@@ -63,8 +63,8 @@ final class FilterOperator
             case self::LOWER_THAN_OR_EQUAL:   return 'est inférieur ou égal à';
             case self::GREATER_THAN:          return 'est supérieur à';
             case self::GREATER_THAN_OR_EQUAL: return 'est supérieur ou égal à';
-            case self::IN:                    return 'est parmis';
-            case self::NOT_IN:                return 'n\'est pas parmis';
+            case self::IN:                    return 'est parmi';
+            case self::NOT_IN:                return 'n\'est pas parmi';
             case self::LIKE:                  return 'contient';
             case self::NOT_LIKE:              return 'ne contient pas';
             case self::START_WITH:            return 'commence par';

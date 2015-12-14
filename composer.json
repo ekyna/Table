@@ -20,11 +20,5 @@
             "Ekyna\\Component\\Table" : ""
         }
     },
-    "target-dir" : "Ekyna/Component/Table",
-    "minimum-stability" : "dev",
-    "extra" : {
-        "branch-alias" : {
-            "dev-master" : "0.1.x-dev"
-        }
-    }
+    "target-dir" : "Ekyna/Component/Table"
 }
