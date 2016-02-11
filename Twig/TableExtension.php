@@ -182,6 +182,6 @@ class TableExtension extends \Twig_Extension
      */
     public function getName()
     {
-    	'ekyna_table';
+    	return 'ekyna_table';
     }
 }
