@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class BooleanType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class BooleanType extends PropertyType
 {
@@ -19,27 +19,26 @@ class BooleanType extends PropertyType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'true_label'            => 'ekyna_core.value.yes',
             'false_label'           => 'ekyna_core.value.no',
             'true_class'            => 'label-success',
             'false_class'           => 'label-danger',
             'route_name'            => null,
-            'route_parameters'      => array(),
-            'route_parameters_map'  => array(),
+            'route_parameters'      => [],
+            'route_parameters_map'  => [],
             'disable_property_path' => null,
-        ));
-        $resolver->setRequired(array('route_name'));
-        $resolver->setAllowedTypes(array(
-            'true_label'            => 'string',
-            'false_label'           => 'string',
-            'true_class'            => 'string',
-            'false_class'           => 'string',
-            'route_name'            => array('null', 'string'),
-            'route_parameters'      => 'array',
-            'route_parameters_map'  => 'array',
-            'disable_property_path' => array('null', 'string'),
-        ));
+        ]);
+        $resolver->setRequired(['route_name']);
+
+        $resolver->setAllowedTypes('true_label', 'string');
+        $resolver->setAllowedTypes('false_label', 'string');
+        $resolver->setAllowedTypes('true_class', 'string');
+        $resolver->setAllowedTypes('false_class', 'string');
+        $resolver->setAllowedTypes('route_name', ['null', 'string']);
+        $resolver->setAllowedTypes('route_parameters', 'array');
+        $resolver->setAllowedTypes('route_parameters_map', 'array');
+        $resolver->setAllowedTypes('disable_property_path', ['null', 'string']);
     }
 
     /**
@@ -65,12 +64,12 @@ class BooleanType extends PropertyType
             $parameters = [];
         }
 
-        $cell->setVars(array(
+        $cell->setVars([
             'label'      => $cell->vars['value'] ? $options['true_label'] : $options['false_label'],
             'class'      => $cell->vars['value'] ? $options['true_class'] : $options['false_class'],
             'route'      => $route,
             'parameters' => $parameters,
-        ));
+        ]);
     }
 
     /**
@@ -80,4 +79,4 @@ class BooleanType extends PropertyType
     {
         return 'boolean';
     }
-} 
+}

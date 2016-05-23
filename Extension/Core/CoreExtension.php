@@ -7,7 +7,7 @@ use Ekyna\Component\Table\AbstractTableExtension;
 /**
  * Class CoreExtension
  * @package Ekyna\Component\Table\Extension\Core
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class CoreExtension extends AbstractTableExtension
 {
@@ -17,7 +17,7 @@ class CoreExtension extends AbstractTableExtension
     protected function loadTableTypes()
     {
         return [
-        	new Type\TableType
+            new Type\TableType,
         ];
     }
 
@@ -27,8 +27,8 @@ class CoreExtension extends AbstractTableExtension
     protected function loadColumnTypes()
     {
         return [
-        	new Type\Column\SelectorType,
-        	new Type\Column\TextType,
+            new Type\Column\SelectorType,
+            new Type\Column\TextType,
             new Type\Column\NumberType,
             new Type\Column\ChoiceType,
             new Type\Column\CountryType,

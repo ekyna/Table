@@ -56,6 +56,8 @@ class TableConfig
 
     /**
      * Constructor.
+     *
+     * @param string $name
      */
     public function __construct($name)
     {

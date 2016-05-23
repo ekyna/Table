@@ -4,6 +4,7 @@ namespace Ekyna\Component\Table;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\Exception\RuntimeException;
 use Ekyna\Component\Table\Request\RequestHelper;
@@ -55,8 +56,11 @@ final class Table
      */
     private $requestHelper;
 
+
     /**
      * Constructor.
+     *
+     * @param TableConfig $config
      */
     public function __construct(TableConfig $config)
     {
@@ -89,10 +93,10 @@ final class Table
     /**
      * Sets the factory.
      *
-     * @param \Ekyna\Component\Table\TableFactory $factory
+     * @param TableFactory $factory
      * @return Table
      */
-    public function setFactory($factory)
+    public function setFactory(TableFactory $factory)
     {
         $this->factory = $factory;
         return $this;
@@ -101,7 +105,7 @@ final class Table
     /**
      * Returns the factory.
      *
-     * @return \Ekyna\Component\Table\TableFactory
+     * @return TableFactory
      */
     public function getFactory()
     {
@@ -137,11 +141,11 @@ final class Table
     /**
      * Sets the entityManager.
      *
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param EntityManager $entityManager
      *
      * @return Table
      */
-    public function setEntityManager($entityManager)
+    public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
         return $this;
@@ -150,7 +154,7 @@ final class Table
     /**
      * Returns the entityManager.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManager
      */
     public function getEntityManager()
     {
@@ -429,7 +433,7 @@ final class Table
 
                 if (in_array($sortDir, $sortDirs)) {
                     $columnOptions['sort_dir'] = $sortDir;
-    	            $columnOptions['sorted']   = true;
+                    $columnOptions['sorted']   = true;
 
                     // Configure query builder.
                     $queryBuilder->addOrderBy($alias.'.'.$columnOptions['property_path'], strtoupper($sortDir));

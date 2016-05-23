@@ -10,7 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * Class DatetimeType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class DatetimeType extends PropertyType
 {
@@ -23,20 +23,17 @@ class DatetimeType extends PropertyType
 
         $formats = ['none', 'short', 'medium', 'long', 'full'];
 
-        $resolver
-            ->setDefaults([
-                'date_format' => 'short',
-                'time_format' => 'short',
-            ])
-            ->setAllowedValues([
-                'date_format' => $formats,
-                'time_format' => $formats,
-            ])
-            ->setAllowedTypes([
-                'date_format' => 'string',
-                'time_format' => 'string',
-            ])
-        ;
+        $resolver->setDefaults([
+            'date_format' => 'short',
+            'time_format' => 'short',
+        ]);
+
+        $resolver->setAllowedValues('date_format', array_values($formats));
+        $resolver->setAllowedValues('time_format', array_values($formats));
+
+
+        $resolver->setAllowedTypes('date_format', 'string');
+        $resolver->setAllowedTypes('time_format', 'string');
     }
 
     /**
@@ -57,6 +54,6 @@ class DatetimeType extends PropertyType
      */
     public function getName()
     {
-    	return 'datetime';
+        return 'datetime';
     }
 }

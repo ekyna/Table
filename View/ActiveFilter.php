@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\View;
 /**
  * Class ActiveFilter
  * @package Ekyna\Component\Table\View
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class ActiveFilter
 {
@@ -33,6 +33,7 @@ class ActiveFilter
         if (array_key_exists($key, $this->vars)) {
             return $this->vars[$key];
         }
+
         return $default;
     }
 

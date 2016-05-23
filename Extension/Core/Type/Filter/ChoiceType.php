@@ -15,7 +15,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 /**
  * Class ChoiceType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class ChoiceType extends AbstractFilterType
 {
@@ -31,10 +31,7 @@ class ChoiceType extends AbstractFilterType
                 'choices' => null,
             ])
             ->setRequired(['choices'])
-            ->setAllowedTypes([
-                'choices' => 'array',
-            ])
-        ;
+            ->setAllowedTypes('choices', 'array');
     }
 
     /**
@@ -44,8 +41,8 @@ class ChoiceType extends AbstractFilterType
     {
         $builder
             ->add('operator', 'choice', [
-                'label' => false,
-                'choices' => FilterOperator::getChoices($this->getOperators())
+                'label'   => false,
+                'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add(
                 $builder->create('value', 'choice', [
@@ -53,8 +50,7 @@ class ChoiceType extends AbstractFilterType
                     'multiple' => true,
                     'choices'  => $options['choices'],
                 ])
-            );
-        ;
+            );;
     }
 
     /**
@@ -64,10 +60,11 @@ class ChoiceType extends AbstractFilterType
     {
         $value = $data['value'];
         $choices = $options['choices'];
-        $transform = function($v) use ($choices) {
+        $transform = function ($v) use ($choices) {
             if (array_key_exists($v, $choices)) {
                 return $choices[$v];
             }
+
             return $v;
         };
 

@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class AnchorType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class AnchorType extends PropertyType
 {
@@ -20,19 +20,16 @@ class AnchorType extends PropertyType
     {
         parent::configureOptions($resolver);
 
-        $resolver
-            ->setDefaults([
-                'route_name'           => null,
-                'route_parameters'     => [],
-                'route_parameters_map' => [],
-            ])
-            ->setRequired(['route_name'])
-            ->setAllowedTypes([
-                'route_name'           => 'string',
-                'route_parameters'     => 'array',
-                'route_parameters_map' => 'array',
-            ])
-        ;
+        $resolver->setDefaults([
+            'route_name'           => null,
+            'route_parameters'     => [],
+            'route_parameters_map' => [],
+        ]);
+        $resolver->setRequired(['route_name']);
+
+        $resolver->setAllowedTypes('route_name', 'string');
+        $resolver->setAllowedTypes('route_parameters', 'array');
+        $resolver->setAllowedTypes('route_parameters_map', 'array');
     }
 
     /**
@@ -44,7 +41,7 @@ class AnchorType extends PropertyType
 
         if (!empty($options['route_parameters_map'])) {
             $parameters = [];
-            foreach($options['route_parameters_map'] as $parameter => $propertyPath) {
+            foreach ($options['route_parameters_map'] as $parameter => $propertyPath) {
                 if (null !== $value = $table->getCurrentRowData($propertyPath)) {
                     $parameters[$parameter] = $value;
                 }

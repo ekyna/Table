@@ -143,6 +143,7 @@ class TableBuilder implements TableBuilderInterface
 
         $table = new Table($tableConfig);
 
+        /** @var \Doctrine\ORM\EntityManager $em */
         $em = null !== $this->options['em'] ? $this->options['em'] : $this->factory->getEntityManager();
 
         $table

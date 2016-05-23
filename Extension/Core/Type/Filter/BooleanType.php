@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class BooleanType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class BooleanType extends AbstractFilterType
 {
@@ -33,13 +33,8 @@ class BooleanType extends AbstractFilterType
             ->setDefaults([
                 'mode' => self::MODE_DEFAULT,
             ])
-            ->setAllowedTypes([
-                'mode' => 'string',
-            ])
-            ->setAllowedValues([
-                'mode' => [self::MODE_DEFAULT, self::MODE_IS_NULL, self::MODE_IS_NOT_NULL],
-            ])
-        ;
+            ->setAllowedTypes('mode', 'string')
+            ->setAllowedValues('mode', [self::MODE_DEFAULT, self::MODE_IS_NULL, self::MODE_IS_NOT_NULL]);
     }
 
     /**
@@ -49,15 +44,15 @@ class BooleanType extends AbstractFilterType
     {
         $form
             ->add('operator', 'choice', [
-                'label' => false,
-                'choices' => FilterOperator::getChoices($this->getOperators())
+                'label'   => false,
+                'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add('value', 'choice', [
-                'label' => false,
+                'label'   => false,
                 'choices' => [
                     '1' => 'ekyna_core.value.yes',
                     '0' => 'ekyna_core.value.no',
-                ]
+                ],
             ]);
     }
 
@@ -69,10 +64,10 @@ class BooleanType extends AbstractFilterType
         $activeFilter = new ActiveFilter();
         $activeFilter->setVars([
             'full_name' => $data['full_name'],
-            'id' => $data['id'],
-            'field' => $data['label'],
-            'operator' => FilterOperator::getLabel($data['operator']),
-            'value' => $data['value'] ? 'ekyna_core.value.yes' : 'ekyna_core.value.no',
+            'id'        => $data['id'],
+            'field'     => $data['label'],
+            'operator'  => FilterOperator::getLabel($data['operator']),
+            'value'     => $data['value'] ? 'ekyna_core.value.yes' : 'ekyna_core.value.no',
         ]);
         $view->active_filters[] = $activeFilter;
     }
@@ -88,23 +83,22 @@ class BooleanType extends AbstractFilterType
         if ($options['mode'] === self::MODE_DEFAULT) {
             $qb
                 ->andWhere(FilterOperator::buildExpression(
-                    $alias.'.'.$data['property_path'],
+                    $alias . '.' . $data['property_path'],
                     $data['operator'],
-                    ':filter_'.self::$filterCount
+                    ':filter_' . self::$filterCount
                 ))
                 ->setParameter(
-                    'filter_'.self::$filterCount,
+                    'filter_' . self::$filterCount,
                     FilterOperator::buildParameter($data['operator'], $data['value'])
-                )
-            ;
+                );
         } else {
             $value = $options['mode'] === self::MODE_IS_NULL ? $data['value'] : !$data['value'];
             $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
 
             $qb->andWhere(FilterOperator::buildExpression(
-                $alias.'.'.$data['property_path'],
+                $alias . '.' . $data['property_path'],
                 $operator,
-                ':filter_'.self::$filterCount
+                ':filter_' . self::$filterCount
             ));
         }
     }

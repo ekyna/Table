@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class CountryType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class CountryType extends ChoiceType
 {
@@ -21,11 +21,9 @@ class CountryType extends ChoiceType
     {
         parent::configureOptions($resolver);
 
-        $resolver
-            ->setDefaults([
-                'choices' => Intl::getRegionBundle()->getCountryNames(),
-            ])
-        ;
+        $resolver->setDefaults([
+            'choices' => Intl::getRegionBundle()->getCountryNames(),
+        ]);
     }
 
     /**
@@ -41,7 +39,7 @@ class CountryType extends ChoiceType
         }
 
         $cell->setVars([
-            'label' =>  $label,
+            'label' => $label,
             'type'  => 'choice',
         ]);
     }

@@ -2,13 +2,15 @@
 
 namespace Ekyna\Component\Table;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AbstractTableType
  * @package Ekyna\Component\Table
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractTableType implements TableTypeInterface
 {
@@ -39,18 +41,16 @@ abstract class AbstractTableType implements TableTypeInterface
             'selector_config' => null,
         ]);
 
-        $resolver->setAllowedTypes([
-            'name'            => 'string',
-            'data'            => ['null', 'array', 'Doctrine\Common\Collections\Collection'],
-            'data_class'      => 'string',
-            'em'              => ['null', 'Doctrine\Common\Persistence\ObjectManager'],
-            'default_sorts'   => 'array',
-            'max_per_page'    => 'int',
-            'customize_qb'    => ['null', 'callable'],
-            'selector'        => 'bool',
-            'multiple'        => 'bool',
-            'selector_config' => ['null', 'array'],
-        ]);
+        $resolver->setAllowedTypes('name', 'string');
+        $resolver->setAllowedTypes('data', ['null', 'array', Collection::class]);
+        $resolver->setAllowedTypes('data_class', 'string');
+        $resolver->setAllowedTypes('em', ['null', ObjectManager::class]);
+        $resolver->setAllowedTypes('default_sorts', 'array');
+        $resolver->setAllowedTypes('max_per_page', 'int');
+        $resolver->setAllowedTypes('customize_qb', ['null', 'callable']);
+        $resolver->setAllowedTypes('selector', 'bool');
+        $resolver->setAllowedTypes('multiple', 'bool');
+        $resolver->setAllowedTypes('selector_config', ['null', 'array']);
 
         $resolver->setRequired(['data_class', 'name']);
     }

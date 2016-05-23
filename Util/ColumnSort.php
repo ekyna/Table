@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Util;
 /**
  * Class ColumnSort
  * @package Ekyna\Component\Table\Util
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 final class ColumnSort
 {

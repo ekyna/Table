@@ -11,7 +11,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 /**
  * Class NestedAnchorType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class NestedAnchorType extends AnchorType
 {
@@ -23,17 +23,16 @@ class NestedAnchorType extends AnchorType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'left_property_path'  => 'left',
-            'right_property_path'  => 'right',
-            'parent_property_path' => 'parent',
+            'left_property_path'     => 'left',
+            'right_property_path'    => 'right',
+            'parent_property_path'   => 'parent',
             'children_property_path' => 'children',
         ]);
-        $resolver->setAllowedTypes([
-            'left_property_path'  => 'string',
-            'right_property_path'  => 'string',
-            'parent_property_path' => 'string',
-            'children_property_path' => 'string',
-        ]);
+
+        $resolver->setAllowedTypes('left_property_path', 'string');
+        $resolver->setAllowedTypes('right_property_path', 'string');
+        $resolver->setAllowedTypes('parent_property_path', 'string');
+        $resolver->setAllowedTypes('children_property_path', 'string');
     }
 
     /**
@@ -46,7 +45,7 @@ class NestedAnchorType extends AnchorType
         $data = $table->getCurrentRowData();
 
         $cell->setVars([
-        	'nodes' => $this->getTreeNodes($data, $table->getPropertyAccessor(), $options),
+            'nodes' => $this->getTreeNodes($data, $table->getPropertyAccessor(), $options),
         ]);
     }
 
@@ -58,7 +57,7 @@ class NestedAnchorType extends AnchorType
         $nodes = [];
 
         if (null !== $parent = $propertyAccessor->getValue($data, $options['parent_property_path'])) {
-            $nodes = $this->getTreeNodes($parent, $propertyAccessor, $options, $level+1);
+            $nodes = $this->getTreeNodes($parent, $propertyAccessor, $options, $level + 1);
 
             $left = $propertyAccessor->getValue($data, $options['left_property_path']);
             $right = $propertyAccessor->getValue($data, $options['right_property_path']);
@@ -86,8 +85,8 @@ class NestedAnchorType extends AnchorType
             }
 
             $nodes[] = [
-                'type'  => $type,
-                'class' => implode(' ', $classes),
+                'type'     => $type,
+                'class'    => implode(' ', $classes),
                 'children' => json_encode($childrenIds),
             ];
         }
@@ -98,9 +97,10 @@ class NestedAnchorType extends AnchorType
     /**
      * Returns the children ids.
      *
-     * @param mixed $data
+     * @param mixed                     $data
      * @param PropertyAccessorInterface $propertyAccessor
-     * @param array $options
+     * @param array                     $options
+     *
      * @return array
      */
     private function getChildrenIds($data, PropertyAccessorInterface $propertyAccessor, array $options)
@@ -114,6 +114,7 @@ class NestedAnchorType extends AnchorType
                 }, $children);
             }
         }
+
         return [];
     }
 

@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Class NumberType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class NumberType extends AbstractFilterType
 {
@@ -20,13 +20,12 @@ class NumberType extends AbstractFilterType
     {
         $form
             ->add('operator', 'choice', [
-                'label' => false,
-                'choices' => FilterOperator::getChoices($this->getOperators())
+                'label'   => false,
+                'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add('value', 'number', [
-                'label' => false
-            ])
-        ;
+                'label' => false,
+            ]);
     }
 
     /**
@@ -48,6 +47,6 @@ class NumberType extends AbstractFilterType
      */
     public function getName()
     {
-    	return 'number';
+        return 'number';
     }
 }

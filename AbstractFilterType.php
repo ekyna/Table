@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class AbstractFilterType
  * @package Ekyna\Component\Table
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractFilterType implements FilterTypeInterface
 {
@@ -34,14 +34,14 @@ abstract class AbstractFilterType implements FilterTypeInterface
                 return $options['name'];
             },
         ]);
+
         $resolver->setRequired(['name', 'full_name', 'type', 'label', 'property_path']);
-        $resolver->setAllowedTypes([
-            'name'          => 'string',
-            'full_name'     => 'string',
-            'type'          => 'string',
-            'label'         => 'string',
-            'property_path' => 'string',
-        ]);
+
+        $resolver->setAllowedTypes('name', 'string');
+        $resolver->setAllowedTypes('full_name', 'string');
+        $resolver->setAllowedTypes('type', 'string');
+        $resolver->setAllowedTypes('label', 'string');
+        $resolver->setAllowedTypes('property_path', 'string');
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
-            'value'     => $data['value']
+            'value'     => $data['value'],
         ]);
         $view->active_filters[] = $activeFilter;
     }
@@ -96,14 +96,13 @@ abstract class AbstractFilterType implements FilterTypeInterface
         $alias = $qb->getRootAliases()[0];
         $qb
             ->andWhere(FilterOperator::buildExpression(
-                $alias.'.'.$data['property_path'],
+                $alias . '.' . $data['property_path'],
                 $data['operator'],
-                ':filter_'.self::$filterCount
+                ':filter_' . self::$filterCount
             ))
             ->setParameter(
-                'filter_'.self::$filterCount,
+                'filter_' . self::$filterCount,
                 FilterOperator::buildParameter($data['operator'], $data['value'])
-            )
-        ;
+            );
     }
 }

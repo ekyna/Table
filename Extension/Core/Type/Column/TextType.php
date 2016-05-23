@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 /**
  * Class TextType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class TextType extends PropertyType
 {
@@ -14,6 +14,6 @@ class TextType extends PropertyType
      */
     public function getName()
     {
-    	return 'text';
+        return 'text';
     }
 }

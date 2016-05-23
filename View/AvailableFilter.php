@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\View;
 /**
  * Class AvailableFilter
  * @package Ekyna\Component\Table\View
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class AvailableFilter
 {
@@ -30,6 +30,7 @@ class AvailableFilter
         if (array_key_exists($key, $this->vars)) {
             return $this->vars[$key];
         }
+
         return $default;
     }
 

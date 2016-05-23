@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class ActionsType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class ActionsType extends AbstractColumnType
 {
@@ -27,16 +27,16 @@ class ActionsType extends AbstractColumnType
             'label'   => '',
             'buttons' => [],
         ]);
+
         $resolver->setRequired(['buttons']);
-        $resolver->setAllowedTypes([
-            'label'   => 'string',
-            'buttons' => 'array',
-        ]);
+
+        $resolver->setAllowedTypes('label', 'string');
+        $resolver->setAllowedTypes('buttons', 'array');
     }
 
     /**
      * Configures the button options resolver.
-     * 
+     *
      * @param OptionsResolver $resolver
      */
     protected function configureButtonOptions(OptionsResolver $resolver)
@@ -51,23 +51,23 @@ class ActionsType extends AbstractColumnType
             'disabled'              => false,
             'disable_property_path' => '',
         ]);
+
         $resolver->setRequired(['label', 'route_name', 'route_parameters_map']);
-        $resolver->setAllowedTypes([
-            'label'                 => 'string',
-            'route_name'            => 'string',
-            'route_parameters'      => 'array',
-            'route_parameters_map'  => 'array',
-            'disabled'              => 'bool',
-            'disable_property_path' => 'string',
-        ]);
+
+        $resolver->setAllowedTypes('label', 'string');
+        $resolver->setAllowedTypes('route_name', 'string');
+        $resolver->setAllowedTypes('route_parameters', 'array');
+        $resolver->setAllowedTypes('route_parameters_map', 'array');
+        $resolver->setAllowedTypes('disabled', 'bool');
+        $resolver->setAllowedTypes('disable_property_path', 'string');
     }
 
     /**
      * Prepares the buttons.
      *
      * @param TableConfig $config
-     * @param array $buttonsOptions
-     * 
+     * @param array       $buttonsOptions
+     *
      * @return array
      */
     protected function prepareButtons(TableConfig $config, array $buttonsOptions)
@@ -76,9 +76,10 @@ class ActionsType extends AbstractColumnType
         $this->configureButtonOptions($buttonResolver);
 
         $tmp = [];
-        foreach($buttonsOptions as $buttonOptions) {
+        foreach ($buttonsOptions as $buttonOptions) {
             $tmp[] = $buttonResolver->resolve($buttonOptions);
         }
+
         return $tmp;
     }
 
@@ -101,9 +102,9 @@ class ActionsType extends AbstractColumnType
     {
         parent::buildViewColumn($column, $table, $options);
 
-    	$column->setVars([
-        	'label' => $options['label'],
-    	]);
+        $column->setVars([
+            'label' => $options['label'],
+        ]);
     }
 
     /**
@@ -114,21 +115,21 @@ class ActionsType extends AbstractColumnType
         parent::buildViewCell($cell, $table, $options);
 
         $buttons = [];
-        foreach($options['buttons'] as $buttonOptions) {
+        foreach ($options['buttons'] as $buttonOptions) {
             $parameters = $buttonOptions['route_parameters'];
-            foreach($buttonOptions['route_parameters_map'] as $parameter => $propertyPath) {
+            foreach ($buttonOptions['route_parameters_map'] as $parameter => $propertyPath) {
                 $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }
             $disabled = $buttonOptions['disabled'];
-            if(0 < strlen($buttonOptions['disable_property_path'])) {
+            if (0 < strlen($buttonOptions['disable_property_path'])) {
                 $disabled = $table->getCurrentRowData($buttonOptions['disable_property_path']);
             }
             $buttons[] = [
                 'disabled'   => $disabled,
                 'label'      => $buttonOptions['label'],
                 'icon'       => $buttonOptions['icon'],
-            	'class'      => $buttonOptions['class'],
-            	'route'      => $buttonOptions['route_name'],
+                'class'      => $buttonOptions['class'],
+                'route'      => $buttonOptions['route_name'],
                 'parameters' => $parameters,
             ];
         }
@@ -142,6 +143,6 @@ class ActionsType extends AbstractColumnType
      */
     public function getName()
     {
-    	return 'actions';
+        return 'actions';
     }
 }

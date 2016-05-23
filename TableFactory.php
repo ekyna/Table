@@ -28,8 +28,13 @@ class TableFactory
      */
     private $entityManager;
 
+
     /**
-     * Initialize the TableFactory
+     * Constructor.
+     *
+     * @param TableRegistryInterface $registry
+     * @param FormFactory            $formFactory
+     * @param ObjectManager          $entityManager
      */
     public function __construct(TableRegistryInterface $registry, FormFactory $formFactory, ObjectManager $entityManager)
     {
@@ -129,7 +134,7 @@ class TableFactory
 
     /**
      * Returns a table type by name.
-     * 
+     *
      * @param string $name The name of the type
      *
      * @return TableTypeInterface The type
@@ -141,7 +146,7 @@ class TableFactory
 
     /**
      * Returns a column type by name.
-     * 
+     *
      * @param string $name The name of the type
      *
      * @return ColumnTypeInterface The type
@@ -153,7 +158,7 @@ class TableFactory
 
     /**
      * Returns a filter type by name.
-     * 
+     *
      * @param string $name The name of the type
      *
      * @return FilterTypeInterface The type

@@ -17,7 +17,6 @@ class TableType extends AbstractTableType
      */
     public function buildTable(TableBuilderInterface $builder, array $options)
     {
-
     }
 
     /**

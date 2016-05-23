@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class ChoiceType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class ChoiceType extends PropertyType
 {
@@ -20,15 +20,9 @@ class ChoiceType extends PropertyType
     {
         parent::configureOptions($resolver);
 
-        $resolver
-            ->setDefaults([
-                'choices' => null,
-            ])
-            ->setRequired(['choices'])
-            ->setAllowedTypes([
-                'choices' => 'array',
-            ])
-        ;
+        $resolver->setDefaults(['choices' => null]);
+        $resolver->setRequired(['choices']);
+        $resolver->setAllowedTypes('choices', 'array');
     }
 
     /**
@@ -43,7 +37,7 @@ class ChoiceType extends PropertyType
             $label = $options['choices'][$cell->vars['value']];
         }
 
-        $cell->setVars(['label' =>  $label]);
+        $cell->setVars(['label' => $label]);
     }
 
     /**

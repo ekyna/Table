@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class NestedActionsType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class NestedActionsType extends ActionsType
 {
@@ -20,6 +20,7 @@ class NestedActionsType extends ActionsType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'disable_property_path' => '',
             'left_property_path'    => 'left',
@@ -31,23 +32,23 @@ class NestedActionsType extends ActionsType
             'routes_parameters'     => [],
             'routes_parameters_map' => [],
         ]);
+
         $resolver->setRequired([
             'move_up_route',
             'move_down_route',
             'new_child_route',
             'routes_parameters_map',
         ]);
-        $resolver->setAllowedTypes([
-            'disable_property_path' => 'string',
-            'left_property_path'    => 'string',
-            'right_property_path'   => 'string',
-            'parent_property_path'  => 'string',
-            'new_child_route'       => 'string',
-            'move_up_route'         => 'string',
-            'move_down_route'       => 'string',
-            'routes_parameters'     => 'array',
-            'routes_parameters_map' => 'array',
-        ]);
+
+        $resolver->setAllowedTypes('disable_property_path', 'string');
+        $resolver->setAllowedTypes('left_property_path', 'string');
+        $resolver->setAllowedTypes('right_property_path', 'string');
+        $resolver->setAllowedTypes('parent_property_path', 'string');
+        $resolver->setAllowedTypes('new_child_route', 'string');
+        $resolver->setAllowedTypes('move_up_route', 'string');
+        $resolver->setAllowedTypes('move_down_route', 'string');
+        $resolver->setAllowedTypes('routes_parameters', 'array');
+        $resolver->setAllowedTypes('routes_parameters_map', 'array');
     }
 
     /**
@@ -63,20 +64,20 @@ class NestedActionsType extends ActionsType
         }
 
         $newChildButton = $moveUpButton = $moveDownButton = [
-            'disabled'   => $disabled,
-            'label'      => 'Ajouter',
-            'class'      => 'primary',
+            'disabled' => $disabled,
+            'label'    => 'Ajouter',
+            'class'    => 'primary',
         ];
-        $newChildButton['icon']  = 'plus';
+        $newChildButton['icon'] = 'plus';
         $newChildButton['class'] = 'success';
-        $moveUpButton['icon']    = 'arrow-up';
-        $moveUpButton['label']   = 'Déplacer vers le haut';
-        $moveDownButton['icon']  = 'arrow-down';
+        $moveUpButton['icon'] = 'arrow-up';
+        $moveUpButton['label'] = 'Déplacer vers le haut';
+        $moveDownButton['icon'] = 'arrow-down';
         $moveDownButton['label'] = 'Déplacer vers le bas';
 
         if (!$disabled) {
             $parameters = $options['routes_parameters'];
-            foreach($options['routes_parameters_map'] as $parameter => $propertyPath) {
+            foreach ($options['routes_parameters_map'] as $parameter => $propertyPath) {
                 $parameters[$parameter] = $table->getCurrentRowData($propertyPath);
             }
             $newChildButton['route'] = $options['new_child_route'];

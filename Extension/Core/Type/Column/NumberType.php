@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 /**
  * Class NumberType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class NumberType extends PropertyType
 {
@@ -13,6 +13,6 @@ class NumberType extends PropertyType
 
     public function getName()
     {
-    	return 'number';
+        return 'number';
     }
 }

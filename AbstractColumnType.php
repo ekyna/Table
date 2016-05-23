@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class AbstractColumnType
  * @package Ekyna\Component\Table
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class AbstractColumnType implements ColumnTypeInterface
 {
@@ -23,12 +23,13 @@ abstract class AbstractColumnType implements ColumnTypeInterface
             'full_name' => null,
             'type'      => $this->getName(),
         ]);
+
         $resolver->setRequired(['name', 'full_name', 'type']);
-        $resolver->setAllowedTypes([
-            'name'      => 'string',
-            'full_name' => 'string',
-            'type'      => 'string',
-        ]);
+
+        $resolver->setAllowedTypes('name', 'string');
+        $resolver->setAllowedTypes('full_name', 'string');
+        $resolver->setAllowedTypes('type', 'string');
+
     }
 
     /**

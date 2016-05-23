@@ -7,7 +7,7 @@ use Ekyna\Component\Table\Util\ColumnSort;
 /**
  * Class Column
  * @package Ekyna\Component\Table\View
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class Column
 {
@@ -15,8 +15,8 @@ class Column
         'name'      => null,
         'full_name' => null,
         'label'     => null,
-    	'sortable'  => false,
-    	'sort_dir'  => ColumnSort::NONE
+        'sortable'  => false,
+        'sort_dir'  => ColumnSort::NONE,
     ];
 
     public function setVars(array $vars)
@@ -34,6 +34,7 @@ class Column
         if (array_key_exists($key, $this->vars)) {
             return $this->vars[$key];
         }
+
         return $default;
     }
 

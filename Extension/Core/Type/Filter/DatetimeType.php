@@ -13,7 +13,7 @@ use Ekyna\Component\Table\View\ActiveFilter;
 /**
  * Class DatetimeType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class DatetimeType extends AbstractFilterType
 {
@@ -24,15 +24,14 @@ class DatetimeType extends AbstractFilterType
     {
         $form
             ->add('operator', 'choice', [
-                'label' => false,
-                'choices' => FilterOperator::getChoices($this->getOperators())
+                'label'   => false,
+                'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add('value', 'datetime', [
-                'label' => false,
+                'label'  => false,
                 'input'  => 'datetime',
                 'widget' => 'single_text',
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -49,7 +48,7 @@ class DatetimeType extends AbstractFilterType
             'id'        => $data['id'],
             'field'     => $data['label'],
             'operator'  => FilterOperator::getLabel($data['operator']),
-            'value'     => $date->format('d/m/Y H:i')
+            'value'     => $date->format('d/m/Y H:i'),
         ]);
         $view->active_filters[] = $activeFilter;
     }
@@ -63,16 +62,15 @@ class DatetimeType extends AbstractFilterType
         $alias = $qb->getRootAliases()[0];
         $qb
             ->andWhere(FilterOperator::buildExpression(
-                $alias.'.'.$data['property_path'],
+                $alias . '.' . $data['property_path'],
                 $data['operator'],
-                ':filter_'.self::$filterCount
+                ':filter_' . self::$filterCount
             ))
             ->setParameter(
-                'filter_'.self::$filterCount,
+                'filter_' . self::$filterCount,
                 $data['value'],
                 Type::DATETIME
-            )
-        ;
+            );
     }
 
     /**
@@ -95,6 +93,6 @@ class DatetimeType extends AbstractFilterType
      */
     public function getName()
     {
-    	return 'datetime';
+        return 'datetime';
     }
 }

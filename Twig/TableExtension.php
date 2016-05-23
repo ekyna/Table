@@ -13,7 +13,7 @@ use Pagerfanta\View\ViewFactoryInterface;
 /**
  * Class TableExtension
  * @package Ekyna\Component\Table\Twig
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class TableExtension extends \Twig_Extension
 {
@@ -39,7 +39,7 @@ class TableExtension extends \Twig_Extension
 
     /**
      * Constructor
-     * 
+     *
      * @param \Twig_Environment    $environment
      * @param ViewFactoryInterface $viewFactory
      * @param string               $template
@@ -49,10 +49,10 @@ class TableExtension extends \Twig_Extension
         $this->environment = $environment;
         $this->viewFactory = $viewFactory;
         $this->defaultOptions = array_merge([
-            'class' => null,
-            'template' => __DIR__.'/../Resources/views/table.html.twig',
+            'class'    => null,
+            'template' => __DIR__ . '/../Resources/views/table.html.twig',
         ], [
-        	'template' => $template
+            'template' => $template,
         ]);
     }
 
@@ -86,7 +86,7 @@ class TableExtension extends \Twig_Extension
         $template = $options['template'];
         if ($template instanceof \Twig_Template) {
             $this->template = $template;
-        }else{
+        } else {
             $this->template = $this->environment->loadTemplate($template);
         }
 
@@ -102,10 +102,12 @@ class TableExtension extends \Twig_Extension
      */
     public function renderCell(Cell $cell)
     {
-        $block = $cell->vars['type'].'_cell';
+        $block = $cell->vars['type'] . '_cell';
+
         /*if(!$this->template->hasBlock($block)) {
             $block = 'text_cell';
         }*/
+
         return trim($this->template->renderBlock($block, $cell->vars));
     }
 
@@ -120,44 +122,46 @@ class TableExtension extends \Twig_Extension
      */
     public function renderPager(TableView $table, $viewName = 'twitter_bootstrap3', array $options = [])
     {
-        $pageParam = $table->name.'_page';
+        $pageParam = $table->name . '_page';
         $options = array_merge([
-            'pageParameter' => '['.$pageParam.']',
+            'pageParameter' => '[' . $pageParam . ']',
             'proximity'     => 3,
             'next_message'  => '&raquo;',
             'prev_message'  => '&laquo;',
-            'default_view'  => 'default'
+            'default_view'  => 'default',
         ], $options);
 
-        $routeGenerator = function($page) use ($pageParam) {
-            return '?'.$pageParam.'='.$page;
+        $routeGenerator = function ($page) use ($pageParam) {
+            return '?' . $pageParam . '=' . $page;
         };
-        
+
         return $this->viewFactory->get($viewName)->render($table->pager, $routeGenerator, $options);
     }
 
     /**
      * Generates a column sort path
-     * 
+     *
      * @param Column $column
-     * 
+     *
      * @return string
      */
     public function generateSortPath(Column $column)
     {
-        if(true === $column->getVar('sortable')) {
+        if (true === $column->getVar('sortable')) {
             $sort = $column->getVar('sort_dir');
-            $path = '?' . $column->getVar('full_name') .'_sort=';
-            return $path .= $sort === ColumnSort::ASC ? ColumnSort::DESC : ColumnSort::ASC;
+            $path = '?' . $column->getVar('full_name') . '_sort=';
+
+            return $path . ($sort === ColumnSort::ASC ? ColumnSort::DESC : ColumnSort::ASC);
         }
+
         return '';
     }
 
     /**
      * Generates a filter add path
-     * 
+     *
      * @param AvailableFilter $filter
-     * 
+     *
      * @return string
      */
     public function generateFilterAddPath(AvailableFilter $filter)
@@ -167,9 +171,9 @@ class TableExtension extends \Twig_Extension
 
     /**
      * Generates a filter remove path
-     * 
+     *
      * @param ActiveFilter $filter
-     * 
+     *
      * @return string
      */
     public function generateFilterRemovePath(ActiveFilter $filter)
@@ -182,6 +186,6 @@ class TableExtension extends \Twig_Extension
      */
     public function getName()
     {
-    	return 'ekyna_table';
+        return 'ekyna_table';
     }
 }

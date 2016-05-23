@@ -8,7 +8,7 @@ use Ekyna\Component\Table\Exception\InvalidArgumentException;
 /**
  * Class FilterOperator
  * @package Ekyna\Component\Table\Util
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 final class FilterOperator
 {
@@ -29,23 +29,25 @@ final class FilterOperator
     const IS_NULL               = 15;
     const IS_NOT_NULL           = 16;
 
-    
+
     /**
      * Returns whether the operator is valid or not.
      *
      * @param string $operator
-     * @param bool $throwException
+     * @param bool   $throwException
+     *
      * @return bool
      */
     public static function isValid($operator, $throwException = false)
     {
         $operator = intval($operator);
-        if($operator > 0 && $operator <= self::IS_NOT_NULL) {
+        if ($operator > 0 && $operator <= self::IS_NOT_NULL) {
             return true;
         }
-        if($throwException) {
+        if ($throwException) {
             throw new InvalidArgumentException('Unexpected filter operator.');
         }
+
         return false;
     }
 
@@ -53,6 +55,7 @@ final class FilterOperator
      * Returns the label for the given operator.
      *
      * @param string $operator
+     *
      * @return string
      */
     public static function getLabel($operator)
@@ -60,21 +63,35 @@ final class FilterOperator
         self::isValid($operator, true);
 
         // TODO translations
-        switch(intval($operator)) {
-            case self::NOT_EQUAL:             return 'est différent de';
-            case self::LOWER_THAN:            return 'est inférieur à';
-            case self::LOWER_THAN_OR_EQUAL:   return 'est inférieur ou égal à';
-            case self::GREATER_THAN:          return 'est supérieur à';
-            case self::GREATER_THAN_OR_EQUAL: return 'est supérieur ou égal à';
-            case self::IN:                    return 'est parmi';
-            case self::NOT_IN:                return 'n\'est pas parmi';
-            case self::LIKE:                  return 'contient';
-            case self::NOT_LIKE:              return 'ne contient pas';
-            case self::START_WITH:            return 'commence par';
-            case self::NOT_START_WITH:        return 'ne commence pas par';
-            case self::END_WITH:              return 'se termine par';
-            case self::NOT_END_WITH:          return 'ne se termine pas par';
-            default:                          return 'est égal à';
+        switch (intval($operator)) {
+            case self::NOT_EQUAL:
+                return 'est différent de';
+            case self::LOWER_THAN:
+                return 'est inférieur à';
+            case self::LOWER_THAN_OR_EQUAL:
+                return 'est inférieur ou égal à';
+            case self::GREATER_THAN:
+                return 'est supérieur à';
+            case self::GREATER_THAN_OR_EQUAL:
+                return 'est supérieur ou égal à';
+            case self::IN:
+                return 'est parmi';
+            case self::NOT_IN:
+                return 'n\'est pas parmi';
+            case self::LIKE:
+                return 'contient';
+            case self::NOT_LIKE:
+                return 'ne contient pas';
+            case self::START_WITH:
+                return 'commence par';
+            case self::NOT_START_WITH:
+                return 'ne commence pas par';
+            case self::END_WITH:
+                return 'se termine par';
+            case self::NOT_END_WITH:
+                return 'ne se termine pas par';
+            default:
+                return 'est égal à';
         }
     }
 
@@ -84,6 +101,7 @@ final class FilterOperator
      * @param string $property
      * @param string $operator
      * @param string $parameter
+     *
      * @return Expr\Comparison|Expr\Func
      */
     public static function buildExpression($property, $operator, $parameter = null)
@@ -91,7 +109,7 @@ final class FilterOperator
         self::isValid($operator, true);
 
         $expr = new Expr();
-        switch(intval($operator)) {
+        switch (intval($operator)) {
             case self::NOT_EQUAL:
                 return $expr->neq($property, $parameter);
             case self::LOWER_THAN:
@@ -131,14 +149,15 @@ final class FilterOperator
      * Builds the parameter value.
      *
      * @param string $operator
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return Expr\Literal
      */
     public static function buildParameter($operator, $value)
     {
         self::isValid($operator, true);
 
-        switch(intval($operator)) {
+        switch (intval($operator)) {
             case self::LIKE:
             case self::NOT_LIKE:
                 return sprintf('%%%s%%', $value);
@@ -157,14 +176,16 @@ final class FilterOperator
      * Returns the available operators choices.
      *
      * @param array $operators
+     *
      * @return array
      */
     public static function getChoices(array $operators)
     {
         $choices = [];
-        foreach($operators as $operator) {
+        foreach ($operators as $operator) {
             $choices[$operator] = self::getLabel($operator);
         }
+
         return $choices;
     }
 }

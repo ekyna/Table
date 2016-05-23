@@ -5,14 +5,14 @@ namespace Ekyna\Component\Table\View;
 /**
  * Class Cell
  * @package Ekyna\Component\Table\View
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class Cell
 {
     public $vars = [
         'value'  => null,
         'type'   => null,
-    	'sorted' => false
+        'sorted' => false,
     ];
 
     public function setVars(array $vars)

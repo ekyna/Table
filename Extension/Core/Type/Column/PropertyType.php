@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class PropertyType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 abstract class PropertyType extends AbstractColumnType
 {
@@ -33,12 +33,12 @@ abstract class PropertyType extends AbstractColumnType
                 return $options['name'];
             },
         ]);
+
         $resolver->setRequired(['sortable', 'label', 'property_path']);
-        $resolver->setAllowedTypes([
-            'sortable'      => 'bool',
-            'label'         => 'string',
-            'property_path' => ['null', 'string'],
-        ]);
+
+        $resolver->setAllowedTypes('sortable', 'bool');
+        $resolver->setAllowedTypes('label', 'string');
+        $resolver->setAllowedTypes('property_path', ['null', 'string']);
     }
 
     /**
@@ -48,13 +48,13 @@ abstract class PropertyType extends AbstractColumnType
     {
         parent::buildViewColumn($column, $table, $options);
 
-    	$column->setVars([
-        	'label'    => $options['label'],
-        	'sortable' => $options['sortable'],
-        	'sort_by'  => $options['property_path'],
-        	'sort_dir' => $options['sort_dir'],
-    	    'sorted'   => $options['sorted'],
-    	]);
+        $column->setVars([
+            'label'    => $options['label'],
+            'sortable' => $options['sortable'],
+            'sort_by'  => $options['property_path'],
+            'sort_dir' => $options['sort_dir'],
+            'sorted'   => $options['sorted'],
+        ]);
     }
 
     /**

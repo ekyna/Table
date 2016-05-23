@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class CountryType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class CountryType extends ChoiceType
 {
@@ -19,11 +19,9 @@ class CountryType extends ChoiceType
     {
         parent::configureOptions($resolver);
 
-        $resolver
-            ->setDefaults([
-                'choices' => Intl::getRegionBundle()->getCountryNames(),
-            ])
-        ;
+        $resolver->setDefaults([
+            'choices' => Intl::getRegionBundle()->getCountryNames(),
+        ]);
     }
 
     /**

@@ -11,7 +11,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * Class SelectorType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class SelectorType extends AbstractColumnType
 {
@@ -27,11 +27,10 @@ class SelectorType extends AbstractColumnType
             'property_path' => null,
             'data_map'      => null,
         ]);
-        $resolver->setAllowedTypes([
-            'multiple'      => 'bool',
-            'property_path' => ['null', 'string'],
-            'data_map'      => ['null', 'array'],
-        ]);
+
+        $resolver->setAllowedTypes('multiple', 'bool');
+        $resolver->setAllowedTypes('property_path', ['null', 'string']);
+        $resolver->setAllowedTypes('data_map', ['null', 'array']);
     }
 
     /**
@@ -49,8 +48,8 @@ class SelectorType extends AbstractColumnType
 
         $data = [];
         if (is_array($options['data_map'])) {
-            foreach($options['data_map'] as $key => $property_path) {
-                $data[(is_string($key) ? $key : $property_path)] = (string) $table->getCurrentRowData($property_path);
+            foreach ($options['data_map'] as $key => $property_path) {
+                $data[(is_string($key) ? $key : $property_path)] = (string)$table->getCurrentRowData($property_path);
             }
         }
 
