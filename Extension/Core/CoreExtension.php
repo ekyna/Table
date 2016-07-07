@@ -30,6 +30,7 @@ class CoreExtension extends AbstractTableExtension
             new Type\Column\SelectorType,
             new Type\Column\TextType,
             new Type\Column\NumberType,
+            new Type\Column\PriceType,
             new Type\Column\ChoiceType,
             new Type\Column\CountryType,
             new Type\Column\BooleanType,

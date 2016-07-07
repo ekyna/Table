@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\Util\FilterOperator;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\View\ActiveFilter;
@@ -23,11 +24,11 @@ class DatetimeType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', [
+            ->add('operator', FormType\ChoiceType::class, [
                 'label'   => false,
                 'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
-            ->add('value', 'datetime', [
+            ->add('value', FormType\DateTimeType::class, [
                 'label'  => false,
                 'input'  => 'datetime',
                 'widget' => 'single_text',

@@ -8,6 +8,8 @@ use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType as FormEntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -60,16 +62,16 @@ class EntityType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('operator', 'choice', [
+            ->add('operator', ChoiceType::class, [
                 'label'   => false,
                 'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add(
-                $builder->create('value', 'entity', [
+                $builder->create('value', FormEntityType::class, [
                     'label'         => false,
                     'class'         => $options['class'],
                     'multiple'      => true,
-                    'property'      => $options['property'],
+                    'choice_label'  => $options['property'],
                     'query_builder' => $options['query_builder'],
                 ])->addModelTransformer(
                     new IdentifierToObjectTransformer($this->em->getRepository($options['class']))

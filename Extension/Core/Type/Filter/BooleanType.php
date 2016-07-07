@@ -7,6 +7,7 @@ use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,15 +44,15 @@ class BooleanType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
         $form
-            ->add('operator', 'choice', [
+            ->add('operator', ChoiceType::class, [
                 'label'   => false,
                 'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
-            ->add('value', 'choice', [
+            ->add('value', ChoiceType::class, [
                 'label'   => false,
                 'choices' => [
-                    '1' => 'ekyna_core.value.yes',
-                    '0' => 'ekyna_core.value.no',
+                    'ekyna_core.value.yes' => '1',
+                    'ekyna_core.value.no'  => '0',
                 ],
             ]);
     }

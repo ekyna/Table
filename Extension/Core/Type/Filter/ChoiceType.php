@@ -40,7 +40,7 @@ class ChoiceType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('operator', 'choice', [
+            ->add('operator', ChoiceType::class, [
                 'label'   => false,
                 'choices' => FilterOperator::getChoices($this->getOperators()),
             ])

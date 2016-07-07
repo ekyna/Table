@@ -2,46 +2,46 @@
 {% spaceless %}
 {% if table.available_filters|length > 0 %}
 <div class="table-filters">
-	<div class="row table-filters-available">
-	    <div class="col-md-3">
-	        <span class="table-filters-title">Filtres disponibles</span>
-	    </div>
-	    <div class="col-md-9">
-	        <div class="table-filters-controls">{{ block('available_filters') }}</div>
-	    </div>
-	</div>
-	{% if table.filter_form %}
-	<div class="row table-filters-form">
-	    <div class="col-md-3">
-	        <span class="table-filters-title">Nouveau filtre <strong>{{ table.filter_label }}</strong></span>
-	    </div>
-	    <div class="col-md-9">
-		    <div class="table-filters-controls">
+    <div class="row table-filters-available">
+        <div class="col-md-3">
+            <span class="table-filters-title">Filtres disponibles</span>
+        </div>
+        <div class="col-md-9">
+            <div class="table-filters-controls">{{ block('available_filters') }}</div>
+        </div>
+    </div>
+    {% if table.filter_form %}
+    <div class="row table-filters-form">
+        <div class="col-md-3">
+            <span class="table-filters-title">Nouveau filtre <strong>{{ table.filter_label }}</strong></span>
+        </div>
+        <div class="col-md-9">
+            <div class="table-filters-controls">
                 {{ bootstrap_set_style('inline') }}
-		        {{ form_start(table.filter_form) }}
-		        <div class="row">
-		            <div class="col-md-3">{{ form_row(table.filter_form.operator) }}</div>
-		            <div class="col-md-6">{{ form_row(table.filter_form.value) }}</div>
-		            <div class="col-md-3">
-		                <button type="submit" class="btn btn-success" style="margin-right:14px;"><span class="glyphicon glyphicon-plus"></span></button>
-		                <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
-		            </div>
-		        </div>
-		        {{ form_rest(table.filter_form) }}
-	        </div>
-	    </div>
-	</div>
-	{% endif %}
-	{% if table.active_filters|length > 0 %}
-	<div class="row table-filters-active">
-	    <div class="col-md-3">
-	        <span class="table-filters-title">Filtres actifs</span>
-	    </div>
-	    <div class="col-md-9">
-	        <div class="table-filters-controls">{{ block('active_filters') }}</div>
-	    </div>
-	</div>
-	{% endif %}
+                {{ form_start(table.filter_form) }}
+                <div class="row">
+                    <div class="col-md-3">{{ form_row(table.filter_form.operator) }}</div>
+                    <div class="col-md-6">{{ form_row(table.filter_form.value) }}</div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success" style="margin-right:14px;"><span class="glyphicon glyphicon-plus"></span></button>
+                        <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                </div>
+                {{ form_rest(table.filter_form) }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if table.active_filters|length > 0 %}
+    <div class="row table-filters-active">
+        <div class="col-md-3">
+            <span class="table-filters-title">Filtres actifs</span>
+        </div>
+        <div class="col-md-9">
+            <div class="table-filters-controls">{{ block('active_filters') }}</div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endif %}
 <div class="table-responsive">
@@ -125,10 +125,14 @@
 {% endblock selector_cell %}
 
 {% block text_cell %}
-<td{% if sorted %} class="sorted"{% endif %}>{{ value }}</td>
+<td{% if sorted %} class="sorted"{% endif %}>{{ value|raw }}</td>
 {% endblock text_cell %}
 
 {% block number_cell %}{{ block('text_cell') }}{% endblock number_cell %}
+
+{% block price_cell %}
+<td{% if sorted %} class="sorted"{% endif %}>{{ value|localizedcurrency(currency) }}</td>
+{% endblock price_cell %}
 
 {% block boolean_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
@@ -164,24 +168,24 @@
 
 {% block anchor_cell %}
 <td{% if sorted %} class="sorted"{% endif %}>
-	{% if value is same as(null) %}
-		-
-	{% elseif route is defined %}
-    	<a href="{{ path(route, parameters) }}">{{ value }}</a>
+    {% if value is same as(null) %}
+        -
+    {% elseif route is defined %}
+        <a href="{{ path(route, parameters) }}">{{ value }}</a>
     {% else %}
         {{ value }}
-	{% endif %}
+    {% endif %}
 </td>
 {% endblock anchor_cell %}
 
 {% block actions_cell %}
 <td class="actions">
 {% for button in buttons %}
-	{% if button.disabled %}
-	    <a href="javascript:void(0)" class="btn btn-xs btn-{{ button.class }} disabled">{{ block('action_button_label') }}</a>
-	{% else %}
-	    <a href="{{ path(button.route, button.parameters) }}" class="btn btn-xs btn-{{ button.class }}">{{ block('action_button_label') }}</a>
-	{% endif %}
+    {% if button.disabled %}
+        <a href="javascript:void(0)" class="btn btn-xs btn-{{ button.class }} disabled">{{ block('action_button_label') }}</a>
+    {% else %}
+        <a href="{{ path(button.route, button.parameters) }}" class="btn btn-xs btn-{{ button.class }}">{{ block('action_button_label') }}</a>
+    {% endif %}
 {% endfor %}
 </td>
 {% endblock actions_cell %}
@@ -197,18 +201,18 @@
 {% block nested_anchor_cell %}
 <td class="nested">
     {#% for class in tree %}<i{% if class|length > 0 %} class="{{ class }}"{% endif %}></i>{% endfor -%}
-	{% if children_ids|length > 0 -%}
-		<a href="javascript: void(0);" class="toggle toggle-close" data-children="{{ children_ids|json_encode }}"></a>
-	{%- else -%}
-		<i class="no-children"></i>
-	{%- endif %#}
-	{%- for node in nodes %}
-		{%- if node.type == 'button' -%}
-		<a href="javascript: void(0);" class="{{ node.class }}" data-children="{{ node.children }}"></a>
-		{%- else -%}
-		<i class="{{ node.class }}"></i>
-		{%- endif -%}
-	{% endfor -%}
+    {% if children_ids|length > 0 -%}
+        <a href="javascript: void(0);" class="toggle toggle-close" data-children="{{ children_ids|json_encode }}"></a>
+    {%- else -%}
+        <i class="no-children"></i>
+    {%- endif %#}
+    {%- for node in nodes %}
+        {%- if node.type == 'button' -%}
+        <a href="javascript: void(0);" class="{{ node.class }}" data-children="{{ node.children }}"></a>
+        {%- else -%}
+        <i class="{{ node.class }}"></i>
+        {%- endif -%}
+    {% endfor -%}
     <a href="{{ path(route, parameters) }}">{{ value }}</a>
 </td>
 {% endblock nested_anchor_cell %}

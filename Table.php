@@ -15,6 +15,7 @@ use Ekyna\Component\Table\View\Column;
 use Ekyna\Component\Table\View\Row;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAccessException;
@@ -342,7 +343,7 @@ final class Table
                 $formBuilder = $this->factory->getFormFactory()->createBuilder();
                 $type->buildFilterFrom($formBuilder, $filterOptions);
                 $form = $formBuilder
-                    ->add('add_filter', 'hidden', [
+                    ->add('add_filter', HiddenType::class, [
                         'data' => $filterOptions['full_name']
                     ])
                     ->getForm();

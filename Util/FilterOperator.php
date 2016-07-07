@@ -183,7 +183,7 @@ final class FilterOperator
     {
         $choices = [];
         foreach ($operators as $operator) {
-            $choices[$operator] = self::getLabel($operator);
+            $choices[self::getLabel($operator)] = $operator;
         }
 
         return $choices;
