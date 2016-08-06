@@ -107,7 +107,7 @@ class TableConfig
      *
      * @param array $resolvedOptions
      *
-     * @return \Ekyna\Component\Table\Table
+     * @return TableConfig
      */
     public function addColumn(array $resolvedOptions)
     {
@@ -128,7 +128,7 @@ class TableConfig
     /**
      * Returns whether the table has columns or not.
      *
-     * @return array
+     * @return bool
      */
     public function hasColumns()
     {
@@ -140,7 +140,7 @@ class TableConfig
      *
      * @param array $resolvedOptions
      *
-     * @return \Ekyna\Component\Table\Table
+     * @return TableConfig
      */
     public function addFilter(array $resolvedOptions)
     {
