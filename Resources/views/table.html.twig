@@ -128,10 +128,14 @@
 <td{% if sorted %} class="sorted"{% endif %}>{{ value|raw }}</td>
 {% endblock text_cell %}
 
-{% block number_cell %}{{ block('text_cell') }}{% endblock number_cell %}
+{% block number_cell %}
+<td class="text-right{% if sorted %} sorted{% endif %}">
+    {{- value|number_format(precision) }}{% if append is not same as (null) %} {{ append }}{% endif -%}
+</td>
+{% endblock number_cell %}
 
 {% block price_cell %}
-<td{% if sorted %} class="sorted"{% endif %}>{{ value|localizedcurrency(currency) }}</td>
+<td class="text-right{% if sorted %} sorted{% endif %}">{{ value|localizedcurrency(currency) }}</td>
 {% endblock price_cell %}
 
 {% block boolean_cell %}
@@ -151,7 +155,7 @@
 {% endblock choice_cell %}
 
 {% block datetime_cell %}
-<td{% if sorted %} class="sorted"{% endif %}>
+<td class="text-right{% if sorted %} sorted{% endif %}">
     {% if value is same as(null) %}
         -
     {% else %}

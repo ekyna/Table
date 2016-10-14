@@ -42,9 +42,7 @@ class PriceType extends PropertyType
         }
 
         $cell->setVars([
-            'value'    => $table->getCurrentRowData($options['property_path']),
             'currency' => $currency,
-            'sorted'   => $options['sorted'],
         ]);
     }
 

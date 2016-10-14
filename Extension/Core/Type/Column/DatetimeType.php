@@ -42,8 +42,8 @@ class DatetimeType extends PropertyType
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
         parent::buildViewCell($cell, $table, $options);
+
         $cell->setVars([
-            //'value'  => $table->getCurrentRowData($options['property_path'])->format('d/m/Y H:i'),
             'date_format' => $options['date_format'],
             'time_format' => $options['time_format'],
         ]);
