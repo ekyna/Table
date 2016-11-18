@@ -58,5 +58,5 @@ abstract class AbstractTableType implements TableTypeInterface
     /**
      * {@inheritdoc}
      */
-    abstract function getName();
+    abstract public function getName();
 }

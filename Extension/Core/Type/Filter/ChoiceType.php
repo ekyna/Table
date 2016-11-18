@@ -2,15 +2,13 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Ekyna\Bundle\CoreBundle\Form\DataTransformer\IdentifierToObjectTransformer;
 use Ekyna\Component\Table\AbstractFilterType;
 use Ekyna\Component\Table\TableView;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Form\Extension\Core\Type as Form;
 
 /**
  * Class ChoiceType
@@ -40,12 +38,12 @@ class ChoiceType extends AbstractFilterType
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('operator', ChoiceType::class, [
+            ->add('operator', Form\ChoiceType::class, [
                 'label'   => false,
                 'choices' => FilterOperator::getChoices($this->getOperators()),
             ])
             ->add(
-                $builder->create('value', 'choice', [
+                $builder->create('value', Form\ChoiceType::class, [
                     'label'    => false,
                     'multiple' => true,
                     'choices'  => $options['choices'],
