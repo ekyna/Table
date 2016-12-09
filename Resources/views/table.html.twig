@@ -128,6 +128,12 @@
 <td{% if sorted %} class="sorted"{% endif %}>{{ value|raw }}</td>
 {% endblock text_cell %}
 
+{% block id_cell %}
+<td class="text-right{% if sorted %} sorted{% endif %}">
+    {{- value -}}
+</td>
+{% endblock id_cell %}
+
 {% block number_cell %}
 <td class="text-right{% if sorted %} sorted{% endif %}">
     {{- value|number_format(precision) }}{% if append is not same as (null) %} {{ append }}{% endif -%}

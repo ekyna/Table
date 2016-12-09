@@ -13,7 +13,7 @@ use Ekyna\Component\Table\TableBuilderInterface;
 class TableType extends AbstractTableType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildTable(TableBuilderInterface $builder, array $options)
     {

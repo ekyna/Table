@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NumberType extends PropertyType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -31,7 +31,7 @@ class NumberType extends PropertyType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {

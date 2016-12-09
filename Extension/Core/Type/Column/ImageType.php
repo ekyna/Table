@@ -13,7 +13,7 @@ use Ekyna\Component\Table\View\Column;
 class ImageType extends PropertyType
 {
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function buildViewColumn(Column $column, Table $table, array $options)
     {
@@ -23,7 +23,7 @@ class ImageType extends PropertyType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getName()
     {

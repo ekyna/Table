@@ -46,7 +46,7 @@ class TableRegistry implements TableRegistryInterface
 
     /**
      * Adds extensions
-     * 
+     *
      * @param TableExtensionInterface[] $extensions An array of TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any extension does not implement TableExtensionInterface
@@ -65,7 +65,7 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTableType($name)
     {
@@ -97,25 +97,25 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasTableType($name)
     {
         if (array_key_exists($name, $this->tableTypes)) {
             return true;
         }
-    
+
         try {
             $this->getTableType($name);
         } catch (ExceptionInterface $e) {
             return false;
         }
-    
+
         return true;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getColumnType($name)
     {
@@ -147,7 +147,7 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasColumnType($name)
     {
@@ -165,7 +165,7 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFilterType($name)
     {
@@ -197,7 +197,7 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasFilterType($name)
     {
@@ -215,7 +215,7 @@ class TableRegistry implements TableRegistryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getExtensions()
     {

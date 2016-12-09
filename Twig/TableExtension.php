@@ -57,7 +57,7 @@ class TableExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFunctions()
     {

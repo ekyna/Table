@@ -19,7 +19,7 @@ use Ekyna\Component\Table\View\ActiveFilter;
 class DatetimeType extends AbstractFilterType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
@@ -36,7 +36,7 @@ class DatetimeType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
@@ -55,7 +55,7 @@ class DatetimeType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function applyFilter(QueryBuilder $qb, array $data, array $options)
     {
@@ -75,7 +75,7 @@ class DatetimeType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOperators()
     {
@@ -90,7 +90,7 @@ class DatetimeType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

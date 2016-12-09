@@ -17,15 +17,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ActionsType extends AbstractColumnType
 {
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'label'   => '',
-            'buttons' => [],
+            'label'    => '',
+            'buttons'  => [],
+            'position' => 999,
         ]);
 
         $resolver->setRequired(['buttons']);
@@ -84,7 +85,7 @@ class ActionsType extends AbstractColumnType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function buildTableColumn(TableConfig $config, $name, array $options = [])
     {
@@ -96,7 +97,7 @@ class ActionsType extends AbstractColumnType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function buildViewColumn(Column $column, Table $table, array $options)
     {
@@ -108,7 +109,7 @@ class ActionsType extends AbstractColumnType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
@@ -139,7 +140,7 @@ class ActionsType extends AbstractColumnType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getName()
     {

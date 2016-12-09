@@ -15,12 +15,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractTableType implements TableTypeInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     abstract public function buildTable(TableBuilderInterface $builder, array $options);
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -56,7 +56,7 @@ abstract class AbstractTableType implements TableTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     abstract public function getName();
 }

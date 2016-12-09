@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class PropertyType extends AbstractColumnType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -42,7 +42,7 @@ abstract class PropertyType extends AbstractColumnType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewColumn(Column $column, Table $table, array $options)
     {
@@ -58,7 +58,7 @@ abstract class PropertyType extends AbstractColumnType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {

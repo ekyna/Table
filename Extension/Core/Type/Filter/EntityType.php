@@ -37,7 +37,7 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -57,7 +57,7 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
@@ -80,7 +80,7 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
@@ -116,7 +116,7 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOperators()
     {
@@ -127,7 +127,7 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

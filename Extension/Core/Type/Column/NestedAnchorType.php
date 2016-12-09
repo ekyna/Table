@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class NestedAnchorType extends AnchorType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -36,7 +36,7 @@ class NestedAnchorType extends AnchorType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
@@ -50,7 +50,7 @@ class NestedAnchorType extends AnchorType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     private function getTreeNodes($data, PropertyAccessorInterface $propertyAccessor, array $options, $level = 0)
     {
@@ -119,7 +119,7 @@ class NestedAnchorType extends AnchorType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

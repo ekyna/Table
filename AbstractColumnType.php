@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractColumnType implements ColumnTypeInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -22,6 +22,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
             'name'      => null,
             'full_name' => null,
             'type'      => $this->getName(),
+            'position'  => 0,
         ]);
 
         $resolver->setRequired(['name', 'full_name', 'type']);
@@ -29,11 +30,11 @@ abstract class AbstractColumnType implements ColumnTypeInterface
         $resolver->setAllowedTypes('name', 'string');
         $resolver->setAllowedTypes('full_name', 'string');
         $resolver->setAllowedTypes('type', 'string');
-
+        $resolver->setAllowedTypes('position', 'int');
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildTableColumn(TableConfig $config, $name, array $options = [])
     {
@@ -50,7 +51,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewColumn(Column $column, Table $table, array $options)
     {
@@ -61,7 +62,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {

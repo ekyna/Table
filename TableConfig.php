@@ -5,7 +5,7 @@ namespace Ekyna\Component\Table;
 /**
  * Class TableConfig
  * @package Ekyna\Component\Table
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class TableConfig
 {
@@ -89,6 +89,7 @@ class TableConfig
     public function setDataClass($dataClass)
     {
         $this->dataClass = $dataClass;
+
         return $this;
     }
 
@@ -112,6 +113,7 @@ class TableConfig
     public function addColumn(array $resolvedOptions)
     {
         $this->columns[] = $resolvedOptions;
+
         return $this;
     }
 
@@ -145,6 +147,7 @@ class TableConfig
     public function addFilter(array $resolvedOptions)
     {
         $this->filters[] = $resolvedOptions;
+
         return $this;
     }
 
@@ -162,7 +165,8 @@ class TableConfig
      * Finds filter by his full name.
      *
      * @param string $fullName
-     * @return array|NULL
+     *
+     * @return array|null
      */
     public function findFilterByFullName($fullName)
     {
@@ -171,6 +175,7 @@ class TableConfig
                 return $options;
             }
         }
+
         return null;
     }
 
@@ -178,11 +183,13 @@ class TableConfig
      * Sets the default sort.
      *
      * @param array $defaultSorts
+     *
      * @return TableConfig
      */
     public function setDefaultSorts(array $defaultSorts = [])
     {
         $this->defaultSorts = $defaultSorts;
+
         return $this;
     }
 
@@ -200,11 +207,13 @@ class TableConfig
      * Sets the maxPerPage.
      *
      * @param int $maxPerPage
+     *
      * @return TableConfig
      */
     public function setMaxPerPage($maxPerPage)
     {
         $this->maxPerPage = $maxPerPage;
+
         return $this;
     }
 
@@ -222,11 +231,13 @@ class TableConfig
      * Sets the customizeQb.
      *
      * @param callable $customizeQb
+     *
      * @return TableConfig
      */
     public function setCustomizeQb($customizeQb)
     {
         $this->customizeQb = $customizeQb;
+
         return $this;
     }
 
@@ -244,11 +255,13 @@ class TableConfig
      * Sets the selector.
      *
      * @param boolean $selector
+     *
      * @return TableConfig
      */
     public function setSelector($selector)
     {
         $this->selector = $selector;
+
         return $this;
     }
 
@@ -266,11 +279,13 @@ class TableConfig
      * Sets the selectorConfig.
      *
      * @param array $selectorConfig
+     *
      * @return TableConfig
      */
     public function setSelectorConfig(array $selectorConfig = null)
     {
         $this->selectorConfig = $selectorConfig;
+
         return $this;
     }
 
@@ -282,5 +297,31 @@ class TableConfig
     public function getSelectorConfig()
     {
         return $this->selectorConfig;
+    }
+
+    /**
+     * Sorts the columns and filers.
+     *
+     * @return TableConfig
+     */
+    public function sortElements()
+    {
+        usort($this->columns, function ($a, $b) {
+            if ($a['position'] == $b['position']) {
+                return 0;
+            }
+
+            return $a['position'] > $b['position'] ? 1 : -1;
+        });
+
+        usort($this->filters, function ($a, $b) {
+            if ($a['position'] == $b['position']) {
+                return 0;
+            }
+
+            return $a['position'] > $b['position'] ? 1 : -1;
+        });
+
+        return $this;
     }
 }

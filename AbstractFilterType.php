@@ -19,7 +19,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     static protected $filterCount = 0;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -33,6 +33,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
             'property_path' => function (Options $options) {
                 return $options['name'];
             },
+            'position'  => 0,
         ]);
 
         $resolver->setRequired(['name', 'full_name', 'type', 'label', 'property_path']);
@@ -42,10 +43,11 @@ abstract class AbstractFilterType implements FilterTypeInterface
         $resolver->setAllowedTypes('type', 'string');
         $resolver->setAllowedTypes('label', 'string');
         $resolver->setAllowedTypes('property_path', 'string');
+        $resolver->setAllowedTypes('position', 'int');
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildTableFilter(TableConfig $config, $name, array $options = [])
     {
@@ -60,7 +62,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildAvailableFilter(AvailableFilter $filter, array $options)
     {
@@ -72,7 +74,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
@@ -88,7 +90,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function applyFilter(QueryBuilder $qb, array $data, array $options)
     {

@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type as Form;
 class ChoiceType extends AbstractFilterType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -33,7 +33,7 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildFilterFrom(FormBuilderInterface $builder, array $options)
     {
@@ -52,15 +52,15 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
         $value = $data['value'];
         $choices = $options['choices'];
         $transform = function ($v) use ($choices) {
-            if (array_key_exists($v, $choices)) {
-                return $choices[$v];
+            if (in_array($v, $choices)) {
+                return array_search($v, $choices);
             }
 
             return $v;
@@ -84,7 +84,7 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOperators()
     {
@@ -95,7 +95,7 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

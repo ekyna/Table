@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class TwigPathCompilerPass implements CompilerPassInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function process(ContainerBuilder $container)
     {

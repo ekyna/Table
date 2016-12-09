@@ -235,6 +235,8 @@ final class Table
             throw new RuntimeException('Table has no columns and cannot be generated.');
         }
 
+        $this->config->sortElements();
+
         $class = $this->config->getDataClass();
         $alias = strtolower(substr($class, strrpos($class, '\\')+1, 1));
 
@@ -424,7 +426,6 @@ final class Table
         // Configure columns options.
         $userSort = false;
         foreach ($columns as $columnOptions) {
-
             $columnOptions['sort_dir'] = ColumnSort::NONE;
             $columnOptions['sorted']   = false;
 

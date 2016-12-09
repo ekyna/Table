@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class SelectorType extends AbstractColumnType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -34,7 +34,7 @@ class SelectorType extends AbstractColumnType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
@@ -63,7 +63,7 @@ class SelectorType extends AbstractColumnType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

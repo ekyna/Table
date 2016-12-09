@@ -12,7 +12,7 @@ use Ekyna\Component\Table\AbstractTableExtension;
 class CoreExtension extends AbstractTableExtension
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function loadTableTypes()
     {
@@ -22,11 +22,12 @@ class CoreExtension extends AbstractTableExtension
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function loadColumnTypes()
     {
         return [
+            new Type\Column\IdType,
             new Type\Column\SelectorType,
             new Type\Column\TextType,
             new Type\Column\NumberType,
@@ -42,7 +43,7 @@ class CoreExtension extends AbstractTableExtension
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function loadFilterTypes()
     {

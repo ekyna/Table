@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 class TextType extends AbstractFilterType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
@@ -30,7 +30,7 @@ class TextType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOperators()
     {
@@ -45,7 +45,7 @@ class TextType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

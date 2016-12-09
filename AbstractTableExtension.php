@@ -31,7 +31,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     private $filterTypes;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTableType($name)
     {
@@ -43,7 +43,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasTableType($name)
     {
@@ -55,7 +55,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getColumnType($name)
     {
@@ -67,7 +67,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasColumnType($name)
     {
@@ -79,7 +79,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFilterType($name)
     {
@@ -91,7 +91,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasFilterType($name)
     {
@@ -184,5 +184,5 @@ abstract class AbstractTableExtension implements TableExtensionInterface
 
             $this->filterTypes[$type->getName()] = $type;
         }
-    }    
+    }
 }

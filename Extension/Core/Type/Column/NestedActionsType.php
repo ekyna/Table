@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NestedActionsType extends ActionsType
 {
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -31,6 +31,7 @@ class NestedActionsType extends ActionsType
             'move_down_route'       => null,
             'routes_parameters'     => [],
             'routes_parameters_map' => [],
+            'position'              => 999,
         ]);
 
         $resolver->setRequired([
@@ -52,7 +53,7 @@ class NestedActionsType extends ActionsType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
@@ -115,7 +116,7 @@ class NestedActionsType extends ActionsType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getName()
     {

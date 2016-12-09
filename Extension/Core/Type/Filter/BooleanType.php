@@ -24,7 +24,7 @@ class BooleanType extends AbstractFilterType
 
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -39,7 +39,7 @@ class BooleanType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildFilterFrom(FormBuilderInterface $form, array $options)
     {
@@ -58,7 +58,7 @@ class BooleanType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildActiveFilter(TableView $view, array $data, array $options)
     {
@@ -74,7 +74,7 @@ class BooleanType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function applyFilter(QueryBuilder $qb, array $data, array $options)
     {
@@ -105,7 +105,7 @@ class BooleanType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOperators()
     {
@@ -116,7 +116,7 @@ class BooleanType extends AbstractFilterType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

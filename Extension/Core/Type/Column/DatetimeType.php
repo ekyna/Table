@@ -15,7 +15,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class DatetimeType extends PropertyType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -37,7 +37,7 @@ class DatetimeType extends PropertyType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildViewCell(Cell $cell, Table $table, array $options)
     {
@@ -50,7 +50,7 @@ class DatetimeType extends PropertyType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

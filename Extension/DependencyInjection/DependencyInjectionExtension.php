@@ -20,7 +20,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
 
     public function __construct(
         ContainerInterface $container,
-        array $tableTypeServiceIds, 
+        array $tableTypeServiceIds,
         array $columnTypeServiceIds,
         array $filterTypeServiceIds
     ) {
@@ -31,7 +31,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTableType($name)
     {
@@ -54,7 +54,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasTableType($name)
     {
@@ -62,7 +62,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getColumnType($name)
     {
@@ -85,7 +85,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasColumnType($name)
     {
@@ -93,7 +93,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFilterType($name)
     {
@@ -116,7 +116,7 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasFilterType($name)
     {
