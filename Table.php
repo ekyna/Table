@@ -352,7 +352,8 @@ final class Table
 
                 // Handle request
                 $form->handleRequest($this->requestHelper->getRequest());
-                if ($form->isValid()) {
+
+                if ($form->isSubmitted() && $form->isValid()) {
                     $this->createActiveFilter($filterOptions, $form->getData());
                 } else {
                     $view->filter_label = $filterOptions['label'];
