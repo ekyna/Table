@@ -167,12 +167,17 @@ class TableBuilder implements TableBuilderInterface
 
         foreach ($this->columns as $name => $definition) {
             list($type, $options) = $definition;
+            if (isset($options['sortable']) && !$this->options['sortable']) {
+                $options['sortable'] = false;
+            }
             $this->factory->createColumn($tableConfig, $name, $type, $options);
         }
 
-        foreach ($this->filters as $name => $definition) {
-            list($type, $options) = $definition;
-            $this->factory->createFilter($tableConfig, $name, $type, $options);
+        if ($this->options['filterable']) {
+            foreach ($this->filters as $name => $definition) {
+                list($type, $options) = $definition;
+                $this->factory->createFilter($tableConfig, $name, $type, $options);
+            }
         }
 
         $table = new Table($tableConfig);

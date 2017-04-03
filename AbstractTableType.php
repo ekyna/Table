@@ -36,8 +36,10 @@ abstract class AbstractTableType implements TableTypeInterface
             'default_sorts'   => [],
             'max_per_page'    => 15,
             'customize_qb'    => null,
-            'selector'        => false,
             'multiple'        => false,
+            'filterable'      => true,
+            'sortable'        => true,
+            'selector'        => false,
             'selector_config' => null,
         ]);
 
@@ -48,8 +50,10 @@ abstract class AbstractTableType implements TableTypeInterface
         $resolver->setAllowedTypes('default_sorts', 'array');
         $resolver->setAllowedTypes('max_per_page', 'int');
         $resolver->setAllowedTypes('customize_qb', ['null', 'callable']);
-        $resolver->setAllowedTypes('selector', 'bool');
         $resolver->setAllowedTypes('multiple', 'bool');
+        $resolver->setAllowedTypes('filterable', 'bool');
+        $resolver->setAllowedTypes('sortable', 'bool');
+        $resolver->setAllowedTypes('selector', 'bool');
         $resolver->setAllowedTypes('selector_config', ['null', 'array']);
 
         $resolver->setRequired(['data_class', 'name']);
