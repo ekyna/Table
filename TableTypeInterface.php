@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Source\RowInterface;
@@ -18,7 +20,7 @@ interface TableTypeInterface
      * @param TableBuilderInterface $builder
      * @param array                 $options
      */
-    public function buildTable(TableBuilderInterface $builder, array $options);
+    public function buildTable(TableBuilderInterface $builder, array $options): void;
 
     /**
      * Builds the table view.
@@ -27,7 +29,7 @@ interface TableTypeInterface
      * @param TableInterface $table
      * @param array          $options
      */
-    public function buildView(View\TableView $view, TableInterface $table, array $options);
+    public function buildView(View\TableView $view, TableInterface $table, array $options): void;
 
     /**
      * Builds the row view.
@@ -36,19 +38,19 @@ interface TableTypeInterface
      * @param RowInterface $row
      * @param array        $options
      */
-    public function buildRowView(View\RowView $view, RowInterface $row, array $options);
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options): void;
 
     /**
      * Sets the default options.
      *
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
      * Returns the name of the parent type.
      *
      * @return string|null The name of the parent type if any, null otherwise
      */
-    public function getParent();
+    public function getParent(): ?string;
 }

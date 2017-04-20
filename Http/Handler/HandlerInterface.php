@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\TableInterface;
@@ -15,9 +17,9 @@ interface HandlerInterface
      * Handle the table.
      *
      * @param TableInterface $table
-     * @param mixed          $request
+     * @param object|null    $request
      *
      * @return null|object The response object or null
      */
-    public function execute(TableInterface $table, $request);
+    public function execute(TableInterface $table, object $request = null): ?object;
 }

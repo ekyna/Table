@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Action\ActionTypeInterface;
@@ -8,6 +10,7 @@ use Ekyna\Component\Table\Column\ColumnTypeInterface;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Filter\FilterTypeInterface;
+use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\TableTypeInterface;
 
 /**
@@ -20,71 +23,71 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     /**
      * The table types provided by this extension
      *
-     * @var TableTypeInterface[] An array of TableTypeInterface
+     * @var TableTypeInterface[]|null An array of TableTypeInterface
      */
-    private $tableTypes;
+    private ?array $tableTypes = null;
 
     /**
      * The table type extensions provided by this extension.
      *
-     * @var []TableTypeExtensionInterface[] An array of TableTypeExtensionInterface
+     * @var array|null An array of {@link TableTypeExtensionInterface} arrays
      */
-    private $tableTypeExtensions;
+    private ?array $tableTypeExtensions = null;
 
     /**
      * The column types provided by this extension
      *
-     * @var ColumnTypeInterface[] An array of ColumnTypeInterface
+     * @var ColumnTypeInterface[]|null An array of ColumnTypeInterface
      */
-    private $columnTypes;
+    private ?array $columnTypes = null;
 
     /**
      * The column type extensions provided by this extension.
      *
-     * @var []ColumnTypeExtensionInterface[] An array of ColumnTypeExtensionInterface
+     * @var array|null An array of {@link ColumnTypeExtensionInterface} arrays
      */
-    private $columnTypeExtensions;
+    private ?array $columnTypeExtensions = null;
 
     /**
      * The filter types provided by this extension
      *
-     * @var FilterTypeInterface[] An array of FilterTypeInterface
+     * @var FilterTypeInterface[]|null An array of FilterTypeInterface
      */
-    private $filterTypes;
+    private ?array $filterTypes = null;
 
     /**
      * The filter type extensions provided by this extension.
      *
-     * @var []FilterTypeExtensionInterface[] An array of FilterTypeExtensionInterface
+     * @var array|null An array of {@link FilterTypeExtensionInterface} arrays
      */
-    private $filterTypeExtensions;
+    private ?array $filterTypeExtensions = null;
 
     /**
      * The action types provided by this extension
      *
-     * @var ActionTypeInterface[] An array of ActionTypeInterface
+     * @var ActionTypeInterface[]|null An array of ActionTypeInterface arrays.
      */
-    private $actionTypes;
+    private ?array $actionTypes = null;
 
     /**
      * The action type extensions provided by this extension.
      *
-     * @var []ActionTypeExtensionInterface[] An array of ActionTypeExtensionInterface
+     * @var array|null An array of {@link ActionTypeExtensionInterface} arrays
      */
-    private $actionTypeExtensions;
+    private ?array $actionTypeExtensions = null;
 
     /**
      * The adapter factories provided by this extension.
      *
-     * @var \Ekyna\Component\Table\Source\AdapterFactoryInterface[]
+     * @var AdapterFactoryInterface[]|null
      */
-    private $adapterFactories;
+    private ?array $adapterFactories = null;
 
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTableType($name)
+    public function getTableType(string $name): TableTypeInterface
     {
         if (null === $this->tableTypes) {
             $this->initTableTypes();
@@ -101,9 +104,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasTableType($name)
+    public function hasTableType(string $name): bool
     {
         if (null === $this->tableTypes) {
             $this->initTableTypes();
@@ -113,9 +116,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getTableTypeExtensions($name)
+    public function getTableTypeExtensions(string $name): array
     {
         if (null === $this->tableTypeExtensions) {
             $this->initTableTypeExtensions();
@@ -127,9 +130,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function hasTableTypeExtensions($name)
+    public function hasTableTypeExtensions(string $name): bool
     {
         if (null === $this->tableTypeExtensions) {
             $this->initTableTypeExtensions();
@@ -139,9 +142,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getColumnType($name)
+    public function getColumnType(string $name): ColumnTypeInterface
     {
         if (!$this->hasColumnType($name)) {
             throw new InvalidArgumentException(sprintf(
@@ -154,9 +157,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasColumnType($name)
+    public function hasColumnType(string $name): bool
     {
         if (null === $this->columnTypes) {
             $this->initColumnTypes();
@@ -166,9 +169,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getColumnTypeExtensions($name)
+    public function getColumnTypeExtensions(string $name): array
     {
         if (null === $this->columnTypeExtensions) {
             $this->initColumnTypeExtensions();
@@ -180,9 +183,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function hasColumnTypeExtensions($name)
+    public function hasColumnTypeExtensions(string $name): bool
     {
         if (null === $this->columnTypeExtensions) {
             $this->initColumnTypeExtensions();
@@ -192,9 +195,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getFilterType($name)
+    public function getFilterType(string $name): FilterTypeInterface
     {
         if (!$this->hasFilterType($name)) {
             throw new InvalidArgumentException(sprintf(
@@ -207,9 +210,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasFilterType($name)
+    public function hasFilterType(string $name): bool
     {
         if (null === $this->filterTypes) {
             $this->initFilterTypes();
@@ -219,9 +222,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getFilterTypeExtensions($name)
+    public function getFilterTypeExtensions(string $name): array
     {
         if (null === $this->filterTypeExtensions) {
             $this->initFilterTypeExtensions();
@@ -233,9 +236,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function hasFilterTypeExtensions($name)
+    public function hasFilterTypeExtensions(string $name): bool
     {
         if (null === $this->filterTypeExtensions) {
             $this->initFilterTypeExtensions();
@@ -245,9 +248,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getActionType($name)
+    public function getActionType(string $name): ActionTypeInterface
     {
         if (!$this->hasActionType($name)) {
             throw new InvalidArgumentException(sprintf(
@@ -260,9 +263,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasActionType($name)
+    public function hasActionType(string $name): bool
     {
         if (null === $this->actionTypes) {
             $this->initActionTypes();
@@ -272,9 +275,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getActionTypeExtensions($name)
+    public function getActionTypeExtensions(string $name): array
     {
         if (null === $this->actionTypeExtensions) {
             $this->initActionTypeExtensions();
@@ -286,9 +289,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function hasActionTypeExtensions($name)
+    public function hasActionTypeExtensions(string $name): bool
     {
         if (null === $this->actionTypeExtensions) {
             $this->initActionTypeExtensions();
@@ -298,9 +301,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getAdapterFactory($name)
+    public function getAdapterFactory(string $name): AdapterFactoryInterface
     {
         if (!$this->hasAdapterFactory($name)) {
             throw new InvalidArgumentException(sprintf(
@@ -313,9 +316,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasAdapterFactory($name)
+    public function hasAdapterFactory(string $name): bool
     {
         if (null === $this->adapterFactories) {
             $this->initAdapterFactories();
@@ -327,9 +330,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     /**
      * Returns the adapters.
      *
-     * @return \Ekyna\Component\Table\Source\AdapterInterface[] The adapters
+     * @return AdapterInterface[] The adapters
      */
-    public function getAdapterFactories()
+    public function getAdapterFactories(): array
     {
         return [];
     }
@@ -339,7 +342,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return TableTypeInterface[] An array of TableTypeInterface instances
      */
-    protected function loadTableTypes()
+    protected function loadTableTypes(): array
     {
         return [];
     }
@@ -349,7 +352,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return TableTypeExtensionInterface[] An array of TableTypeExtensionInterface instances
      */
-    protected function loadTableTypeExtensions()
+    protected function loadTableTypeExtensions(): array
     {
         return [];
     }
@@ -359,7 +362,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return ColumnTypeInterface[] An array of ColumnTypeInterface instances
      */
-    protected function loadColumnTypes()
+    protected function loadColumnTypes(): array
     {
         return [];
     }
@@ -369,7 +372,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return ColumnTypeExtensionInterface[] An array of ColumnTypeExtensionInterface instances
      */
-    protected function loadColumnTypeExtensions()
+    protected function loadColumnTypeExtensions(): array
     {
         return [];
     }
@@ -377,9 +380,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     /**
      * Registers the filter types.
      *
-     * @return \Ekyna\Component\Table\Filter\FilterTypeInterface[] An array of FilterTypeInterface instances
+     * @return FilterTypeInterface[] An array of FilterTypeInterface instances
      */
-    protected function loadFilterTypes()
+    protected function loadFilterTypes(): array
     {
         return [];
     }
@@ -389,7 +392,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return FilterTypeExtensionInterface[] An array of FilterTypeExtensionInterface instances
      */
-    protected function loadFilterTypeExtensions()
+    protected function loadFilterTypeExtensions(): array
     {
         return [];
     }
@@ -397,9 +400,9 @@ abstract class AbstractTableExtension implements TableExtensionInterface
     /**
      * Registers the action types.
      *
-     * @return \Ekyna\Component\Table\Action\ActionTypeInterface[] An array of ActionTypeInterface instances
+     * @return ActionTypeInterface[] An array of ActionTypeInterface instances
      */
-    protected function loadActionTypes()
+    protected function loadActionTypes(): array
     {
         return [];
     }
@@ -409,7 +412,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return ActionTypeExtensionInterface[] An array of ActionTypeExtensionInterface instances
      */
-    protected function loadActionTypeExtensions()
+    protected function loadActionTypeExtensions(): array
     {
         return [];
     }
@@ -419,7 +422,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @return AdapterFactoryInterface[] An array of AdapterFactoryInterface instances
      */
-    protected function loadAdapterFactories()
+    protected function loadAdapterFactories(): array
     {
         return [];
     }
@@ -429,7 +432,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any registered type is not an instance of TableTypeInterface
      */
-    private function initTableTypes()
+    private function initTableTypes(): void
     {
         $this->tableTypes = [];
 
@@ -448,7 +451,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      * @throws UnexpectedTypeException if any registered type extension is not
      *                                 an instance of FormTypeExtensionInterface
      */
-    private function initTableTypeExtensions()
+    private function initTableTypeExtensions(): void
     {
         $this->tableTypeExtensions = [];
 
@@ -457,9 +460,15 @@ abstract class AbstractTableExtension implements TableExtensionInterface
                 throw new UnexpectedTypeException($extension, TableTypeExtensionInterface::class);
             }
 
-            $type = $extension->getExtendedType();
+            $types = $extension::getExtendedTypes();
 
-            $this->tableTypeExtensions[$type][] = $extension;
+            foreach ($types as $type) {
+                if (!isset($this->tableTypeExtensions[$type])) {
+                    $this->tableTypeExtensions[$type] = [];
+                }
+
+                $this->tableTypeExtensions[$type][] = $extension;
+            }
         }
     }
 
@@ -468,7 +477,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any registered type is not an instance of ColumnTypeInterface
      */
-    private function initColumnTypes()
+    private function initColumnTypes(): void
     {
         $this->columnTypes = [];
 
@@ -487,7 +496,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      * @throws UnexpectedTypeException if any registered type extension is not
      *                                 an instance of FormTypeExtensionInterface
      */
-    private function initColumnTypeExtensions()
+    private function initColumnTypeExtensions(): void
     {
         $this->columnTypeExtensions = [];
 
@@ -496,9 +505,15 @@ abstract class AbstractTableExtension implements TableExtensionInterface
                 throw new UnexpectedTypeException($extension, ColumnTypeExtensionInterface::class);
             }
 
-            $type = $extension->getExtendedType();
+            $types = $extension::getExtendedTypes();
 
-            $this->columnTypeExtensions[$type][] = $extension;
+            foreach ($types as $type) {
+                if (!isset($this->columnTypeExtensions[$type])) {
+                    $this->columnTypeExtensions[$type] = [];
+                }
+
+                $this->columnTypeExtensions[$type][] = $extension;
+            }
         }
     }
 
@@ -507,7 +522,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any registered type is not an instance of FilterTypeInterface
      */
-    private function initFilterTypes()
+    private function initFilterTypes(): void
     {
         $this->filterTypes = [];
 
@@ -526,7 +541,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      * @throws UnexpectedTypeException if any registered type extension is not
      *                                 an instance of FormTypeExtensionInterface
      */
-    private function initFilterTypeExtensions()
+    private function initFilterTypeExtensions(): void
     {
         $this->filterTypeExtensions = [];
 
@@ -535,9 +550,15 @@ abstract class AbstractTableExtension implements TableExtensionInterface
                 throw new UnexpectedTypeException($extension, FilterTypeExtensionInterface::class);
             }
 
-            $type = $extension->getExtendedType();
+            $types = $extension::getExtendedTypes();
 
-            $this->filterTypeExtensions[$type][] = $extension;
+            foreach ($types as $type) {
+                if (!isset($this->filterTypeExtensions[$type])) {
+                    $this->filterTypeExtensions[$type] = [];
+                }
+
+                $this->filterTypeExtensions[$type][] = $extension;
+            }
         }
     }
 
@@ -546,7 +567,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any registered type is not an instance of ActionTypeInterface
      */
-    private function initActionTypes()
+    private function initActionTypes(): void
     {
         $this->actionTypes = [];
 
@@ -565,7 +586,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      * @throws UnexpectedTypeException if any registered type extension is not
      *                                 an instance of FormTypeExtensionInterface
      */
-    private function initActionTypeExtensions()
+    private function initActionTypeExtensions(): void
     {
         $this->actionTypeExtensions = [];
 
@@ -574,9 +595,15 @@ abstract class AbstractTableExtension implements TableExtensionInterface
                 throw new UnexpectedTypeException($extension, ActionTypeExtensionInterface::class);
             }
 
-            $type = $extension->getExtendedType();
+            $types = $extension::getExtendedTypes();
 
-            $this->actionTypeExtensions[$type][] = $extension;
+            foreach ($types as $type) {
+                if (!isset($this->actionTypeExtensions[$type])) {
+                    $this->actionTypeExtensions[$type] = [];
+                }
+
+                $this->actionTypeExtensions[$type][] = $extension;
+            }
         }
     }
 
@@ -585,7 +612,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
      *
      * @throws UnexpectedTypeException if any registered adapter factory is not an instance of AdapterFactoryInterface
      */
-    private function initAdapterFactories()
+    private function initAdapterFactories(): void
     {
         $this->adapterFactories = [];
 

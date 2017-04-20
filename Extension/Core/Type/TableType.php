@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type;
 
 use Ekyna\Component\Table\AbstractTableType;
@@ -20,9 +22,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TableType extends AbstractTableType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
         $action = $options['url'];
         if (empty($action)) {
@@ -30,7 +32,7 @@ class TableType extends AbstractTableType
                 if (false !== $info = parse_url($url = $_SERVER['REQUEST_URI'])) {
                     $action = isset($info['path']) ? $info['path'] : '/';
                 } else {
-                    list($action) = explode('?', $url);
+                    [$action] = explode('?', $url);
                 }
             } else {
                 $action = '/';
@@ -58,7 +60,7 @@ class TableType extends AbstractTableType
             }
 
             if (!$source instanceof Source\SourceInterface) {
-                throw new UnexpectedTypeException($source, 'null, array or ' . Source\SourceInterface::class);
+                throw new UnexpectedTypeException($source, ['null', 'array',  Source\SourceInterface::class]);
             }
 
             $builder->setSource($source);
@@ -72,7 +74,7 @@ class TableType extends AbstractTableType
     /**
      * @inheritDoc
      */
-    public function buildView(TableView $view, TableInterface $table, array $options)
+    public function buildView(TableView $view, TableInterface $table, array $options): void
     {
         $name = $table->getName();
         $id = $name;
@@ -88,9 +90,9 @@ class TableType extends AbstractTableType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -126,9 +128,9 @@ class TableType extends AbstractTableType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return null;
     }

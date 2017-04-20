@@ -1,34 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
+
+use function count;
+use function serialize;
+use function unserialize;
 
 /**
  * Class ActiveFilter
  * @package Ekyna\Component\Table\Context
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ActiveFilter
+final class ActiveFilter
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $filterName;
-
-    /**
-     * @var string
-     */
-    private $operator;
-
-    /**
-     * @var mixed
-     */
+    private string $id;
+    private string $filterName;
+    private int $operator;
     private $value;
 
 
@@ -38,10 +29,10 @@ class ActiveFilter
      * @param string $id
      * @param string $filterName
      */
-    public function __construct($id, $filterName)
+    public function __construct(string $id, string $filterName)
     {
-        $this->id = (string)$id;
-        $this->filterName = (string)$filterName;
+        $this->id = $id;
+        $this->filterName = $filterName;
     }
 
     /**
@@ -49,7 +40,7 @@ class ActiveFilter
      *
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -59,7 +50,7 @@ class ActiveFilter
      *
      * @return string
      */
-    public function getFilterName()
+    public function getFilterName(): string
     {
         return $this->filterName;
     }
@@ -67,9 +58,9 @@ class ActiveFilter
     /**
      * Returns the operator.
      *
-     * @return string
+     * @return int
      */
-    public function getOperator()
+    public function getOperator(): int
     {
         return $this->operator;
     }
@@ -77,11 +68,11 @@ class ActiveFilter
     /**
      * Sets the operator.
      *
-     * @param string $operator
+     * @param int $operator
      */
-    public function setOperator($operator)
+    public function setOperator(int $operator): void
     {
-        $this->operator = (int)$operator;
+        $this->operator = $operator;
     }
 
     /**
@@ -99,7 +90,7 @@ class ActiveFilter
      *
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         // TODO Validates value as scalar or array of scalar
         $this->value = $value;
@@ -110,7 +101,7 @@ class ActiveFilter
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             $this->id,
@@ -127,13 +118,13 @@ class ActiveFilter
      *
      * @return ActiveFilter
      */
-    static public function createFromArray(array $data)
+    public static function createFromArray(array $data): ActiveFilter
     {
         if (4 != count($data)) {
-            throw new InvalidArgumentException("Expected data as a 4 length array.");
+            throw new InvalidArgumentException('Expected data as a 4 length array.');
         }
 
-        $filter = new static($data[0], $data[1]);
+        $filter = new self($data[0], $data[1]);
         $filter->setOperator($data[2]);
         $filter->setValue(unserialize($data[3]));
 

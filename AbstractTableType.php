@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
@@ -15,37 +17,37 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractTableType implements TableTypeInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildView(TableView $view, TableInterface $table, array $options)
+    public function buildView(TableView $view, TableInterface $table, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options): void
     {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return TableType::class;
     }

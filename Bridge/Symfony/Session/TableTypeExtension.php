@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\Session;
 
 use Ekyna\Component\Table\Extension\AbstractTableTypeExtension;
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
 use Ekyna\Component\Table\TableBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class TableTypeExtension
@@ -14,35 +16,20 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class TableTypeExtension extends AbstractTableTypeExtension
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private RequestStack $requestStack;
 
-
-    /**
-     * Constructor.
-     *
-     * @param SessionInterface $session
-     */
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
-        $builder->setSessionStorage(new SessionStorage($this->session));
+        $builder->setSessionStorage(new SessionStorage($this->requestStack->getSession()));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return TableType::class;
+        return [TableType::class];
     }
 }

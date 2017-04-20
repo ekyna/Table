@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Column\AbstractColumnType;
@@ -18,7 +20,7 @@ class NumberType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $view->vars['precision'] = $options['precision'];
         $view->vars['append'] = $options['append'];
@@ -27,7 +29,7 @@ class NumberType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -42,7 +44,7 @@ class NumberType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return PropertyType::class;
     }

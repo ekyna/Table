@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 /**
@@ -25,7 +27,7 @@ interface ResolvedTypeFactoryInterface
         TableTypeInterface $type,
         array $typeExtensions,
         ResolvedTableTypeInterface $parent = null
-    );
+    ): ResolvedTableTypeInterface;
 
     /**
      * Resolves a column type.
@@ -43,7 +45,7 @@ interface ResolvedTypeFactoryInterface
         Column\ColumnTypeInterface $type,
         array $typeExtensions,
         Column\ResolvedColumnTypeInterface $parent = null
-    );
+    ): Column\ResolvedColumnTypeInterface;
 
     /**
      * Resolves a filter type.
@@ -61,7 +63,7 @@ interface ResolvedTypeFactoryInterface
         Filter\FilterTypeInterface $type,
         array $typeExtensions,
         Filter\ResolvedFilterTypeInterface $parent = null
-    );
+    ): Filter\ResolvedFilterTypeInterface;
 
     /**
      * Resolves an action type.
@@ -79,5 +81,5 @@ interface ResolvedTypeFactoryInterface
         Action\ActionTypeInterface $type,
         array $typeExtensions,
         Action\ResolvedActionTypeInterface $parent = null
-    );
+    ): Action\ResolvedActionTypeInterface;
 }

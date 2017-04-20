@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -7,9 +9,9 @@ use Ekyna\Component\Table\Filter\AbstractFilterType;
 use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Ekyna\Component\Table\View\ActiveFilterView;
+use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -22,7 +24,7 @@ class ChoiceType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         $builder
             ->add('operator', Form\ChoiceType::class, [
@@ -49,8 +51,12 @@ class ChoiceType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void {
         $choices = $options['choices'];
 
         if ($options['choices_as_values']) {
@@ -78,9 +84,9 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired('choices')
@@ -90,9 +96,9 @@ class ChoiceType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }

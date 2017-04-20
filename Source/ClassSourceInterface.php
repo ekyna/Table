@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 /**
@@ -14,5 +16,5 @@ interface ClassSourceInterface extends SourceInterface
      *
      * @return string
      */
-    public function getClass();
+    public function getClass(): string;
 }

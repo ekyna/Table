@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 use Ekyna\Component\Table\Context\ContextInterface;
@@ -18,7 +20,7 @@ interface AdapterInterface
      *
      * @return Grid
      */
-    public function getGrid(ContextInterface $context);
+    public function getGrid(ContextInterface $context): Grid;
 
     /**
      * Get selection.
@@ -27,5 +29,5 @@ interface AdapterInterface
      *
      * @return RowInterface[]
      */
-    public function getSelection(ContextInterface $context);
+    public function getSelection(ContextInterface $context): array;
 }

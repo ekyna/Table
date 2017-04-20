@@ -1,74 +1,79 @@
-<?php
+<?php /** @noinspection PhpPropertyNamingConventionInspection */
+
+declare(strict_types=1);
 
 namespace Ekyna\Component\Table\View;
+
+use Pagerfanta\Pagerfanta;
+use Symfony\Component\Form\FormView;
 
 /**
  * Class TableView
  * @package Ekyna\Component\Table\View
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class TableView
+final class TableView
 {
     /**
      * The variables.
      *
      * @var array
      */
-    public $vars = [];
+    public array $vars = [];
 
     /**
      * The ui variables.
      *
      * @var array
      */
-    public $ui = [];
+    public array $ui = [];
 
     /**
      * The available filters views.
      *
      * @var AvailableFilterView[]
      */
-    public $available_filters = [];
+    public array $available_filters = [];
 
     /**
      * The active filters views.
      *
      * @var ActiveFilterView[]
      */
-    public $active_filters = [];
+    public array $active_filters = [];
 
     /**
      * The current filter label.
      *
      * @var null|string
      */
-    public $filter_label = null;
+    public ?string $filter_label = null;
 
     /**
      * The current filter form view.
      *
-     * @var null|\Symfony\Component\Form\FormView
+     * @var null|FormView
      */
-    public $filter_form = null;
+    public ?FormView $filter_form = null;
 
     /**
      * The columns headers views.
      *
-     * @var HeadView
+     * @var HeadView[]
      */
-    public $heads = [];
+    public array $heads = [];
 
     /**
      * The rows views.
      *
      * @var RowView[]
      */
-    public $rows = [];
+    public array $rows = [];
 
     /**
      * The pager instance.
      *
-     * @var \Pagerfanta\Pagerfanta
+     * @var Pagerfanta
      */
-    public $pager;
+    public Pagerfanta $pager;
 }

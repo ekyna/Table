@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -13,6 +15,9 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Ekyna\Component\Table\View\AvailableFilterView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function array_replace;
+use function sprintf;
+
 /**
  * Class FilterType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
@@ -23,7 +28,7 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options)
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void
     {
         $builder
             ->setLabel($options['label'] ?: ucfirst($builder->getName()))
@@ -34,12 +39,12 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options)
+    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options): void
     {
-        $name = $filter->getName();
+        $name      = $filter->getName();
         $tableName = $filter->getTable()->getName();
 
-        $id = sprintf('%s_%s', $tableName, $name);
+        $id       = sprintf('%s_%s', $tableName, $name);
         $fullName = sprintf('%s[%s]', $tableName, $name);
 
         /*$blockName = $options['block_name'] ?: $name;
@@ -56,29 +61,32 @@ class FilterType extends AbstractFilterType
         $addFilterHref = $filter->getTable()->getParametersHelper()->getAddFilterHref($filter);
 
         $view->vars = array_replace($view->vars, [
-            'id'                 => $id,
-            'name'               => $name,
-            'full_name'          => $fullName,
-            'label'              => $filter->getLabel(),
-            'translation_domain' => $options['translation_domain'],
-            'attr'               => $options['available_attr'],
-            'add_filter_href'    => $addFilterHref, // TODO href in attr
+            'id'              => $id,
+            'name'            => $name,
+            'full_name'       => $fullName,
+            'label'           => $filter->getLabel(),
+            'attr'            => $options['available_attr'],
+            'add_filter_href' => $addFilterHref, // TODO href in attr
             //'block_prefixes'      => $blockPrefixes,
             //'unique_block_prefix' => $uniqueBlockPrefix,
             //'cache_key'           => $cacheKey,
-            'block_prefix'       => $filter->getConfig()->getType()->getBlockPrefix(), // TODO remove
+            'block_prefix'    => $filter->getConfig()->getType()->getBlockPrefix(), // TODO remove
         ]);
     }
 
     /**
      * @inheritDoc
      */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
-        $name = $filter->getName();
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void {
+        $name      = $filter->getName();
         $tableName = $filter->getTable()->getName();
 
-        $id = sprintf('%s_%s', $tableName, $name);
+        $id       = sprintf('%s_%s', $tableName, $name);
         $fullName = sprintf('%s[%s]', $tableName, $name);
 
         /*$blockName = $options['block_name'] ?: $name;
@@ -99,7 +107,6 @@ class FilterType extends AbstractFilterType
             'name'               => $name,
             'full_name'          => $fullName,
             'label'              => $filter->getLabel(),
-            'translation_domain' => $options['translation_domain'],
             'attr'               => $options['active_attr'],
             'remove_filter_href' => $removeFilterHref, // TODO href in attr
             'operator'           => FilterOperator::getLabel($activeFilter->getOperator()),
@@ -114,8 +121,12 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): bool {
         if (!$adapter instanceof ArrayAdapter) {
             return false;
         }
@@ -134,22 +145,20 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                'position'           => 0,
-                'property_path'      => null,
-                'label'              => null,
-                'translation_domain' => null,
-                'available_attr'     => [],
-                'active_attr'        => [],
-                'block_name'         => null,
+                'position'       => 0,
+                'property_path'  => null,
+                'label'          => null,
+                'available_attr' => [],
+                'active_attr'    => [],
+                'block_name'     => null,
             ])
             ->setAllowedTypes('position', 'int')
             ->setAllowedTypes('property_path', ['null', 'string'])
             ->setAllowedTypes('label', ['null', 'string'])
-            ->setAllowedTypes('translation_domain', ['null', 'string'])
             ->setAllowedTypes('available_attr', 'array')
             ->setAllowedTypes('active_attr', 'array')
             ->setAllowedTypes('block_name', ['null', 'string']);
@@ -158,7 +167,7 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter';
     }
@@ -166,7 +175,7 @@ class FilterType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return null;
     }

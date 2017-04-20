@@ -1,57 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\Util\Config;
 use Symfony\Component\Form\FormFactoryInterface;
 
+use function array_key_exists;
+
 /**
  * Class FilterBuilder
  * @package Ekyna\Component\Table\Filter
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class FilterBuilder implements FilterBuilderInterface
+final class FilterBuilder implements FilterBuilderInterface
 {
-    /**
-     * @var bool
-     */
-    private $locked = false;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var ResolvedFilterTypeInterface
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var int
-     */
-    private $position;
-
-    /**
-     * @var string
-     */
-    private $propertyPath;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private bool $locked = false;
+    private string $name;
+    private FormFactoryInterface $formFactory;
+    private ResolvedFilterTypeInterface $type;
+    private string $label;
+    private int $position;
+    private string $propertyPath;
+    private array $options;
 
 
     /**
@@ -61,11 +34,11 @@ class FilterBuilder implements FilterBuilderInterface
      * @param FormFactoryInterface $formFactory
      * @param array                $options
      */
-    public function __construct($name, FormFactoryInterface $formFactory, array $options = [])
+    public function __construct(string $name, FormFactoryInterface $formFactory, array $options = [])
     {
         Config::validateName($name);
 
-        $this->name = (string)$name;
+        $this->name = $name;
         $this->options = $options;
 
         $this->setFormFactory($formFactory);
@@ -74,7 +47,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -82,7 +55,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getType()
+    public function getType(): ResolvedFilterTypeInterface
     {
         return $this->type;
     }
@@ -90,7 +63,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -98,7 +71,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getFormFactory()
+    public function getFormFactory(): FormFactoryInterface
     {
         return $this->formFactory;
     }
@@ -106,7 +79,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -114,7 +87,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getPropertyPath()
+    public function getPropertyPath(): string
     {
         return $this->propertyPath;
     }
@@ -122,7 +95,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -130,7 +103,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function hasOption($name)
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
@@ -138,7 +111,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOption($name, $default = null)
+    public function getOption(string $name, $default = null)
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
@@ -146,7 +119,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setType(ResolvedFilterTypeInterface $type)
+    public function setType(ResolvedFilterTypeInterface $type): FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -158,7 +131,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setLabel($label)
+    public function setLabel(string $label): FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -170,7 +143,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setFormFactory(FormFactoryInterface $formFactory)
+    public function setFormFactory(FormFactoryInterface $formFactory): FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -182,7 +155,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setPosition($position)
+    public function setPosition(int $position): FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -194,7 +167,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setPropertyPath($path)
+    public function setPropertyPath(string $path): FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -206,7 +179,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getFilterConfig()
+    public function getFilterConfig(): FilterConfigInterface
     {
         $this->preventIfLocked();
 
@@ -220,7 +193,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getFilter()
+    public function getFilter(): FilterInterface
     {
         $this->preventIfLocked();
 
@@ -232,7 +205,7 @@ class FilterBuilder implements FilterBuilderInterface
      *
      * @throws Exception\BadMethodCallException
      */
-    private function preventIfLocked()
+    private function preventIfLocked(): void
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('The config builder cannot be modified anymore.');

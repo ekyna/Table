@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -11,6 +13,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function get_class;
+
 /**
  * Class AbstractFilterType
  * @package Ekyna\Component\Table
@@ -19,53 +23,61 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractFilterType implements FilterTypeInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options)
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options)
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
-    {
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
+    {
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): bool {
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix(): string
     {
         return StringUtil::fqcnToBlockPrefix(get_class($this));
     }
@@ -73,7 +85,7 @@ abstract class AbstractFilterType implements FilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }

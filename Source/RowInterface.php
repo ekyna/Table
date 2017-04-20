@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
+
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Interface RowInterface
@@ -14,21 +18,21 @@ interface RowInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Returns the row data, optionally for the given property path.
      *
-     * @param string|false $propertyPath
+     * @param string|null $propertyPath
      *
      * @return mixed
      */
-    public function getData($propertyPath = false);
+    public function getData(?string $propertyPath);
 
     /**
      * Returns the property accessor.
      *
-     * @return \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     * @return PropertyAccessorInterface
      */
-    public function getPropertyAccessor();
+    public function getPropertyAccessor(): PropertyAccessorInterface;
 }

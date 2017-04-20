@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 /**
@@ -12,7 +14,7 @@ interface ActionBuilderInterface extends ActionConfigBuilderInterface
     /**
      * Returns the action.
      *
-     * @return Action
+     * @return ActionInterface
      */
-    public function getAction();
+    public function getAction(): ActionInterface;
 }

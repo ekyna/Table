@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\Session;
 
 use Ekyna\Component\Table\Context;
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\TableInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+use function json_decode;
+use function json_encode;
 
 /**
  * Class SessionStorage
@@ -14,12 +19,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class SessionStorage implements Context\Session\StorageInterface
 {
-    const PREFIX = 'table_context/';
+    private const PREFIX = 'table_context/';
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private SessionInterface $session;
 
 
     /**
@@ -35,7 +37,7 @@ class SessionStorage implements Context\Session\StorageInterface
     /**
      * @inheritDoc
      */
-    public function load(TableInterface $table)
+    public function load(TableInterface $table): void
     {
         $key = $this->getKey($table);
 
@@ -52,7 +54,7 @@ class SessionStorage implements Context\Session\StorageInterface
     /**
      * @inheritDoc
      */
-    public function save(TableInterface $table)
+    public function save(TableInterface $table): void
     {
         if ($table->getContext()->isDefault()) {
             $this->clear($table);
@@ -67,7 +69,7 @@ class SessionStorage implements Context\Session\StorageInterface
     /**
      * @inheritDoc
      */
-    public function clear(TableInterface $table)
+    public function clear(TableInterface $table): void
     {
         $this->session->remove($this->getKey($table));
     }
@@ -79,7 +81,7 @@ class SessionStorage implements Context\Session\StorageInterface
      *
      * @return string
      */
-    private function getKey(TableInterface $table)
+    private function getKey(TableInterface $table): string
     {
         return static::PREFIX . $table->getHash();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 /**
@@ -12,7 +14,7 @@ interface ColumnBuilderInterface extends ColumnConfigBuilderInterface
     /**
      * Returns the column.
      *
-     * @return Column
+     * @return ColumnInterface
      */
-    public function getColumn();
+    public function getColumn(): ColumnInterface;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 use Ekyna\Component\Table\Context\ActiveSort;
@@ -18,62 +20,62 @@ interface ColumnInterface
     /**
      * Sets the table.
      *
-     * @param TableInterface $table
+     * @param TableInterface|null $table
      *
-     * @return self
+     * @return $this|ColumnInterface
      */
-    public function setTable(TableInterface $table);
+    public function setTable(TableInterface $table = null): ColumnInterface;
 
     /**
      * Returns the table.
      *
-     * @return TableInterface
+     * @return TableInterface|null
      */
-    public function getTable();
+    public function getTable(): ?TableInterface;
 
     /**
      * Returns the column's name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the column's label.
      *
      * @return string
      */
-    public function getLabel();
+    public function getLabel(): string;
 
     /**
      * Returns the config.
      *
      * @return ColumnConfigInterface
      */
-    public function getConfig();
+    public function getConfig(): ColumnConfigInterface;
 
     /**
      * Returns whether the column is sorted.
      *
      * @return bool
      */
-    public function isSorted();
+    public function isSorted(): bool;
 
     /**
      * Returns the sort direction.
      *
      * @return string
      */
-    public function getSortDirection();
+    public function getSortDirection(): string;
 
     /**
      * Sets the sort direction.
      *
      * @param string $sort
      *
-     * @return self
+     * @return $this|ColumnInterface
      */
-    public function setSortDirection($sort);
+    public function setSortDirection(string $sort): ColumnInterface;
 
     /**
      * Creates the column head view.
@@ -82,7 +84,7 @@ interface ColumnInterface
      *
      * @return View\HeadView The view
      */
-    public function createHeadView(View\TableView $tableView);
+    public function createHeadView(View\TableView $tableView): View\HeadView;
 
     /**
      * Creates the column cell view.
@@ -90,9 +92,9 @@ interface ColumnInterface
      * @param View\RowView $rowView
      * @param RowInterface $row
      *
-     * @return View\HeadView The view
+     * @return View\CellView The view
      */
-    public function createCellView(View\RowView $rowView, RowInterface $row);
+    public function createCellView(View\RowView $rowView, RowInterface $row): View\CellView;
 
 
     /**
@@ -101,5 +103,5 @@ interface ColumnInterface
      * @param AdapterInterface $adapter
      * @param ActiveSort       $activeSort
      */
-    public function applySort(AdapterInterface $adapter, ActiveSort $activeSort);
+    public function applySort(AdapterInterface $adapter, ActiveSort $activeSort): void;
 }

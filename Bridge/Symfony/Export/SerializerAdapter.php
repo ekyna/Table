@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\Export;
 
 use Ekyna\Component\Table\Export\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use function in_array;
 
 /**
  * Class SerializerAdapter
@@ -14,26 +18,14 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class SerializerAdapter implements AdapterInterface
 {
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private SerializerInterface $serializer;
 
-
-    /**
-     * Constructor.
-     *
-     * @param SerializerInterface $serializer
-     */
     public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function export(TableInterface $table, $format)
+    public function export(TableInterface $table, string $format): ?string
     {
         $rows = $table->getSourceAdapter()->getSelection($table->getContext());
 
@@ -74,10 +66,7 @@ class SerializerAdapter implements AdapterInterface
         return $this->serializer->serialize($data, $format, $context);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getMimeType($format)
+    public function getMimeType(string $format): string
     {
         if ($format === 'csv') {
             return 'text/csv';
@@ -86,10 +75,7 @@ class SerializerAdapter implements AdapterInterface
         return 'application/' . $format;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function supports($format)
+    public function supports(string $format): bool
     {
         return in_array($format, ['json', 'xml', 'csv'], true);
     }

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Type\Filter;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Closure;
+use Doctrine\Persistence\ManagerRegistry;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Form\IdToObjectTransformer;
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
@@ -17,7 +20,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraints\Count;
+
+use function array_shift;
+use function explode;
+use function implode;
+use function is_string;
+use function strpos;
 
 /**
  * Class EntityType
@@ -26,15 +36,8 @@ use Symfony\Component\Validator\Constraints\Count;
  */
 class EntityType extends AbstractFilterType
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $registry;
-
-    /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
-     */
-    private $propertyAccessor;
+    private ManagerRegistry $registry;
+    private ?PropertyAccessorInterface $propertyAccessor = null;
 
 
     /**
@@ -50,7 +53,7 @@ class EntityType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         $valueField = $builder
             ->create('value', $options['form_class'], $options['form_options'])
@@ -85,13 +88,13 @@ class EntityType extends AbstractFilterType
         FilterInterface $filter,
         ActiveFilter $activeFilter,
         array $options
-    ) {
+    ): void {
         $ids = $activeFilter->getValue();
         $entities = $this->registry->getRepository($options['class'])->findBy(['id' => $ids]);
         $values = [];
 
         $choiceLabel = $options['entity_label'];
-        if (!$choiceLabel instanceof \Closure) {
+        if (!$choiceLabel instanceof Closure) {
             if (is_string($choiceLabel) && !empty($choiceLabel)) {
                 $accessor = $this->getPropertyAccessor();
                 $propertyPath = $choiceLabel;
@@ -113,9 +116,9 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired('class')
@@ -162,9 +165,9 @@ class EntityType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }
@@ -177,7 +180,7 @@ class EntityType extends AbstractFilterType
      *
      * @return array
      */
-    private function getOperators($dataClass, $propertyPath)
+    private function getOperators($dataClass, $propertyPath): array
     {
         $metadata = $this->registry->getManagerForClass($dataClass)->getClassMetadata($dataClass);
 
@@ -213,9 +216,9 @@ class EntityType extends AbstractFilterType
     /**
      * Returns the property accessor.
      *
-     * @return \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     * @return PropertyAccessorInterface
      */
-    private function getPropertyAccessor()
+    private function getPropertyAccessor(): PropertyAccessorInterface
     {
         if ($this->propertyAccessor) {
             return $this->propertyAccessor;

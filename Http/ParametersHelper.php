@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http;
 
 use Ekyna\Component\Table\Column\ColumnInterface;
@@ -8,57 +10,46 @@ use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\ColumnSort;
 use Ekyna\Component\Table\Util\Config;
 
+use function array_replace;
+use function strtolower;
+
 /**
  * Class ParametersHelper
  * @package Ekyna\Component\Table\Request
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ParametersHelper
+final class ParametersHelper
 {
-    const SORT            = 'sort';
-    const PAGE_NUM        = 'page';
-    const ADD_FILTER      = 'add_filter';
-    const REMOVE_FILTER   = 'remove_filter';
-    const IDENTIFIERS     = 'identifiers';
-    const ALL             = 'all';
-    const BATCH           = 'batch';
-    const ACTION          = 'action';
-    const EXPORT          = 'export';
-    const FORMAT          = 'format';
-    const CONFIG          = 'config';
-    const VISIBLE_COLUMNS = 'columns';
-    const MAX_PER_PAGE    = 'page_max';
-    const PROFILE         = 'profile';
+    public const SORT            = 'sort';
+    public const PAGE_NUM        = 'page';
+    public const ADD_FILTER      = 'add_filter';
+    public const REMOVE_FILTER   = 'remove_filter';
+    public const IDENTIFIERS     = 'identifiers';
+    public const ALL             = 'all';
+    public const BATCH           = 'batch';
+    public const ACTION          = 'action';
+    public const EXPORT          = 'export';
+    public const FORMAT          = 'format';
+    public const CONFIG          = 'config';
+    public const VISIBLE_COLUMNS = 'columns';
+    public const MAX_PER_PAGE    = 'page_max';
+    public const PROFILE         = 'profile';
 
 
-    /**
-     * @var string
-     */
-    private $tableName;
+    private string $tableName;
+    private ?string $selectionMode;
 
-    /**
-     * @var bool
-     */
-    private $selectionMode;
-
-    /**
-     * @var bool
-     */
-    private $default;
-
-    /**
-     * @var array
-     */
-    private $data;
+    private bool $default;
+    private array $data;
 
 
     /**
      * Constructor.
      *
      * @param string $tableName
-     * @param string $selectionMode
+     * @param string|null $selectionMode
      */
-    public function __construct($tableName, $selectionMode)
+    public function __construct(string $tableName, string $selectionMode = null)
     {
         $this->tableName = $tableName;
         $this->selectionMode = $selectionMode;
@@ -76,20 +67,20 @@ class ParametersHelper
         $this->default = empty($data);
 
         $this->data = array_replace([
-            static::VISIBLE_COLUMNS => [],
-            static::MAX_PER_PAGE    => null,
-            static::CONFIG          => null,
-            static::PAGE_NUM        => null,
-            static::SORT            => null,
-            static::ADD_FILTER      => null,
-            static::REMOVE_FILTER   => null,
-            static::IDENTIFIERS     => [],
-            static::ALL             => null,
-            static::BATCH           => null,
-            static::ACTION          => null,
-            static::EXPORT          => null,
-            static::FORMAT          => null,
-            static::PROFILE         => [],
+            self::VISIBLE_COLUMNS => [],
+            self::MAX_PER_PAGE    => null,
+            self::CONFIG          => null,
+            self::PAGE_NUM        => null,
+            self::SORT            => null,
+            self::ADD_FILTER      => null,
+            self::REMOVE_FILTER   => null,
+            self::IDENTIFIERS     => [],
+            self::ALL             => null,
+            self::BATCH           => null,
+            self::ACTION          => null,
+            self::EXPORT          => null,
+            self::FORMAT          => null,
+            self::PROFILE         => [],
         ], $data);
     }
 
@@ -98,7 +89,7 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isDefault()
+    public function isDefault(): bool
     {
         return $this->default;
     }
@@ -108,9 +99,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getColumnsName()
+    public function getColumnsName(): string
     {
-        return $this->tableName . '[' . static::VISIBLE_COLUMNS . '][]';
+        return $this->tableName . '[' . self::VISIBLE_COLUMNS . '][]';
     }
 
     /**
@@ -118,9 +109,9 @@ class ParametersHelper
      *
      * @return array
      */
-    public function getColumnsValue()
+    public function getColumnsValue(): array
     {
-        return (array)$this->data[static::VISIBLE_COLUMNS];
+        return $this->data[self::VISIBLE_COLUMNS] ?: [];
     }
 
     /**
@@ -128,9 +119,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getMaxPerPageName()
+    public function getMaxPerPageName(): string
     {
-        return $this->tableName . '[' . static::MAX_PER_PAGE . ']';
+        return $this->tableName . '[' . self::MAX_PER_PAGE . ']';
     }
 
     /**
@@ -138,9 +129,9 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getMaxPerPageValue()
+    public function getMaxPerPageValue(): ?string
     {
-        return $this->data[static::MAX_PER_PAGE];
+        return $this->data[self::MAX_PER_PAGE];
     }
 
     /**
@@ -148,9 +139,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getConfigButton()
+    public function getConfigButton(): string
     {
-        return $this->tableName . '[' . static::CONFIG . ']';
+        return $this->tableName . '[' . self::CONFIG . ']';
     }
 
     /**
@@ -158,9 +149,9 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isConfigClicked()
+    public function isConfigClicked(): bool
     {
-        return $this->data[static::CONFIG] === static::CONFIG;
+        return $this->data[self::CONFIG] === self::CONFIG;
     }
 
     /**
@@ -168,9 +159,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getPageName()
+    public function getPageName(): string
     {
-        return $this->tableName . '[' . static::PAGE_NUM . ']';
+        return $this->tableName . '[' . self::PAGE_NUM . ']';
     }
 
     /**
@@ -178,9 +169,9 @@ class ParametersHelper
      *
      * @return int
      */
-    public function getPageValue()
+    public function getPageValue(): int
     {
-        return (int)$this->data[static::PAGE_NUM];
+        return (int)$this->data[self::PAGE_NUM];
     }
 
     /**
@@ -188,9 +179,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getSortName()
+    public function getSortName(): string
     {
-        return $this->tableName . '[' . static::SORT . ']';
+        return $this->tableName . '[' . self::SORT . ']';
     }
 
     /**
@@ -198,9 +189,9 @@ class ParametersHelper
      *
      * @return array|null
      */
-    public function getSortValue()
+    public function getSortValue(): ?array
     {
-        return $this->data[static::SORT];
+        return $this->data[self::SORT];
     }
 
     /**
@@ -210,7 +201,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getSortHref(ColumnInterface $column)
+    public function getSortHref(ColumnInterface $column): string
     {
         $parameter = $this->getSortName();
         $dir = ($column->getSortDirection() === ColumnSort::ASC ? ColumnSort::DESC : ColumnSort::ASC);
@@ -219,23 +210,23 @@ class ParametersHelper
     }
 
     /**
-     * Returns the add filter parameter value.
+     * Returns the add filter parameter name.
      *
      * @return string
      */
-    public function getAddFilterName()
+    public function getAddFilterName(): string
     {
-        return $this->tableName . '[' . static::ADD_FILTER . ']';
+        return $this->tableName . '[' . self::ADD_FILTER . ']';
     }
 
     /**
-     * Returns the add filter parameter name.
+     * Returns the add filter parameter value.
      *
      * @return string|null
      */
-    public function getAddFilterValue()
+    public function getAddFilterValue(): ?string
     {
-        return $this->data[static::ADD_FILTER];
+        return $this->data[self::ADD_FILTER];
     }
 
     /**
@@ -245,7 +236,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getAddFilterHref(FilterInterface $filter)
+    public function getAddFilterHref(FilterInterface $filter): string
     {
         return '?' . $this->getAddFilterName() . '=' . $filter->getName();
     }
@@ -255,9 +246,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getRemoveFilterName()
+    public function getRemoveFilterName(): string
     {
-        return $this->tableName . '[' . static::REMOVE_FILTER . ']';
+        return $this->tableName . '[' . self::REMOVE_FILTER . ']';
     }
 
     /**
@@ -265,9 +256,9 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getRemoveFilterValue()
+    public function getRemoveFilterValue(): ?string
     {
-        return $this->data[static::REMOVE_FILTER];
+        return $this->data[self::REMOVE_FILTER];
     }
 
     /**
@@ -277,7 +268,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getRemoveFilterHref(ActiveFilter $filter)
+    public function getRemoveFilterHref(ActiveFilter $filter): string
     {
         return '?' . $this->getRemoveFilterName() . '=' . $filter->getId();
     }
@@ -287,11 +278,11 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getIdentifiersName()
+    public function getIdentifiersName(): string
     {
-        $name = $this->tableName . '[' . static::IDENTIFIERS . ']';
+        $name = $this->tableName . '[' . self::IDENTIFIERS . ']';
 
-        if ($this->selectionMode == Config::SELECTION_MULTIPLE) {
+        if ($this->selectionMode === Config::SELECTION_MULTIPLE) {
             $name .= '[]';
         }
 
@@ -303,9 +294,9 @@ class ParametersHelper
      *
      * @return array
      */
-    public function getIdentifiersValue()
+    public function getIdentifiersValue(): array
     {
-        return (array)$this->data[static::IDENTIFIERS];
+        return $this->data[self::IDENTIFIERS] ?: [];
     }
 
     /**
@@ -313,9 +304,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getAllName()
+    public function getAllName(): string
     {
-        return $this->tableName . '[' . static::ALL . ']';
+        return $this->tableName . '[' . self::ALL . ']';
     }
 
     /**
@@ -323,9 +314,9 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function getAllValue()
+    public function getAllValue(): bool
     {
-        return (bool)$this->data[static::ALL];
+        return $this->data[self::ALL] ?: false;
     }
 
     /**
@@ -333,9 +324,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getBatchButton()
+    public function getBatchButton(): string
     {
-        return $this->tableName . '[' . static::BATCH . ']';
+        return $this->tableName . '[' . self::BATCH . ']';
     }
 
     /**
@@ -343,9 +334,9 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isBatchClicked()
+    public function isBatchClicked(): bool
     {
-        return $this->data[static::BATCH] === static::BATCH;
+        return $this->data[self::BATCH] === self::BATCH;
     }
 
     /**
@@ -353,9 +344,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getActionName()
+    public function getActionName(): string
     {
-        return $this->tableName . '[' . static::ACTION . ']';
+        return $this->tableName . '[' . self::ACTION . ']';
     }
 
     /**
@@ -363,9 +354,9 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getActionValue()
+    public function getActionValue(): ?string
     {
-        return $this->data[static::ACTION];
+        return $this->data[self::ACTION];
     }
 
     /**
@@ -373,9 +364,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getExportButton()
+    public function getExportButton(): string
     {
-        return $this->tableName . '[' . static::EXPORT . ']';
+        return $this->tableName . '[' . self::EXPORT . ']';
     }
 
     /**
@@ -383,9 +374,9 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isExportClicked()
+    public function isExportClicked(): bool
     {
-        return $this->data[static::EXPORT] === static::EXPORT;
+        return $this->data[self::EXPORT] === self::EXPORT;
     }
 
     /**
@@ -393,9 +384,9 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getFormatName()
+    public function getFormatName(): string
     {
-        return $this->tableName . '[' . static::FORMAT . ']';
+        return $this->tableName . '[' . self::FORMAT . ']';
     }
 
     /**
@@ -403,18 +394,17 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getFormatValue()
+    public function getFormatValue(): ?string
     {
-        return strtolower($this->data[static::FORMAT]);
+        return strtolower($this->data[self::FORMAT]);
     }
-
 
     /**
      * Returns the profile choice parameter name.
      *
      * @return string
      */
-    public function getProfileChoiceName()
+    public function getProfileChoiceName(): string
     {
         return $this->getProfileName('choice');
     }
@@ -424,7 +414,7 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getProfileChoiceValue()
+    public function getProfileChoiceValue(): ?string
     {
         return $this->getProfileValue('choice');
     }
@@ -434,7 +424,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getProfileLoadButton()
+    public function getProfileLoadButton(): string
     {
         return $this->getProfileName('load');
     }
@@ -444,7 +434,7 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isProfileLoadClicked()
+    public function isProfileLoadClicked(): bool
     {
         return $this->getProfileValue('load') === 'load';
     }
@@ -454,7 +444,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getProfileEditButton()
+    public function getProfileEditButton(): string
     {
         return $this->getProfileName('edit');
     }
@@ -464,7 +454,7 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isProfileEditClicked()
+    public function isProfileEditClicked(): bool
     {
         return $this->getProfileValue('edit') === 'edit';
     }
@@ -474,7 +464,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getProfileRemoveButton()
+    public function getProfileRemoveButton(): string
     {
         return $this->getProfileName('remove');
     }
@@ -484,7 +474,7 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isProfileRemoveClicked()
+    public function isProfileRemoveClicked(): bool
     {
         return $this->getProfileValue('remove') === 'remove';
     }
@@ -494,7 +484,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getProfileNameName()
+    public function getProfileNameName(): string
     {
         return $this->getProfileName('name');
     }
@@ -504,7 +494,7 @@ class ParametersHelper
      *
      * @return string|null
      */
-    public function getProfileNameValue()
+    public function getProfileNameValue(): ?string
     {
         return $this->getProfileValue('name');
     }
@@ -514,7 +504,7 @@ class ParametersHelper
      *
      * @return string
      */
-    public function getProfileCreateButton()
+    public function getProfileCreateButton(): string
     {
         return $this->getProfileName('create');
     }
@@ -524,7 +514,7 @@ class ParametersHelper
      *
      * @return bool
      */
-    public function isProfileCreateClicked()
+    public function isProfileCreateClicked(): bool
     {
         return $this->getProfileValue('create') === 'create';
     }
@@ -536,9 +526,9 @@ class ParametersHelper
      *
      * @return string
      */
-    private function getProfileName($name)
+    private function getProfileName(string $name): string
     {
-        return $this->tableName . '[' . static::PROFILE . '][' . $name . ']';
+        return $this->tableName . '[' . self::PROFILE . '][' . $name . ']';
     }
 
     /**
@@ -548,10 +538,10 @@ class ParametersHelper
      *
      * @return string|null
      */
-    private function getProfileValue($name)
+    private function getProfileValue(string $name): ?string
     {
-        if (isset($this->data[static::PROFILE][$name])) {
-            return $this->data[static::PROFILE][$name];
+        if (isset($this->data[self::PROFILE][$name])) {
+            return $this->data[self::PROFILE][$name];
         }
 
         return null;

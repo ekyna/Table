@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context\Profile;
 
 /**
@@ -14,53 +16,53 @@ interface ProfileInterface
      *
      * @return string
      */
-    public function getKey();
+    public function getKey(): string;
 
     /**
      * Sets the table hash.
      *
      * @param string $hash
      *
-     * @return $this
+     * @return $this|ProfileInterface
      */
-    public function setTableHash($hash);
+    public function setTableHash(string $hash): ProfileInterface;
 
     /**
      * Returns the table hash.
      *
      * @return string
      */
-    public function getTableHash();
+    public function getTableHash(): string;
 
     /**
      * Sets the name.
      *
      * @param string $name
      *
-     * @return $this
+     * @return $this|ProfileInterface
      */
-    public function setName($name);
+    public function setName(string $name): ProfileInterface;
 
     /**
      * Returns the name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Sets the data.
      *
      * @param array $data
      *
-     * @return $this
+     * @return $this|ProfileInterface
      */
-    public function setData(array $data);
+    public function setData(array $data): ProfileInterface;
 
     /**
      * Returns the data (to build the context).
      *
      * @return array
      */
-    public function getData();
+    public function getData(): array;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 /**
@@ -14,147 +16,147 @@ interface TableConfigInterface
      *
      * @return string
      */
-    public function getHash();
+    public function getHash(): string;
 
     /**
      * Returns the table name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the table type used to construct the table.
      *
      * @return ResolvedTableTypeInterface
      */
-    public function getType();
+    public function getType(): ResolvedTableTypeInterface;
 
     /**
      * Returns the data source.
      *
      * @return Source\SourceInterface
      */
-    public function getSource();
+    public function getSource(): Source\SourceInterface;
 
     /**
      * Returns the data class.
      *
      * @return string
      */
-    public function getDataClass();
+    public function getDataClass(): string;
 
     /**
      * Returns the "max per page" choices.
      *
      * @return array
      */
-    public function getPerPageChoices();
+    public function getPerPageChoices(): array;
 
     /**
      * Returns the table url.
      *
      * @return string
      */
-    public function getUrl();
+    public function getUrl(): string;
 
     /**
      * Returns the default sorts.
      *
      * @return array ([propertyPath => direction]) An array with property path as keys and direction as values.
      */
-    public function getDefaultSorts();
+    public function getDefaultSorts(): array;
 
     /**
      * Returns whether the table's rows can be sorted.
      *
      * @return bool
      */
-    public function isSortable();
+    public function isSortable(): bool;
 
     /**
      * Returns whether the table's rows can be filtered.
      *
      * @return bool
      */
-    public function isFilterable();
+    public function isFilterable(): bool;
 
     /**
      * Returns whether the table's batch actions are enabled.
      *
      * @return bool
      */
-    public function isBatchable();
+    public function isBatchable(): bool;
 
     /**
      * Returns whether the table can be exported.
      *
      * @return bool
      */
-    public function isExportable();
+    public function isExportable(): bool;
 
     /**
      * Returns whether the table can be configured (visible columns / max per page).
      *
      * @return bool
      */
-    public function isConfigurable();
+    public function isConfigurable(): bool;
 
     /**
      * Returns whether the table profiles are enabled.
      *
      * @return bool
      */
-    public function isProfileable();
+    public function isProfileable(): bool;
 
     /**
      * Returns the selection mode.
      *
-     * @return string
+     * @return string|null
      */
-    public function getSelectionMode();
+    public function getSelectionMode(): ?string;
 
     /**
      * Returns the http adapter used by the table.
      *
      * @return Http\AdapterInterface The http adapter
      */
-    public function getHttpAdapter();
+    public function getHttpAdapter(): Http\AdapterInterface;
 
     /**
      * Returns the session storage used by the table.
      *
      * @return Context\Session\StorageInterface The session storage
      */
-    public function getSessionStorage();
+    public function getSessionStorage(): Context\Session\StorageInterface;
 
     /**
      * Returns the profile storage used by the table.
      *
      * @return Context\Profile\StorageInterface|null The profile storage or null if profile are not supported
      */
-    public function getProfileStorage();
+    public function getProfileStorage(): ?Context\Profile\StorageInterface;
 
     /**
      * Returns whether some export adapters are configured.
      *
      * @return bool
      */
-    public function hasExportAdapters();
+    public function hasExportAdapters(): bool;
 
     /**
      * Returns the export adapters used by the table.
      *
      * @return Export\AdapterInterface[] The export adapters
      */
-    public function getExportAdapters();
+    public function getExportAdapters(): array;
 
     /**
      * Returns all options passed during the construction of the table.
      *
      * @return array The passed options
      */
-    public function getOptions();
+    public function getOptions(): array;
 
     /**
      * Returns whether a specific option exists.
@@ -163,7 +165,7 @@ interface TableConfigInterface
      *
      * @return bool Whether the option exists
      */
-    public function hasOption($name);
+    public function hasOption(string $name): bool;
 
     /**
      * Returns the value of a specific option.
@@ -173,12 +175,12 @@ interface TableConfigInterface
      *
      * @return mixed The option value
      */
-    public function getOption($name, $default = null);
+    public function getOption(string $name, $default = null);
 
     /**
      * Returns the factory.
      *
-     * @return \Ekyna\Component\Table\FactoryInterface
+     * @return TableFactoryInterface
      */
-    public function getFactory();
+    public function getFactory(): TableFactoryInterface;
 }

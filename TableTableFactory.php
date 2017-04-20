@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
-use Ekyna\Component\Table\Extension\Core\Type;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -10,23 +11,16 @@ use Symfony\Component\Form\FormFactoryInterface;
  * @package Ekyna\Component\Table
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Factory implements FactoryInterface
+class TableTableFactory implements TableFactoryInterface
 {
-    /**
-     * @var RegistryInterface
-     */
-    private $registry;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
+    private RegistryInterface    $registry;
+    private FormFactoryInterface $formFactory;
 
 
     /**
      * Constructor.
      *
-     * @param RegistryInterface $registry
+     * @param RegistryInterface    $registry
      * @param FormFactoryInterface $formFactory
      */
     public function __construct(RegistryInterface $registry, FormFactoryInterface $formFactory)
@@ -38,7 +32,7 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createTable($name, $type = Type\TableType::class, array $options = [])
+    public function createTable(string $name, string $type, array $options = []): TableInterface
     {
         return $this->createTableBuilder($name, $type, $options)->getTable();
     }
@@ -46,16 +40,8 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createTableBuilder($name, $type = Type\TableType::class, array $options = [])
+    public function createTableBuilder(string $name, string $type, array $options = []): TableBuilderInterface
     {
-        /*if (null !== $data && !array_key_exists('data', $options)) {
-            $options['data'] = $data;
-        }*/
-
-        if (!is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string');
-        }
-
         $type = $this->registry->getTableType($type);
 
         $builder = $type->createBuilder($this, $name, $options);
@@ -70,7 +56,7 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createColumn($name, $type = Type\Column\ColumnType::class, array $options = [])
+    public function createColumn(string $name, string $type, array $options = []): Column\ColumnInterface
     {
         return $this->createColumnBuilder($name, $type, $options)->getColumn();
     }
@@ -78,12 +64,8 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createColumnBuilder($name, $type = Type\Column\ColumnType::class, array $options = [])
+    public function createColumnBuilder(string $name, string $type, array $options = []): Column\ColumnBuilderInterface
     {
-        if (!is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string');
-        }
-
         $type = $this->registry->getColumnType($type);
 
         $builder = $type->createBuilder($name, $options);
@@ -98,7 +80,7 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createFilter($name, $type = Type\Filter\FilterType::class, array $options = [])
+    public function createFilter(string $name, string $type, array $options = []): Filter\FilterInterface
     {
         return $this->createFilterBuilder($name, $type, $options)->getFilter();
     }
@@ -106,12 +88,8 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createFilterBuilder($name, $type = Type\Filter\FilterType::class, array $options = [])
+    public function createFilterBuilder(string $name, string $type, array $options = []): Filter\FilterBuilderInterface
     {
-        if (!is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string');
-        }
-
         $type = $this->registry->getFilterType($type);
 
         $builder = $type->createBuilder($this->formFactory, $name, $options);
@@ -126,20 +104,16 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createAction($name, $type = Type\Action\ActionType::class, array $options = [])
+    public function createAction(string $name, string $type, array $options = []): Action\ActionInterface
     {
-        return $this->createActionBuilder($name, $options)->getAction();
+        return $this->createActionBuilder($name, $type, $options)->getAction();
     }
 
     /**
      * @inheritDoc
      */
-    public function createActionBuilder($name, $type = Type\Action\ActionType::class, array $options = [])
+    public function createActionBuilder(string $name, string $type, array $options = []): Action\ActionBuilderInterface
     {
-        if (!is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string');
-        }
-
         $type = $this->registry->getActionType($type);
 
         $builder = $type->createBuilder($name, $options);
@@ -154,11 +128,11 @@ class Factory implements FactoryInterface
     /**
      * @inheritDoc
      */
-    public function createAdapter(TableInterface $table)
+    public function createAdapter(TableInterface $table): Source\AdapterInterface
     {
         $source = $table->getConfig()->getSource();
 
-        $factory = $this->registry->getAdapterFactory($source->getFactory());
+        $factory = $this->registry->getAdapterFactory($source::getFactory());
 
         return $factory->createAdapter($table);
     }

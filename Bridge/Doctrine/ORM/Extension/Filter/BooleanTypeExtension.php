@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
 use Doctrine\DBAL\Types\Types;
@@ -27,7 +29,7 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
         FilterInterface $filter,
         ActiveFilter $activeFilter,
         array $options
-    ) {
+    ): bool {
         if (!$adapter instanceof EntityAdapter) {
             return false;
         }
@@ -60,8 +62,8 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return BooleanType::class;
+        return [BooleanType::class];
     }
 }

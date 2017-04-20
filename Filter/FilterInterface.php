@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 use Ekyna\Component\Table\View;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Interface FilterInterface
@@ -19,37 +22,37 @@ interface FilterInterface
      *
      * @param TableInterface $table
      *
-     * @return self
+     * @return $this|FilterInterface
      */
-    public function setTable(TableInterface $table);
+    public function setTable(TableInterface $table): FilterInterface;
 
     /**
      * Returns the table.
      *
      * @return TableInterface
      */
-    public function getTable();
+    public function getTable(): TableInterface;
 
     /**
      * Returns the filter's name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the filter's label.
      *
      * @return string
      */
-    public function getLabel();
+    public function getLabel(): string;
 
     /**
      * Returns the config.
      *
      * @return FilterConfigInterface
      */
-    public function getConfig();
+    public function getConfig(): FilterConfigInterface;
 
     /**
      * Creates the available filter view.
@@ -58,7 +61,7 @@ interface FilterInterface
      *
      * @return View\AvailableFilterView
      */
-    public function createAvailableView(View\TableView $tableView);
+    public function createAvailableView(View\TableView $tableView): View\AvailableFilterView;
 
     /**
      * Creates the active filter view.
@@ -68,14 +71,14 @@ interface FilterInterface
      *
      * @return View\ActiveFilterView
      */
-    public function createActiveView(View\TableView $tableView, ActiveFilter $activeFilter);
+    public function createActiveView(View\TableView $tableView, ActiveFilter $activeFilter): View\ActiveFilterView;
 
     /**
      * Creates the filter form.
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
-    public function createForm();
+    public function createForm(): FormInterface;
 
     /**
      * Applies the active filter to the adapter.
@@ -83,5 +86,5 @@ interface FilterInterface
      * @param AdapterInterface $adapter
      * @param ActiveFilter     $activeFilter
      */
-    public function applyFilter(AdapterInterface $adapter, ActiveFilter $activeFilter);
+    public function applyFilter(AdapterInterface $adapter, ActiveFilter $activeFilter): void;
 }

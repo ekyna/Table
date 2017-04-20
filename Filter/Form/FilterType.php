@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter\Form;
 
 use Ekyna\Component\Table\Context\ActiveFilter;

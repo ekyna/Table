@@ -1,12 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Source;
 
+use Closure;
 use Ekyna\Component\Table\Context\ContextInterface;
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\Source;
 use Ekyna\Component\Table\Util;
 use Pagerfanta\Adapter\ArrayAdapter as PagerAdapter;
+
+use function array_filter;
+use function in_array;
+use function is_null;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function uasort;
 
 /**
  * Class ArrayAdapter
@@ -17,28 +28,19 @@ use Pagerfanta\Adapter\ArrayAdapter as PagerAdapter;
  */
 class ArrayAdapter extends Source\AbstractAdapter
 {
-    /**
-     * @var array|\Closure[]
-     */
-    private $sortClosures;
-
-    /**
-     * @var array|\Closure[]
-     */
-    private $filterClosures;
-
-    /**
-     * @var \Closure
-     */
-    private $identifiersClosures;
+    /** @var callable[] */
+    private array $sortClosures;
+    /** @var callable[] */
+    private array    $filterClosures;
+    private ?Closure $identifiersClosures = null;
 
 
     /**
      * Adds the filter closure.
      *
-     * @param \Closure $closure
+     * @param Closure $closure
      */
-    public function addFilterClosure(\Closure $closure)
+    public function addFilterClosure(Closure $closure)
     {
         $this->filterClosures[] = $closure;
     }
@@ -46,9 +48,9 @@ class ArrayAdapter extends Source\AbstractAdapter
     /**
      * Adds the sort closure.
      *
-     * @param \Closure $closure
+     * @param Closure $closure
      */
-    public function addSortClosure(\Closure $closure)
+    public function addSortClosure(Closure $closure)
     {
         $this->sortClosures[] = $closure;
     }
@@ -57,12 +59,12 @@ class ArrayAdapter extends Source\AbstractAdapter
      * Builds a filter closure from the active filter.
      *
      * @param string $propertyPath
-     * @param string $operator
-     * @param string $value
+     * @param int    $operator
+     * @param mixed  $value
      *
-     * @return \Closure
+     * @return Closure
      */
-    public function buildFilterClosure($propertyPath, $operator, $value)
+    public function buildFilterClosure(string $propertyPath, int $operator, $value): Closure
     {
         $rowValue = function ($data) use ($propertyPath) {
             return $this->propertyAccessor->getValue($data, $propertyPath);
@@ -105,35 +107,41 @@ class ArrayAdapter extends Source\AbstractAdapter
                 };
             case Util\FilterOperator::LIKE:
                 $value = strtolower($value);
+
                 return function ($row) use ($value, $rowValue) {
                     return false !== strpos(strtolower((string)$rowValue($row)), $value);
                 };
             case Util\FilterOperator::NOT_LIKE:
                 $value = strtolower($value);
+
                 return function ($row) use ($value, $rowValue) {
                     return false === strpos(strtolower((string)$rowValue($row)), $value);
                 };
             case Util\FilterOperator::START_WITH:
                 $value = strtolower($value);
                 $length = strlen($value);
+
                 return function ($row) use ($value, $length, $rowValue) {
                     return (substr(strtolower((string)$rowValue($row)), 0, $length) === $value);
                 };
             case Util\FilterOperator::NOT_START_WITH:
                 $value = strtolower($value);
                 $length = strlen($value);
+
                 return function ($row) use ($value, $length, $rowValue) {
                     return !(substr(strtolower((string)$rowValue($row)), 0, $length) === $value);
                 };
             case Util\FilterOperator::END_WITH:
                 $value = strtolower($value);
                 $length = strlen($value);
+
                 return function ($row) use ($value, $length, $rowValue) {
                     return (substr(strtolower((string)$rowValue($row)), -$length) === $value);
                 };
             case Util\FilterOperator::NOT_END_WITH:
                 $value = strtolower($value);
                 $length = strlen($value);
+
                 return function ($row) use ($value, $length, $rowValue) {
                     return !(substr(strtolower((string)$rowValue($row)), -$length) === $value);
                 };
@@ -147,7 +155,7 @@ class ArrayAdapter extends Source\AbstractAdapter
                 };
         }
 
-        throw new Exception\InvalidArgumentException("Unexpected filter operator.");
+        throw new Exception\InvalidArgumentException('Unexpected filter operator.');
     }
 
     /**
@@ -156,31 +164,31 @@ class ArrayAdapter extends Source\AbstractAdapter
      * @param string $propertyPath
      * @param string $direction
      *
-     * @return \Closure
+     * @return Closure
      */
-    public function buildSortClosure($propertyPath, $direction)
+    public function buildSortClosure(string $propertyPath, string $direction): Closure
     {
         $value = function ($data) use ($propertyPath) {
             return $this->propertyAccessor->getValue($data, $propertyPath);
         };
 
         if ($direction === Util\ColumnSort::ASC) {
-            return function ($rowA, $rowB) use ($value) {
+            return function ($rowA, $rowB) use ($value): int {
                 $a = $value($rowA);
                 $b = $value($rowB);
 
-                if ($a == $b) {
+                if ($a === $b) {
                     return 0;
                 }
 
                 return $a < $b ? -1 : 1;
             };
         } elseif ($direction === Util\ColumnSort::DESC) {
-            return function ($rowA, $rowB) use ($value) {
+            return function ($rowA, $rowB) use ($value): int {
                 $a = $value($rowA);
                 $b = $value($rowB);
 
-                if ($a == $b) {
+                if ($a === $b) {
                     return 0;
                 }
 
@@ -188,23 +196,25 @@ class ArrayAdapter extends Source\AbstractAdapter
             };
         }
 
-        throw new Exception\InvalidArgumentException("Unexpected column sort direction.");
+        throw new Exception\InvalidArgumentException('Unexpected column sort direction.');
     }
 
     /**
      * @inheritDoc
      */
-    protected function validateSource(Source\SourceInterface $source)
+    protected function validateSource(Source\SourceInterface $source): void
     {
-        if (!$source instanceof ArraySource) {
-            throw new Exception\InvalidArgumentException($source, ArraySource::class);
+        if ($source instanceof ArraySource) {
+            return;
         }
+
+        throw new Exception\InvalidArgumentException($source, ArraySource::class);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function initializeSorting(ContextInterface $context)
+    protected function initializeSorting(ContextInterface $context): void
     {
         if (!$context->getActiveSort() && !empty($sorts = $this->table->getConfig()->getDefaultSorts())) {
             foreach ($sorts as $propertyPath => $direction) {
@@ -222,11 +232,11 @@ class ArrayAdapter extends Source\AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function initializeSelection(ContextInterface $context)
+    protected function initializeSelection(ContextInterface $context): void
     {
         $identifiers = $context->getSelectedIdentifiers();
 
-        $this->identifiersClosures = function($key) use ($identifiers) {
+        $this->identifiersClosures = function ($key) use ($identifiers) {
             return in_array($key, $identifiers);
         };
     }
@@ -234,7 +244,7 @@ class ArrayAdapter extends Source\AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function getSelectedRows()
+    protected function getSelectedRows(): array
     {
         $results = $this->applyClosures($this->getSource()->getData());
 
@@ -247,9 +257,9 @@ class ArrayAdapter extends Source\AbstractAdapter
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function getPagerAdapter()
+    protected function getPagerAdapter(): PagerAdapter
     {
         // Filter and sort the data
         $data = $this->getSource()->getData();
@@ -259,9 +269,9 @@ class ArrayAdapter extends Source\AbstractAdapter
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function reset()
+    protected function reset(): void
     {
         parent::reset();
 
@@ -277,7 +287,7 @@ class ArrayAdapter extends Source\AbstractAdapter
      *
      * @return array
      */
-    private function applyClosures($data)
+    private function applyClosures(array $data): array
     {
         if (!empty($this->filterClosures)) {
             $data = array_filter($data, function ($datum) {
@@ -292,9 +302,9 @@ class ArrayAdapter extends Source\AbstractAdapter
         }
 
         if (!empty($this->sortClosures)) {
-            uasort($data, function($rowA, $rowB) {
+            uasort($data, function ($rowA, $rowB) {
                 foreach ($this->sortClosures as $closure) {
-                    if (0 != $result = $closure($rowA, $rowB)) {
+                    if (0 !== $result = $closure($rowA, $rowB)) {
                         return $result;
                     }
                 }

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
+use DateTime;
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Filter\AbstractFilterType;
 use Ekyna\Component\Table\Filter\FilterInterface;
@@ -22,9 +25,9 @@ class DateTimeType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options): void
     {
-        /** @var \DateTime $date */
+        /** @var DateTime $date */
         $date = $activeFilter->getValue();
 
         $view->vars['value'] = $date->format($options['time'] ? 'd/m/Y H:i' : 'd/m/Y'); // TODO localized format.
@@ -33,7 +36,7 @@ class DateTimeType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         $builder
             ->add('operator', FormType\ChoiceType::class, [
@@ -52,7 +55,6 @@ class DateTimeType extends AbstractFilterType
                 'label'       => false,
                 'required'    => true,
                 'input'       => 'datetime',
-                'widget'      => 'single_text',
                 'constraints' => [
                     new NotNull(),
                 ],
@@ -64,7 +66,7 @@ class DateTimeType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefault('time', false)
@@ -72,9 +74,9 @@ class DateTimeType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }

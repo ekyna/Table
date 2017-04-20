@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\Export;
 
 use Ekyna\Component\Table\Extension\AbstractTableTypeExtension;
@@ -14,10 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class TableTypeExtension extends AbstractTableTypeExtension
 {
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private SerializerInterface $serializer;
 
 
     /**
@@ -33,7 +32,7 @@ class TableTypeExtension extends AbstractTableTypeExtension
     /**
      * @inheritDoc
      */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
         $builder->addExportAdapter(new SerializerAdapter($this->serializer));
     }
@@ -41,8 +40,8 @@ class TableTypeExtension extends AbstractTableTypeExtension
     /**
      * @inheritDoc
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return TableType::class;
+        return [TableType::class];
     }
 }

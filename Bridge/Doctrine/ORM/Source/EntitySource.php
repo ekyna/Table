@@ -1,10 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Source;
 
+use Closure;
 use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Source\ClassSourceInterface;
+use ReflectionFunction;
+
+use function class_exists;
+use function in_array;
+use function is_null;
 
 /**
  * Class EntitySource
@@ -13,15 +21,8 @@ use Ekyna\Component\Table\Source\ClassSourceInterface;
  */
 class EntitySource implements ClassSourceInterface
 {
-    /**
-     * @var string
-     */
-    private $class;
-
-    /**
-     * @var \Closure
-     */
-    private $queryBuilderInitializer;
+    private string   $class;
+    private ?Closure $queryBuilderInitializer = null;
 
 
     /**
@@ -29,19 +30,19 @@ class EntitySource implements ClassSourceInterface
      *
      * @param string $class
      */
-    public function __construct($class)
+    public function __construct(string $class)
     {
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf("Class %s does not exists.", $class));
+            throw new InvalidArgumentException(sprintf('Class %s does not exists.', $class));
         }
 
         $this->class = $class;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -49,9 +50,9 @@ class EntitySource implements ClassSourceInterface
     /**
      * Returns the queryBuilderInitializer.
      *
-     * @return \Closure
+     * @return Closure
      */
-    public function getQueryBuilderInitializer()
+    public function getQueryBuilderInitializer(): ?Closure
     {
         return $this->queryBuilderInitializer;
     }
@@ -66,11 +67,11 @@ class EntitySource implements ClassSourceInterface
      *
      * }
      *
-     * @param \Closure|null $initializer
+     * @param Closure|null $initializer
      *
      * @return EntitySource
      */
-    public function setQueryBuilderInitializer(\Closure $initializer = null)
+    public function setQueryBuilderInitializer(Closure $initializer = null): EntitySource
     {
         if (!is_null($initializer)) {
             $this->validateQueryBuilderInitializer($initializer);
@@ -84,17 +85,19 @@ class EntitySource implements ClassSourceInterface
     /**
      * Validates the query builder initializer.
      *
-     * @param \Closure $initializer
+     * @param Closure $initializer
      *
      * @throws InvalidArgumentException
+     * @noinspection PhpDocMissingThrowsInspection
      */
-    private function validateQueryBuilderInitializer(\Closure $initializer)
+    private function validateQueryBuilderInitializer(Closure $initializer)
     {
-        $reflection = new \ReflectionFunction($initializer);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $reflection = new ReflectionFunction($initializer);
         $parameters = $reflection->getParameters();
 
         if (2 !== count($parameters)) {
-            throw new InvalidArgumentException("The query builder initializer must have two and only two arguments.");
+            throw new InvalidArgumentException('The query builder initializer must have two and only two arguments.');
         }
 
         $class = $parameters[0]->getClass();
@@ -105,18 +108,18 @@ class EntitySource implements ClassSourceInterface
             ));
         }
 
-        if (!in_array($parameters[1]->getType(), [null, 'string'], true)) {
-            throw new InvalidArgumentException(sprintf(
-                "The query builder initializer's second must be type hinted to 'string'.",
-                QueryBuilder::class
-            ));
+        $type = (string)$parameters[1]->getType();
+        if (!in_array($type, [null, 'string'], true)) {
+            throw new InvalidArgumentException(
+                "The query builder initializer's second argument must be type hinted to 'string'."
+            );
         }
     }
 
     /**
      * @inheritDoc
      */
-    static public function getFactory()
+    public static function getFactory(): string
     {
         return EntityAdapterFactory::class;
     }

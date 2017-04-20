@@ -1,20 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
+use Ekyna\Component\Table\Export\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
+
+use function sprintf;
 
 /**
  * Class ExportHandler
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ExportHandler implements HandlerInterface
+final class ExportHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         // Abort if table export is not enabled
         if (!$table->getConfig()->isExportable()) {
@@ -33,21 +38,15 @@ class ExportHandler implements HandlerInterface
             }
 
             // Body
-            try {
-                $body = $adapter->export($table, $format);
-            } catch (\Exception $e) {
-                @trigger_error($e->getMessage());
-
+            if (empty($body = $adapter->export($table, $format))) {
                 return null;
             }
 
             // Response
-            $response = $table->getConfig()->getHttpAdapter()->createResponse($body, 200, [
+            return $table->getConfig()->getHttpAdapter()->createResponse($body, 200, [
                 'Content-Type'        => $adapter->getMimeType($format),
                 'Content-Disposition' => sprintf('attachment; filename="export.%s"', $format),
             ]);
-
-            return $response;
         }
 
         return null;
@@ -59,9 +58,9 @@ class ExportHandler implements HandlerInterface
      * @param TableInterface $table
      * @param string         $format
      *
-     * @return \Ekyna\Component\Table\Export\AdapterInterface|null
+     * @return AdapterInterface|null
      */
-    private function getAdapter(TableInterface $table, $format)
+    private function getAdapter(TableInterface $table, string $format): ?AdapterInterface
     {
         $adapters = $table->getConfig()->getExportAdapters();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 /**
@@ -14,168 +16,168 @@ interface TableConfigBuilderInterface extends TableConfigInterface
      *
      * @param ResolvedTableTypeInterface $type
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setType(ResolvedTableTypeInterface $type);
+    public function setType(ResolvedTableTypeInterface $type): TableConfigBuilderInterface;
 
     /**
      * Sets the data source.
      *
      * @param Source\SourceInterface $source
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setSource(Source\SourceInterface $source);
+    public function setSource(Source\SourceInterface $source): TableConfigBuilderInterface;
 
     /**
      * Sets the data class.
      *
      * @param string $class
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setDataClass($class);
+    public function setDataClass(string $class): TableConfigBuilderInterface;
 
     /**
      * Sets the "max per page" choices.
      *
      * @param array $choices
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setPerPageChoices(array $choices);
+    public function setPerPageChoices(array $choices): TableConfigBuilderInterface;
 
     /**
      * Sets the table url.
      *
      * @param string $url
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setUrl($url);
+    public function setUrl(string $url): TableConfigBuilderInterface;
 
     /**
      * Adds a default sort.
      *
-     * @param string $propertyPath
-     * @param string $direction Default to ASC if null
+     * @param string      $propertyPath
+     * @param string|null $direction Default to ASC if null
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function addDefaultSort($propertyPath, $direction = null);
+    public function addDefaultSort(string $propertyPath, string $direction = null): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table's rows can be sorted.
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setSortable($enabled);
+    public function setSortable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table's rows can be filtered.
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setFilterable($enabled);
+    public function setFilterable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table's batch actions are enabled.
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setBatchable($enabled);
+    public function setBatchable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table can be exported.
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setExportable($enabled);
+    public function setExportable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table can be configured (visible columns / max per page).
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setConfigurable($enabled);
+    public function setConfigurable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets whether the table profiles are enabled.
      *
      * @param bool $enabled
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setProfileable($enabled);
+    public function setProfileable(bool $enabled): TableConfigBuilderInterface;
 
     /**
      * Sets the selection mode.
      *
-     * @param string $mode
+     * @param string|null $mode
      *
-     * @return TableConfigBuilder
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setSelectionMode($mode);
+    public function setSelectionMode(string $mode = null): TableConfigBuilderInterface;
 
     /**
      * Sets the http adapter.
      *
      * @param Http\AdapterInterface $adapter
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setHttpAdapter(Http\AdapterInterface $adapter);
+    public function setHttpAdapter(Http\AdapterInterface $adapter): TableConfigBuilderInterface;
 
     /**
      * Sets the session storage.
      *
      * @param Context\Session\StorageInterface $storage
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setSessionStorage(Context\Session\StorageInterface $storage);
+    public function setSessionStorage(Context\Session\StorageInterface $storage): TableConfigBuilderInterface;
 
     /**
      * Sets the profile storage.
      *
      * @param Context\Profile\StorageInterface $storage
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setProfileStorage(Context\Profile\StorageInterface $storage);
+    public function setProfileStorage(Context\Profile\StorageInterface $storage): TableConfigBuilderInterface;
 
     /**
      * Adds the export adapter.
      *
      * @param Export\AdapterInterface $adapter
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function addExportAdapter(Export\AdapterInterface $adapter);
+    public function addExportAdapter(Export\AdapterInterface $adapter): TableConfigBuilderInterface;
 
     /**
      * Sets the factory.
      *
-     * @param FactoryInterface $factory
+     * @param TableFactoryInterface $factory
      *
-     * @return $this
+     * @return $this|TableConfigBuilderInterface
      */
-    public function setFactory(FactoryInterface $factory);
+    public function setFactory(TableFactoryInterface $factory): TableConfigBuilderInterface;
 
     /**
      * Builds and returns the table configuration.
      *
      * @return TableConfigInterface
      */
-    public function getTableConfig();
+    public function getTableConfig(): TableConfigInterface;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http;
 
 use Ekyna\Component\Table\TableInterface;
@@ -11,10 +13,7 @@ use Ekyna\Component\Table\TableInterface;
  */
 class RequestHandler
 {
-    /**
-     * @var TableInterface
-     */
-    private $table;
+    private TableInterface $table;
 
 
     /**
@@ -28,9 +27,13 @@ class RequestHandler
     }
 
     /**
-     * @inheritDoc
+     * Handles the request.
+     *
+     * @param object|null $request
+     *
+     * @return object|null The response if any.
      */
-    public function handleRequest($request = null)
+    public function handleRequest(object $request = null): ?object
     {
         $config = $this->table->getConfig();
 
@@ -59,7 +62,7 @@ class RequestHandler
         ];
         foreach ($classes as $class) {
             /** @var Handler\HandlerInterface $handler */
-            $handler = new $class;
+            $handler = new $class();
 
             // Abort on response
             if (null !== $response = $handler->execute($this->table, $request)) {

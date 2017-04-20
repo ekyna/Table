@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 use Ekyna\Component\Table\Context\ActiveSort;
@@ -11,6 +13,8 @@ use Ekyna\Component\Table\View\HeadView;
 use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function get_class;
+
 /**
  * Class AbstractColumnType
  * @package Ekyna\Component\Table
@@ -19,44 +23,49 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractColumnType implements ColumnTypeInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildColumn(ColumnBuilderInterface $builder, array $options)
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildHeadView(HeadView $view, ColumnInterface $column, array $options)
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
-    {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function buildHeadView(HeadView $view, ColumnInterface $column, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        ActiveSort $activeSort,
+        array $options
+    ): bool {
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix(): string
     {
         return StringUtil::fqcnToBlockPrefix(get_class($this));
     }
@@ -64,7 +73,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ColumnType::class;
     }

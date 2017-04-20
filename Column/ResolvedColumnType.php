@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 use Ekyna\Component\Table\Context\ActiveSort;
@@ -11,32 +13,21 @@ use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function get_class;
+
 /**
  * Class ResolvedColumnType
  * @package Ekyna\Component\Table\Column
  * @author  Etienne Dauvergne <contact@ekyna.com>
+ *
+ * @property ColumnTypeExtensionInterface[] $typeExtensions
  */
-class ResolvedColumnType implements ResolvedColumnTypeInterface
+final class ResolvedColumnType implements ResolvedColumnTypeInterface
 {
-    /**
-     * @var ColumnTypeInterface
-     */
-    private $innerType;
-
-    /**
-     * @var ColumnTypeExtensionInterface[]
-     */
-    private $typeExtensions;
-
-    /**
-     * @var ResolvedColumnTypeInterface|null
-     */
-    private $parent;
-
-    /**
-     * @var OptionsResolver
-     */
-    private $optionsResolver;
+    private ColumnTypeInterface          $innerType;
+    private array                        $typeExtensions;
+    private ?ResolvedColumnTypeInterface $parent          = null;
+    private ?OptionsResolver             $optionsResolver = null;
 
 
     /**
@@ -48,7 +39,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function __construct(
         ColumnTypeInterface $innerType,
-        array $typeExtensions = array(),
+        array $typeExtensions = [],
         ResolvedColumnTypeInterface $parent = null
     ) {
         foreach ($typeExtensions as $extension) {
@@ -65,7 +56,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return $this->innerType->getBlockPrefix();
     }
@@ -73,7 +64,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?ResolvedColumnTypeInterface
     {
         return $this->parent;
     }
@@ -81,7 +72,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function getInnerType()
+    public function getInnerType(): ColumnTypeInterface
     {
         return $this->innerType;
     }
@@ -89,15 +80,15 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function getTypeExtensions()
+    public function getTypeExtensions(): array
     {
         return $this->typeExtensions;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function createBuilder($name, array $options = array())
+    public function createBuilder(string $name, array $options = []): ColumnBuilderInterface
     {
         $options = $this->getOptionsResolver()->resolve($options);
 
@@ -110,7 +101,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildColumn(ColumnBuilderInterface $builder, array $options)
+    public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildColumn($builder, $options);
@@ -126,7 +117,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function createHeadView(ColumnInterface $column, View\TableView $table)
+    public function createHeadView(ColumnInterface $column, View\TableView $table): View\HeadView
     {
         return new View\HeadView($table);
     }
@@ -134,7 +125,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildHeadView(View\HeadView $view, ColumnInterface $column, array $options)
+    public function buildHeadView(View\HeadView $view, ColumnInterface $column, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildHeadView($view, $column, $options);
@@ -150,7 +141,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function createCellView(ColumnInterface $column, View\RowView $row)
+    public function createCellView(ColumnInterface $column, View\RowView $row): View\CellView
     {
         return new View\CellView($row);
     }
@@ -158,7 +149,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildCellView(View\CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(View\CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildCellView($view, $column, $row, $options);
@@ -174,8 +165,12 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
-    {
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        ActiveSort $activeSort,
+        array $options
+    ): bool {
         foreach ($this->typeExtensions as $extension) {
             if ($extension->applySort($adapter, $column, $activeSort, $options)) {
                 return true;
@@ -193,14 +188,14 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
         throw new LogicException(
             "None of the extensions, type or parent type were able to apply the sort to the adapter.\n" .
             "Did you forget to return true in some 'applySort' methods ? Or maybe you need to create " .
-            "a filter type extension that supports the " . get_class($adapter) . " adapter."
+            'a filter type extension that supports the ' . get_class($adapter) . ' adapter.'
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function getOptionsResolver()
+    public function getOptionsResolver(): OptionsResolver
     {
         if (null === $this->optionsResolver) {
             if (null !== $this->parent) {

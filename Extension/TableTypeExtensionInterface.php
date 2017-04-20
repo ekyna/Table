@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Ekyna\Component\Table\Extension;
 
@@ -27,7 +28,7 @@ interface TableTypeExtensionInterface
      * @param TableBuilderInterface $builder The table builder
      * @param array                 $options The options
      */
-    public function buildTable(TableBuilderInterface $builder, array $options);
+    public function buildTable(TableBuilderInterface $builder, array $options): void;
 
     /**
      * Builds the table view.
@@ -41,7 +42,7 @@ interface TableTypeExtensionInterface
      * @param TableInterface $table   The table
      * @param array          $options The options
      */
-    public function buildView(View\TableView $view, TableInterface $table, array $options);
+    public function buildView(View\TableView $view, TableInterface $table, array $options): void;
 
     /**
      * Builds the row view.
@@ -55,19 +56,19 @@ interface TableTypeExtensionInterface
      * @param RowInterface $row     The row
      * @param array        $options The options
      */
-    public function buildRowView(View\RowView $view, RowInterface $row, array $options);
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options): void;
 
     /**
      * Configures the options for this type.
      *
      * @param OptionsResolver $resolver The resolver for the options
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
-     * Returns the name of the type being extended.
+     * Returns the names of the types being extended.
      *
-     * @return string The name of the type being extended
+     * @return string[] The names of the types being extended
      */
-    public function getExtendedType();
+    public static function getExtendedTypes(): array;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Util;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
@@ -9,27 +11,27 @@ use Ekyna\Component\Table\Exception\InvalidArgumentException;
  * @package Ekyna\Component\Table\Util
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-abstract class ColumnSort
+final class ColumnSort
 {
-    const NONE = 'none';
-    const ASC  = 'asc';
-    const DESC = 'desc';
+    public const NONE = 'none';
+    public const ASC  = 'asc';
+    public const DESC = 'desc';
 
 
     /**
      * Returns whether the given direction is valid.
      *
      * @param string $direction
-     * @param bool $throw
+     * @param bool   $throw
      *
      * @return bool
      */
-    static public function isValid($direction, $throw = false)
+    public static function isValid(string $direction, bool $throw = false): bool
     {
         $valid = in_array($direction, [
-            static::NONE,
-            static::ASC,
-            static::DESC,
+            self::NONE,
+            self::ASC,
+            self::DESC,
         ], true);
 
         if (!$valid && $throw) {
@@ -37,5 +39,12 @@ abstract class ColumnSort
         }
 
         return $valid;
+    }
+
+    /**
+     * Disabled constructor.
+     */
+    private function __construct()
+    {
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\Filter\AbstractFilterType;
@@ -19,7 +21,7 @@ class NumberType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         $builder
             ->add('operator', FormType\ChoiceType::class, [
@@ -45,9 +47,9 @@ class NumberType extends AbstractFilterType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 /**
@@ -10,13 +12,13 @@ namespace Ekyna\Component\Table;
 class ResolvedTypeFactory implements ResolvedTypeFactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function createResolvedTableType(
         TableTypeInterface $type,
         array $typeExtensions,
         ResolvedTableTypeInterface $parent = null
-    ) {
+    ): ResolvedTableTypeInterface {
         return new ResolvedTableType($type, $typeExtensions, $parent);
     }
 
@@ -27,7 +29,7 @@ class ResolvedTypeFactory implements ResolvedTypeFactoryInterface
         Column\ColumnTypeInterface $type,
         array $typeExtensions,
         Column\ResolvedColumnTypeInterface $parent = null
-    ) {
+    ): Column\ResolvedColumnTypeInterface {
         return new Column\ResolvedColumnType($type, $typeExtensions, $parent);
     }
 
@@ -38,7 +40,7 @@ class ResolvedTypeFactory implements ResolvedTypeFactoryInterface
         Filter\FilterTypeInterface $type,
         array $typeExtensions,
         Filter\ResolvedFilterTypeInterface $parent = null
-    ) {
+    ): Filter\ResolvedFilterTypeInterface {
         return new Filter\ResolvedFilterType($type, $typeExtensions, $parent);
     }
 
@@ -49,7 +51,7 @@ class ResolvedTypeFactory implements ResolvedTypeFactoryInterface
         Action\ActionTypeInterface $type,
         array $typeExtensions,
         Action\ResolvedActionTypeInterface $parent = null
-    ) {
+    ): Action\ResolvedActionTypeInterface {
         return new Action\ResolvedActionType($type, $typeExtensions, $parent);
     }
 }

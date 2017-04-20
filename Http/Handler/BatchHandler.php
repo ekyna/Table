@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\TableInterface;
@@ -9,12 +11,12 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class BatchHandler implements HandlerInterface
+final class BatchHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         // Abort if table's batch actions are not enabled
         if (!$table->getConfig()->isBatchable()) {
@@ -31,6 +33,7 @@ class BatchHandler implements HandlerInterface
             // If action exists
             if (!empty($name) && $table->hasAction($name)) {
                 $result = $table->getAction($name)->execute();
+
                 if (is_object($result)) {
                     return $result;
                 }

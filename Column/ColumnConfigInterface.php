@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 /**
@@ -14,49 +16,49 @@ interface ColumnConfigInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the column type used to construct the column.
      *
      * @return ResolvedColumnTypeInterface
      */
-    public function getType();
+    public function getType(): ResolvedColumnTypeInterface;
 
     /**
      * Returns the column label.
      *
      * @return string
      */
-    public function getLabel();
+    public function getLabel(): string;
 
     /**
      * Returns the column position.
      *
      * @return int
      */
-    public function getPosition();
+    public function getPosition(): int;
 
     /**
      * Returns the column property path.
      *
      * @return string|null
      */
-    public function getPropertyPath();
+    public function getPropertyPath(): ?string;
 
     /**
      * Returns whether the column is sortable.
      *
      * @return bool
      */
-    public function isSortable();
+    public function isSortable(): bool;
 
     /**
      * Returns all options passed during the construction of the column.
      *
      * @return array The passed options
      */
-    public function getOptions();
+    public function getOptions(): array;
 
     /**
      * Returns whether a specific option exists.
@@ -65,7 +67,7 @@ interface ColumnConfigInterface
      *
      * @return bool Whether the option exists
      */
-    public function hasOption($name);
+    public function hasOption(string $name): bool;
 
     /**
      * Returns the value of a specific option.
@@ -75,5 +77,5 @@ interface ColumnConfigInterface
      *
      * @return mixed The option value
      */
-    public function getOption($name, $default = null);
+    public function getOption(string $name, $default = null);
 }

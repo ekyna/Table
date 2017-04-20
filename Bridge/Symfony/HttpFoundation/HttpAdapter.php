@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\HttpFoundation;
 
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Http\AdapterInterface;
+use Ekyna\Component\Table\Http\ParametersHelper;
 use Ekyna\Component\Table\TableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class HttpAdapter
@@ -18,15 +21,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class HttpAdapter implements AdapterInterface
 {
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private FlashBagInterface   $flashBag;
+    private TranslatorInterface $translator;
 
 
     /**
@@ -44,7 +40,7 @@ class HttpAdapter implements AdapterInterface
     /**
      * @inheritDoc
      */
-    public function loadParameters(TableInterface $table, $request = null)
+    public function loadParameters(TableInterface $table, object $request = null): ParametersHelper
     {
         if (!$request instanceof Request) {
             throw new UnexpectedTypeException($request, Request::class);
@@ -66,14 +62,14 @@ class HttpAdapter implements AdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function redirect(TableInterface $table)
+    public function redirect(TableInterface $table): object
     {
         foreach ($table->getErrors() as $error) {
             $message = $error->getMessage();
-            if (null !== $error->getTranslationDomain()) {
-                $message = $this->translator->trans($message, $error->getParameters(), $error->getTranslationDomain());
+            if (null !== $error->getTransDomain()) {
+                $message = $this->translator->trans($message, $error->getParameters(), $error->getTransDomain());
             }
             $this->addFlash('danger', $message);
         }
@@ -90,9 +86,9 @@ class HttpAdapter implements AdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function addFlash($type, $message)
+    public function addFlash($type, $message): void
     {
         $this->flashBag->add($type, $message);
     }
@@ -100,7 +96,7 @@ class HttpAdapter implements AdapterInterface
     /**
      * @inheritDoc
      */
-    public function createRedirection($url = null)
+    public function createRedirection($url = null): object
     {
         return new RedirectResponse($url);
     }
@@ -108,7 +104,7 @@ class HttpAdapter implements AdapterInterface
     /**
      * @inheritDoc
      */
-    public function createResponse($body, $code = 200, array $headers = [])
+    public function createResponse($body, $code = 200, array $headers = []): object
     {
         return new Response($body, $code, $headers);
     }

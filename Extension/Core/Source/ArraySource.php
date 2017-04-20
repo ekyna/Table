@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Source;
 
 use Ekyna\Component\Table\Source\SourceInterface;
@@ -11,10 +13,7 @@ use Ekyna\Component\Table\Source\SourceInterface;
  */
 class ArraySource implements SourceInterface
 {
-    /**
-     * @var array
-     */
-    private $data;
+    private array $data;
 
 
     /**
@@ -37,7 +36,7 @@ class ArraySource implements SourceInterface
         $this->data = [];
 
         foreach ($data as $key => $value) {
-            $this->data[$key] = (object) $value;
+            $this->data[$key] = (object)$value;
         }
     }
 
@@ -46,7 +45,7 @@ class ArraySource implements SourceInterface
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -54,7 +53,7 @@ class ArraySource implements SourceInterface
     /**
      * @inheritDoc
      */
-    static public function getFactory()
+    public static function getFactory(): string
     {
         return ArrayAdapterFactory::class;
     }

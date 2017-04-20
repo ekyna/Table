@@ -1,36 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\Util\Config;
+
+use function array_key_exists;
 
 /**
  * Class ActionBuilder
  * @package Ekyna\Component\Table\Action
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ActionBuilder implements ActionBuilderInterface
+final class ActionBuilder implements ActionBuilderInterface
 {
-    /**
-     * @var bool
-     */
-    private $locked = false;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var ResolvedActionTypeInterface
-     */
-    private $type;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private string                      $name;
+    private string                      $label;
+    private ResolvedActionTypeInterface $type;
+    private array                       $options;
+    private bool                        $locked = false;
 
 
     /**
@@ -39,18 +29,18 @@ class ActionBuilder implements ActionBuilderInterface
      * @param string $name
      * @param array  $options
      */
-    public function __construct($name, array $options = [])
+    public function __construct(string $name, array $options = [])
     {
         Config::validateName($name);
 
-        $this->name = (string)$name;
+        $this->name = $name;
         $this->options = $options;
     }
 
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -58,7 +48,15 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getType()
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getType(): ResolvedActionTypeInterface
     {
         return $this->type;
     }
@@ -66,7 +64,7 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -74,7 +72,7 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function hasOption($name)
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
@@ -82,7 +80,7 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOption($name, $default = null)
+    public function getOption(string $name, $default = null)
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
@@ -90,7 +88,7 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setType(ResolvedActionTypeInterface $type)
+    public function setType(ResolvedActionTypeInterface $type): ActionBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -102,7 +100,19 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getActionConfig()
+    public function setLabel(string $label): ActionBuilderInterface
+    {
+        $this->preventIfLocked();
+
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActionConfig(): ActionConfigInterface
     {
         $this->preventIfLocked();
 
@@ -116,7 +126,7 @@ class ActionBuilder implements ActionBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getAction()
+    public function getAction(): ActionInterface
     {
         $this->preventIfLocked();
 
@@ -128,10 +138,12 @@ class ActionBuilder implements ActionBuilderInterface
      *
      * @throws Exception\BadMethodCallException
      */
-    private function preventIfLocked()
+    private function preventIfLocked(): void
     {
-        if ($this->locked) {
-            throw new Exception\BadMethodCallException('The action builder cannot be modified anymore.');
+        if (!$this->locked) {
+            return;
         }
+
+        throw new Exception\BadMethodCallException('The action builder cannot be modified anymore.');
     }
 }

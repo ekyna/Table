@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Action;
 
 use Ekyna\Component\Table\Action\AbstractActionType;
+use Ekyna\Component\Table\Action\ActionBuilderInterface;
 use Ekyna\Component\Table\Action\ActionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function ucfirst;
 
 /**
  * Class ActionType
@@ -13,6 +18,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ActionType extends AbstractActionType
 {
+    /**
+     * @inheritDoc
+     */
+    public function buildAction(ActionBuilderInterface $builder, array $options): void
+    {
+        $builder->setLabel($options['label'] ?: ucfirst($builder->getName()));
+    }
+
     /**
      * @inheritDoc
      */
@@ -34,25 +47,23 @@ class ActionType extends AbstractActionType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                //'position'           => 0,
-                'label'              => null,
-                'translation_domain' => null,
-                'attr'               => [],
+                //'position'   => 0,
+                'label'        => null,
+                'attr'         => [],
             ])
             //->setAllowedTypes('position', 'int')
             ->setAllowedTypes('label', ['null', 'string'])
-            ->setAllowedTypes('translation_domain', ['null', 'string'])
             ->setAllowedTypes('attr', 'array');
     }
 
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return null;
     }

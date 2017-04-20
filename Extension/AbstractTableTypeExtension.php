@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Source\RowInterface;
@@ -18,28 +20,28 @@ abstract class AbstractTableTypeExtension implements TableTypeExtensionInterface
     /**
      * @inheritDoc
      */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildView(View\TableView $view, TableInterface $table, array $options)
+    public function buildView(View\TableView $view, TableInterface $table, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 }

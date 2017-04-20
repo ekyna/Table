@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,6 +11,10 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+use function count;
+use function implode;
+use function is_array;
+
 /**
  * Class IdToObjectTransformer
  * @package Ekyna\Component\Table\Bridge\Doctrine\ORM\Form
@@ -16,17 +22,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class IdToObjectTransformer implements DataTransformerInterface
 {
-    /**
-     * Repository
-     *
-     * @var ObjectRepository
-     */
-    protected $repository;
-
-    /**
-     * @var string
-     */
-    protected $identifier;
+    protected ObjectRepository $repository;
+    protected string           $identifier;
 
 
     /**
@@ -42,7 +39,7 @@ class IdToObjectTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function transform($value)
     {
@@ -82,7 +79,7 @@ class IdToObjectTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function reverseTransform($value)
     {

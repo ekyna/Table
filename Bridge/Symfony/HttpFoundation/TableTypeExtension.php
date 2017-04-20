@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\HttpFoundation;
 
 use Ekyna\Component\Table\Extension\AbstractTableTypeExtension;
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
 use Ekyna\Component\Table\TableBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TableTypeExtension
@@ -15,42 +17,23 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class TableTypeExtension extends AbstractTableTypeExtension
 {
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private RequestStack        $requestStack;
+    private TranslatorInterface $translator;
 
 
-    /**
-     * Constructor.
-     *
-     * @param FlashBagInterface   $flashBag
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(FlashBagInterface $flashBag, TranslatorInterface $translator)
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
     {
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
-        $builder->setHttpAdapter(new HttpAdapter($this->flashBag, $this->translator));
+        $builder->setHttpAdapter(new HttpAdapter($this->requestStack->getSession()->getFlashBag(), $this->translator));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return TableType::class;
+        return [TableType::class];
     }
 }

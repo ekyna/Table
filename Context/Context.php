@@ -1,71 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Symfony\Component\Form\FormInterface;
+
+use function count;
+use function is_array;
+use function is_null;
 
 /**
  * Class Context
  * @package Ekyna\Component\Table\Context
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Context implements ContextInterface
+final class Context implements ContextInterface
 {
-    /**
-     * @var int
-     */
-    private $maxPerPage;
-
-    /**
-     * @var int
-     */
-    private $currentPage;
-
-    /**
-     * @var array|string[]
-     */
-    private $visibleColumns;
-
-    /**
-     * @var ActiveSort|null
-     */
-    private $activeSort;
-
-    /**
-     * @var ActiveFilter[]
-     */
-    private $activeFilters;
-
-    /**
-     * @var array
-     */
-    private $selectedIdentifiers;
-
-    /**
-     * @var string
-     */
-    private $filterLabel;
-
-    /**
-     * @var FormInterface
-     */
-    private $filterForm;
-
-    /**
-     * @var bool
-     */
-    private $all;
-
-    /**
-     * @var string
-     */
-    private $action;
-
-    /**
-     * @var string
-     */
-    private $format;
+    private int         $maxPerPage;
+    private int         $currentPage;
+    private array       $visibleColumns;
+    private ?ActiveSort $activeSort;
+    /** @var ActiveFilter[] */
+    private array          $activeFilters;
+    private array          $selectedIdentifiers;
+    private string         $filterLabel;
+    private ?FormInterface $filterForm   = null;
+    private bool           $all;
+    private ?string        $action       = null;
+    private ?string        $format       = null;
 
 
     /**
@@ -79,9 +43,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function reset()
+    public function reset(): ContextInterface
     {
-        $this->maxPerPage = null;
+        $this->maxPerPage = 15;
         $this->currentPage = 1;
         $this->visibleColumns = [];
         $this->activeSort = null;
@@ -98,24 +62,24 @@ class Context implements ContextInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function isDefault()
+    public function isDefault(): bool
     {
         return (
-            is_null($this->maxPerPage) &&
-            is_null($this->currentPage) &&
-            is_null($this->activeSort) &&
-            empty($this->visibleColumns) &&
-            empty($this->activeFilters) &&
-            empty($this->selectedIdentifiers)
+            (15 === $this->maxPerPage)
+            && (1 === $this->currentPage)
+            && is_null($this->activeSort)
+            && empty($this->visibleColumns)
+            && empty($this->activeFilters)
+            && empty($this->selectedIdentifiers)
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function getMaxPerPage()
+    public function getMaxPerPage(): int
     {
         return $this->maxPerPage;
     }
@@ -123,9 +87,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setMaxPerPage($maxPerPage)
+    public function setMaxPerPage(int $max): ContextInterface
     {
-        $this->maxPerPage = (int)$maxPerPage;
+        $this->maxPerPage = $max;
 
         return $this;
     }
@@ -133,7 +97,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return $this->currentPage;
     }
@@ -141,9 +105,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setCurrentPage($currentPage)
+    public function setCurrentPage(int $num): ContextInterface
     {
-        $this->currentPage = (int)$currentPage;
+        $this->currentPage = $num;
 
         return $this;
     }
@@ -151,7 +115,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getVisibleColumns()
+    public function getVisibleColumns(): array
     {
         return $this->visibleColumns;
     }
@@ -159,7 +123,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setVisibleColumns(array $names)
+    public function setVisibleColumns(array $names): ContextInterface
     {
         // TODO compare size with default and if equals, set empty
 
@@ -171,7 +135,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getActiveSort()
+    public function getActiveSort(): ?ActiveSort
     {
         return $this->activeSort;
     }
@@ -179,7 +143,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setActiveSort(ActiveSort $sort = null)
+    public function setActiveSort(ActiveSort $sort = null): ContextInterface
     {
         $this->activeSort = $sort;
 
@@ -189,7 +153,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getActiveFilters()
+    public function getActiveFilters(): array
     {
         return $this->activeFilters;
     }
@@ -197,7 +161,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function hasActiveFilter($id)
+    public function hasActiveFilter(string $id): bool
     {
         return isset($this->activeFilters[$id]);
     }
@@ -205,10 +169,10 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function addActiveFilter(ActiveFilter $filter)
+    public function addActiveFilter(ActiveFilter $filter): ContextInterface
     {
         if (isset($this->activeFilters[$filter->getId()])) {
-            throw new InvalidArgumentException("This active filter is already registered.");
+            throw new InvalidArgumentException('This active filter is already registered.');
         }
 
         $this->activeFilters[$filter->getId()] = $filter;
@@ -219,7 +183,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function removeActiveFilter($id)
+    public function removeActiveFilter(string $id): ContextInterface
     {
         if ($this->hasActiveFilter($id)) {
             unset($this->activeFilters[$id]);
@@ -231,7 +195,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getSelectedIdentifiers()
+    public function getSelectedIdentifiers(): array
     {
         return $this->selectedIdentifiers;
     }
@@ -239,7 +203,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setSelectedIdentifiers(array $identifiers)
+    public function setSelectedIdentifiers(array $identifiers): ContextInterface
     {
         $this->selectedIdentifiers = $identifiers;
 
@@ -249,7 +213,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getFilterLabel()
+    public function getFilterLabel(): string
     {
         return $this->filterLabel;
     }
@@ -257,9 +221,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setFilterLabel($filterLabel)
+    public function setFilterLabel(string $label): ContextInterface
     {
-        $this->filterLabel = $filterLabel;
+        $this->filterLabel = $label;
 
         return $this;
     }
@@ -267,7 +231,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getFilterForm()
+    public function getFilterForm(): ?FormInterface
     {
         return $this->filterForm;
     }
@@ -275,9 +239,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setFilterForm(FormInterface $filterForm)
+    public function setFilterForm(?FormInterface $form): ContextInterface
     {
-        $this->filterForm = $filterForm;
+        $this->filterForm = $form;
 
         return $this;
     }
@@ -285,7 +249,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getAll()
+    public function getAll(): bool
     {
         return $this->all;
     }
@@ -293,9 +257,9 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setAll($all)
+    public function setAll(bool $all): ContextInterface
     {
-        $this->all = (bool)$all;
+        $this->all = $all;
 
         return $this;
     }
@@ -303,7 +267,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -311,15 +275,17 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setAction($name)
+    public function setAction(string $name): ContextInterface
     {
         $this->action = $name;
+
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getFormat()
+    public function getFormat(): string
     {
         return $this->format;
     }
@@ -327,7 +293,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function setFormat($format)
+    public function setFormat(string $format): ContextInterface
     {
         $this->format = $format;
 
@@ -337,7 +303,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function hasSelection()
+    public function hasSelection(): bool
     {
         return $this->all || !empty($this->selectedIdentifiers);
     }
@@ -345,7 +311,7 @@ class Context implements ContextInterface
     /**
      * @inheritDoc
      */
-    public function toArray()
+    public function toArray(): array
     {
         $filters = [];
 
@@ -353,25 +319,23 @@ class Context implements ContextInterface
             $filters[] = $filter->toArray();
         }
 
-        $data = [
+        return [
             $this->maxPerPage,
             $this->currentPage,
             $this->visibleColumns,
             $this->activeSort ? $this->activeSort->toArray() : null,
             $filters,
-            $this->selectedIdentifiers
+            $this->selectedIdentifiers,
         ];
-
-        return $data;
     }
 
     /**
      * @inheritDoc
      */
-    public function fromArray(array $data)
+    public function fromArray(array $data): void
     {
         if (6 != count($data)) {
-            throw new InvalidArgumentException("Expected 6 length array.");
+            throw new InvalidArgumentException('Expected 6 length array.');
         }
 
         $this->reset();

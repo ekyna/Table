@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\Context\ActiveSort;
@@ -10,12 +12,12 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class SortHandler implements HandlerInterface
+final class SortHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         // Abort if table is not sortable
         if (!$table->getConfig()->isSortable()) {
@@ -40,5 +42,7 @@ class SortHandler implements HandlerInterface
         $sort = new ActiveSort($sort['by'], $sort['dir']);
 
         $table->getContext()->setActiveSort($sort);
+
+        return null;
     }
 }

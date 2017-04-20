@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 /**
@@ -14,5 +16,5 @@ interface FilterBuilderInterface extends FilterConfigBuilderInterface
      *
      * @return Filter
      */
-    public function getFilter();
+    public function getFilter(): FilterInterface;
 }

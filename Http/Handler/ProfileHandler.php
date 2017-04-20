@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\TableError;
@@ -10,12 +12,12 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ProfileHandler implements HandlerInterface
+final class ProfileHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         if (!$table->getConfig()->isProfileable()) {
             return null;
@@ -36,7 +38,7 @@ class ProfileHandler implements HandlerInterface
 
             $table->getContext()->fromArray($storage->get($key)->getData());
 
-            return;
+            return null;
         }
 
         if ($parameters->isProfileEditClicked()) {
@@ -75,5 +77,7 @@ class ProfileHandler implements HandlerInterface
 
             $storage->create($table, $name);
         }
+
+        return null;
     }
 }

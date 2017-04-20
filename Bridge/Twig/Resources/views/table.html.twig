@@ -206,7 +206,9 @@
 
 
 {%- block boolean_cell -%}
-    {%- if route is not same as(null) -%}
+    {%- if path is defined and path is not null -%}
+        <a href="{{ path }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
+    {%- elseif route is defined and route is not null -%}
         <a href="{{ path(route, parameters) }}" class="label {{ class }}">{{ block('boolean_cell_value') }}</a>
     {%- else -%}
         <span class="label {{ class }}">{{ block('boolean_cell_value') }}</span>
@@ -234,7 +236,7 @@
     {%- if value is same as(null) -%}
         &nbsp;
     {%- else -%}
-        {{- value|localizeddate(date_format, time_format) -}}
+        {{- value|format_datetime(date_format, time_format) -}}
     {%- endif -%}
 {%- endblock date_time_cell -%}
 

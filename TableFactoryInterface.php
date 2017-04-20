@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+
 /**
- * Interface FactoryInterface
+ * Interface TableFactoryInterface
  * @package Ekyna\Component\Table
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-interface FactoryInterface
+interface TableFactoryInterface
 {
     /**
      * Returns a named table.
@@ -18,9 +22,9 @@ interface FactoryInterface
      *
      * @return TableInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createTable($name, $type, array $options = []);
+    public function createTable(string $name, string $type, array $options = []): TableInterface;
 
     /**
      * Returns a named table builder.
@@ -31,9 +35,9 @@ interface FactoryInterface
      *
      * @return TableBuilderInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createTableBuilder($name, $type, array $options = []);
+    public function createTableBuilder(string $name, string $type, array $options = []): TableBuilderInterface;
 
     /**
      * Returns a named column.
@@ -44,9 +48,9 @@ interface FactoryInterface
      *
      * @return Column\ColumnInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createColumn($name, $type, array $options = []);
+    public function createColumn(string $name, string $type, array $options = []): Column\ColumnInterface;
 
     /**
      * Returns a named column builder.
@@ -57,9 +61,9 @@ interface FactoryInterface
      *
      * @return Column\ColumnBuilderInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createColumnBuilder($name, $type, array $options = []);
+    public function createColumnBuilder(string $name, string $type, array $options = []): Column\ColumnBuilderInterface;
 
     /**
      * Returns a named filter.
@@ -70,9 +74,9 @@ interface FactoryInterface
      *
      * @return Filter\FilterInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createFilter($name, $type, array $options = []);
+    public function createFilter(string $name, string $type, array $options = []): Filter\FilterInterface;
 
     /**
      * Returns a named filter builder.
@@ -83,9 +87,9 @@ interface FactoryInterface
      *
      * @return Filter\FilterBuilderInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createFilterBuilder($name, $type, array $options = []);
+    public function createFilterBuilder(string $name, string $type, array $options = []): Filter\FilterBuilderInterface;
 
     /**
      * Returns a named action.
@@ -96,9 +100,9 @@ interface FactoryInterface
      *
      * @return Action\ActionInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createAction($name, $type, array $options = []);
+    public function createAction(string $name, string $type, array $options = []): Action\ActionInterface;
 
     /**
      * Returns a named action builder.
@@ -109,9 +113,9 @@ interface FactoryInterface
      *
      * @return Action\ActionBuilderInterface
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    public function createActionBuilder($name, $type, array $options = []);
+    public function createActionBuilder(string $name, string $type, array $options = []): Action\ActionBuilderInterface;
 
     /**
      * Returns the adapter.
@@ -120,5 +124,5 @@ interface FactoryInterface
      *
      * @return Source\AdapterInterface
      */
-    public function createAdapter(TableInterface $table);
+    public function createAdapter(TableInterface $table): Source\AdapterInterface;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 use Pagerfanta\Pagerfanta;
@@ -13,27 +15,17 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class Grid
 {
-    /**
-     * @var \Pagerfanta\Pagerfanta
-     */
-    private $pager;
-
-    /**
-     * @var Row[]
-     */
-    private $rows;
-
-    /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
-     */
-    protected $propertyAccessor;
+    private Pagerfanta $pager;
+    /** @var Row[] */
+    private array                       $rows;
+    protected PropertyAccessorInterface $propertyAccessor;
 
 
     /**
      * Constructor.
      *
-     * @param Pagerfanta                $pager
-     * @param PropertyAccessorInterface $accessor
+     * @param Pagerfanta                     $pager
+     * @param PropertyAccessorInterface|null $accessor
      */
     public function __construct(Pagerfanta $pager, PropertyAccessorInterface $accessor = null)
     {
@@ -47,7 +39,7 @@ class Grid
      *
      * @return Pagerfanta
      */
-    public function getPager()
+    public function getPager(): Pagerfanta
     {
         return $this->pager;
     }
@@ -57,7 +49,7 @@ class Grid
      *
      * @return Row[]
      */
-    public function getRows()
+    public function getRows(): array
     {
         return $this->rows;
     }
@@ -67,7 +59,7 @@ class Grid
      *
      * @param RowInterface $row
      */
-    public function addRow(RowInterface $row)
+    public function addRow(RowInterface $row): void
     {
         $this->rows[] = $row;
     }

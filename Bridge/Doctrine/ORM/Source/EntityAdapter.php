@@ -1,15 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Source;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\QueryBuilder;
 use Ekyna\Component\Table\Context\ContextInterface;
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\Source\AbstractAdapter;
 use Ekyna\Component\Table\Source\SourceInterface;
 use Ekyna\Component\Table\TableInterface;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Adapter\AdapterInterface as PagerfantaAdapter;
+
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+
+use function array_pop;
+use function array_slice;
+use function chr;
+use function count;
+use function explode;
+use function implode;
+use function strpos;
 
 /**
  * Class EntityAdapter
@@ -20,35 +33,12 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
  */
 class EntityAdapter extends AbstractAdapter
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $manager;
-
-    /**
-     * @var ClassMetadata
-     */
-    private $metadata;
-
-    /**
-     * @var \Doctrine\ORM\QueryBuilder
-     */
-    private $queryBuilder;
-
-    /**
-     * @var string
-     */
-    private $alias;
-
-    /**
-     * @var array
-     */
-    private $paths;
-
-    /**
-     * @var array
-     */
-    private $aliases;
+    private EntityManagerInterface $manager;
+    private ?ClassMetadata $metadata = null;
+    private ?QueryBuilder $queryBuilder = null;
+    private string $alias;
+    private array $paths;
+    private array $aliases;
 
 
     /**
@@ -69,7 +59,7 @@ class EntityAdapter extends AbstractAdapter
      *
      * @return EntityManagerInterface
      */
-    public function getManager()
+    public function getManager(): EntityManagerInterface
     {
         return $this->manager;
     }
@@ -77,9 +67,9 @@ class EntityAdapter extends AbstractAdapter
     /**
      * Returns the queryBuilder.
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder|null
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): ?QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -91,7 +81,7 @@ class EntityAdapter extends AbstractAdapter
      *
      * @return string
      */
-    public function getQueryBuilderPath($propertyPath)
+    public function getQueryBuilderPath(string $propertyPath): string
     {
         if (false === strpos($propertyPath, '.')) {
             return $this->alias . '.' . $propertyPath;
@@ -141,7 +131,7 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function preInitialize(ContextInterface $context)
+    protected function preInitialize(ContextInterface $context): void
     {
         // Create the initial query builder
         $this->queryBuilder = $this->manager->createQueryBuilder();
@@ -159,7 +149,7 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function initializeSorting(ContextInterface $context)
+    protected function initializeSorting(ContextInterface $context): void
     {
         if (!$context->getActiveSort() && !empty($sorts = $this->table->getConfig()->getDefaultSorts())) {
             foreach ($sorts as $propertyPath => $direction) {
@@ -178,7 +168,7 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function initializeSelection(ContextInterface $context)
+    protected function initializeSelection(ContextInterface $context): void
     {
         $this->queryBuilder->andWhere(
             $this->queryBuilder->expr()->in(
@@ -191,7 +181,7 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function getSelectedRows()
+    protected function getSelectedRows(): array
     {
         $results = $this->queryBuilder->getQuery()->getResult();
 
@@ -206,15 +196,15 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function getPagerAdapter()
+    protected function getPagerAdapter(): PagerfantaAdapter
     {
-        return new DoctrineORMAdapter($this->queryBuilder);
+        return new QueryAdapter($this->queryBuilder);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function reset()
+    protected function reset(): void
     {
         parent::reset();
 
@@ -227,11 +217,13 @@ class EntityAdapter extends AbstractAdapter
     /**
      * @inheritDoc
      */
-    protected function validateSource(SourceInterface $source)
+    protected function validateSource(SourceInterface $source): void
     {
-        if (!$source instanceof EntitySource) {
-            throw new Exception\InvalidArgumentException($source, EntitySource::class);
+        if ($source instanceof EntitySource) {
+            return;
         }
+
+        throw new Exception\InvalidArgumentException($source, EntitySource::class);
     }
 
     /**
@@ -239,7 +231,7 @@ class EntityAdapter extends AbstractAdapter
      *
      * @return ClassMetadata
      */
-    private function getClassMetadata()
+    private function getClassMetadata(): ClassMetadata
     {
         if (null !== $this->metadata) {
             return $this->metadata;

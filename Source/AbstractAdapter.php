@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 use Ekyna\Component\Table\Context\ContextInterface;
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\TableInterface;
 use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\AdapterInterface as PagerfantaAdapter;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Class AbstractAdapter
@@ -15,15 +19,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 abstract class AbstractAdapter implements AdapterInterface
 {
-    /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
-     */
-    protected $propertyAccessor;
-
-    /**
-     * @var TableInterface
-     */
-    protected $table;
+    protected TableInterface $table;
+    protected PropertyAccessorInterface $propertyAccessor;
 
 
     /**
@@ -44,7 +41,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * @inheritDoc
      */
-    public function getGrid(ContextInterface $context)
+    public function getGrid(ContextInterface $context): Grid
     {
         $this->reset();
 
@@ -72,7 +69,7 @@ abstract class AbstractAdapter implements AdapterInterface
 
         // Build data rows
         foreach ($data as $index => $datum) {
-            $grid->addRow($this->createRow($index, $datum));
+            $grid->addRow($this->createRow((string)$index, $datum));
         }
 
         return $grid;
@@ -81,7 +78,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * @inheritDoc
      */
-    public function getSelection(ContextInterface $context)
+    public function getSelection(ContextInterface $context): array
     {
         $this->reset();
 
@@ -112,7 +109,7 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param ContextInterface $context
      */
-    protected function preInitialize(ContextInterface $context)
+    protected function preInitialize(ContextInterface $context): void
     {
     }
 
@@ -121,7 +118,7 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param ContextInterface $context
      */
-    protected function initializeFiltering(ContextInterface $context)
+    protected function initializeFiltering(ContextInterface $context): void
     {
         $activeFilters = $context->getActiveFilters();
 
@@ -138,7 +135,7 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param ContextInterface $context
      */
-    protected function initializeSorting(ContextInterface $context)
+    protected function initializeSorting(ContextInterface $context): void
     {
         if (null !== $activeSort = $context->getActiveSort()) {
             $columnName = $activeSort->getColumnName();
@@ -153,14 +150,14 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param ContextInterface $context
      */
-    abstract protected function initializeSelection(ContextInterface $context);
+    abstract protected function initializeSelection(ContextInterface $context): void;
 
     /**
      * Called after filtering and sorting are initialized.
      *
      * @param ContextInterface $context
      */
-    protected function postInitialize(ContextInterface $context)
+    protected function postInitialize(ContextInterface $context): void
     {
     }
 
@@ -169,14 +166,14 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @return RowInterface[]
      */
-    abstract protected function getSelectedRows();
+    abstract protected function getSelectedRows(): array;
 
     /**
      * Returns the pager adapter.
      *
-     * @return \Pagerfanta\Adapter\AdapterInterface
+     * @return PagerfantaAdapter
      */
-    abstract protected function getPagerAdapter();
+    abstract protected function getPagerAdapter(): PagerfantaAdapter;
 
     /**
      * Validates the source.
@@ -185,14 +182,14 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @throws Exception\InvalidArgumentException
      */
-    abstract protected function validateSource(SourceInterface $source);
+    abstract protected function validateSource(SourceInterface $source): void;
 
     /**
      * Returns the source.
      *
      * @return SourceInterface
      */
-    protected function getSource()
+    protected function getSource(): SourceInterface
     {
         return $this->table->getConfig()->getSource();
     }
@@ -200,7 +197,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Resets the adapter.
      */
-    protected function reset()
+    protected function reset(): void
     {
     }
 
@@ -212,8 +209,8 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @return RowInterface
      */
-    protected function createRow($identifier, $data)
+    protected function createRow(string $identifier, object $data): RowInterface
     {
-        return new Row((string)$identifier, $data, $this->propertyAccessor);
+        return new Row($identifier, $data, $this->propertyAccessor);
     }
 }

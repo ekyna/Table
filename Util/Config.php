@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Util;
 
 use Ekyna\Component\Table\Exception;
@@ -9,10 +11,10 @@ use Ekyna\Component\Table\Exception;
  * @package Ekyna\Component\Table\Util
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-abstract class Config
+final class Config
 {
-    const SELECTION_SINGLE   = 'single';
-    const SELECTION_MULTIPLE = 'multiple';
+    public const SELECTION_SINGLE   = 'single';
+    public const SELECTION_MULTIPLE = 'multiple';
 
 
     /**
@@ -23,11 +25,11 @@ abstract class Config
      *
      * @return bool
      */
-    static public function isValidSelectionMode($mode, $throw = false)
+    public static function isValidSelectionMode(string $mode, bool $throw = false): bool
     {
         $valid = in_array($mode, [
-            static::SELECTION_SINGLE,
-            static::SELECTION_MULTIPLE,
+            self::SELECTION_SINGLE,
+            self::SELECTION_MULTIPLE,
         ], true);
 
         if (!$valid && $throw) {
@@ -42,13 +44,13 @@ abstract class Config
      *
      * @param string $name The tested name
      *
-     * @throws Exception\UnexpectedTypeException  If the name is not a string.
+     * @throws Exception\UnexpectedTypeException If the name is not a string.
      * @throws Exception\InvalidArgumentException If the name contains invalid characters.
      */
-    static public function validateName($name)
+    public static function validateName(string $name): void
     {
-        if (null !== $name && !is_string($name)) {
-            throw new Exception\UnexpectedTypeException($name, 'string, integer or null');
+        if (!is_null($name) && !is_string($name)) {
+            throw new Exception\UnexpectedTypeException($name, ['string', 'integer', 'null']);
         }
 
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
@@ -57,5 +59,12 @@ abstract class Config
                 $name
             ));
         }
+    }
+
+    /**
+     * Disabled constructor.
+     */
+    private function __construct()
+    {
     }
 }

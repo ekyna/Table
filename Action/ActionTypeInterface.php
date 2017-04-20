@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,10 +16,10 @@ interface ActionTypeInterface
     /**
      * Builds the action.
      *
-     * @param ActionBuilderInterface $action
+     * @param ActionBuilderInterface $builder
      * @param array                  $options
      */
-    public function buildAction(ActionBuilderInterface $action, array $options);
+    public function buildAction(ActionBuilderInterface $builder, array $options): void;
 
     /**
      * Executes the action.
@@ -34,12 +36,12 @@ interface ActionTypeInterface
      *
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
      * Returns the name of the parent type.
      *
      * @return string|null The name of the parent type if any, null otherwise
      */
-    public function getParent();
+    public function getParent(): ?string;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Column\AbstractColumnType;
@@ -7,6 +9,8 @@ use Ekyna\Component\Table\Column\ColumnInterface;
 use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\View\CellView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function array_values;
 
 /**
  * Class DateTimeType
@@ -18,16 +22,16 @@ class DateTimeType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $view->vars['date_format'] = $options['date_format'];
         $view->vars['time_format'] = $options['time_format'];
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $formats = ['none', 'short', 'medium', 'long', 'full'];
 
@@ -46,7 +50,7 @@ class DateTimeType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return PropertyType::class;
     }

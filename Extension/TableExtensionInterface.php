@@ -1,6 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
+
+use Ekyna\Component\Table\Action\ActionTypeInterface;
+use Ekyna\Component\Table\Column\ColumnTypeInterface;
+use Ekyna\Component\Table\Exception\InvalidArgumentException;
+use Ekyna\Component\Table\Filter\FilterTypeInterface;
+use Ekyna\Component\Table\Source\AdapterFactoryInterface;
+use Ekyna\Component\Table\TableTypeInterface;
 
 /**
  * Interface TableExtensionInterface
@@ -14,20 +23,20 @@ interface TableExtensionInterface
      *
      * @param string $name The name of the table type
      *
-     * @return \Ekyna\Component\Table\TableTypeInterface The table type
+     * @return TableTypeInterface The table type
      *
-     * @throws \Ekyna\Component\Table\Exception\InvalidArgumentException If the given table type is not supported by this extension
+     * @throws InvalidArgumentException If the given table type is not supported by this extension
      */
-    public function getTableType($name);
+    public function getTableType(string $name): TableTypeInterface;
 
     /**
      * Returns whether the given table type is supported.
      *
      * @param string $name The name of the table type
      *
-     * @return Boolean Whether the table type is supported by this extension
+     * @return bool Whether the table type is supported by this extension
      */
-    public function hasTableType($name);
+    public function hasTableType(string $name): bool;
 
     /**
      * Returns the extensions for the given table type.
@@ -36,7 +45,7 @@ interface TableExtensionInterface
      *
      * @return TableTypeExtensionInterface[] An array of extensions as TableTypeExtensionInterface instances
      */
-    public function getTableTypeExtensions($name);
+    public function getTableTypeExtensions(string $name): array;
 
     /**
      * Returns whether this extension provides type extensions for the given table type.
@@ -45,27 +54,27 @@ interface TableExtensionInterface
      *
      * @return bool Whether the given type has extensions
      */
-    public function hasTableTypeExtensions($name);
+    public function hasTableTypeExtensions(string $name): bool;
 
     /**
      * Returns a column type by name.
      *
      * @param string $name The name of the column type
      *
-     * @return \Ekyna\Component\Table\Column\ColumnTypeInterface The column type
+     * @return ColumnTypeInterface The column type
      *
-     * @throws \Ekyna\Component\Table\Exception\InvalidArgumentException If the given column type is not provided by this extension
+     * @throws InvalidArgumentException If the given column type is not provided by this extension
      */
-    public function getColumnType($name);
+    public function getColumnType(string $name): ColumnTypeInterface;
 
     /**
      * Returns whether the given column type is supported.
      *
      * @param string $name The name of the column type
      *
-     * @return Boolean Whether the column type is supported by this extension
+     * @return bool Whether the column type is supported by this extension
      */
-    public function hasColumnType($name);
+    public function hasColumnType(string $name): bool;
 
     /**
      * Returns the extensions for the given column type.
@@ -74,7 +83,7 @@ interface TableExtensionInterface
      *
      * @return ColumnTypeExtensionInterface[] An array of extensions as ColumnTypeExtensionInterface instances
      */
-    public function getColumnTypeExtensions($name);
+    public function getColumnTypeExtensions(string $name): array;
 
     /**
      * Returns whether this extension provides type extensions for the given column type.
@@ -83,27 +92,27 @@ interface TableExtensionInterface
      *
      * @return bool Whether the given type has extensions
      */
-    public function hasColumnTypeExtensions($name);
+    public function hasColumnTypeExtensions(string $name): bool;
 
     /**
      * Returns a filter type by name.
      *
      * @param string $name The name of the filter type
      *
-     * @return \Ekyna\Component\Table\Filter\FilterTypeInterface The type
+     * @return FilterTypeInterface The type
      *
-     * @throws \Ekyna\Component\Table\Exception\InvalidArgumentException If the given type is not provided by this extension
+     * @throws InvalidArgumentException If the given type is not provided by this extension
      */
-    public function getFilterType($name);
+    public function getFilterType(string $name): FilterTypeInterface;
 
     /**
      * Returns whether the given filter type is supported.
      *
      * @param string $name The name of the filter type
      *
-     * @return Boolean Whether the filter type is supported by this extension
+     * @return bool Whether the filter type is supported by this extension
      */
-    public function hasFilterType($name);
+    public function hasFilterType(string $name): bool;
 
     /**
      * Returns the extensions for the given filter type.
@@ -112,7 +121,7 @@ interface TableExtensionInterface
      *
      * @return FilterTypeExtensionInterface[] An array of extensions as FilterTypeExtensionInterface instances
      */
-    public function getFilterTypeExtensions($name);
+    public function getFilterTypeExtensions(string $name): array;
 
     /**
      * Returns whether this extension provides type extensions for the given filter type.
@@ -121,27 +130,27 @@ interface TableExtensionInterface
      *
      * @return bool Whether the given type has extensions
      */
-    public function hasFilterTypeExtensions($name);
+    public function hasFilterTypeExtensions(string $name): bool;
 
     /**
      * Returns a action type by name.
      *
      * @param string $name The name of the action type
      *
-     * @return \Ekyna\Component\Table\Action\ActionTypeInterface The type
+     * @return ActionTypeInterface The type
      *
-     * @throws \Ekyna\Component\Table\Exception\InvalidArgumentException If the given type is not provided by this extension
+     * @throws InvalidArgumentException If the given type is not provided by this extension
      */
-    public function getActionType($name);
+    public function getActionType(string $name): ActionTypeInterface;
 
     /**
      * Returns whether the given action type is supported.
      *
      * @param string $name The name of the action type
      *
-     * @return Boolean Whether the action type is supported by this extension
+     * @return bool Whether the action type is supported by this extension
      */
-    public function hasActionType($name);
+    public function hasActionType(string $name): bool;
 
     /**
      * Returns the extensions for the given action type.
@@ -150,7 +159,7 @@ interface TableExtensionInterface
      *
      * @return ActionTypeExtensionInterface[] An array of extensions as ActionTypeExtensionInterface instances
      */
-    public function getActionTypeExtensions($name);
+    public function getActionTypeExtensions(string $name): array;
 
     /**
      * Returns whether this extension provides type extensions for the given action type.
@@ -159,25 +168,25 @@ interface TableExtensionInterface
      *
      * @return bool Whether the given type has extensions
      */
-    public function hasActionTypeExtensions($name);
+    public function hasActionTypeExtensions(string $name): bool;
 
     /**
      * Returns the adapter factory by name.
      *
      * @param string $name The name of the adapter
      *
-     * @return \Ekyna\Component\Table\Source\AdapterFactoryInterface The adapter factory
+     * @return AdapterFactoryInterface The adapter factory
      *
-     * @throws \Ekyna\Component\Table\Exception\InvalidArgumentException If the given adapter is not provided by this extension
+     * @throws InvalidArgumentException If the given adapter is not provided by this extension
      */
-    public function getAdapterFactory($name);
+    public function getAdapterFactory(string $name): AdapterFactoryInterface;
 
     /**
      * Returns whether this extension provides the adapter factory for the given name.
      *
      * @param string $name The name of the adapter factory
      *
-     * @return Boolean Whether the adapter is supported by this extension
+     * @return bool Whether the adapter is supported by this extension
      */
-    public function hasAdapterFactory($name);
+    public function hasAdapterFactory(string $name): bool;
 }

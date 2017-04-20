@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Source\RowInterface;
@@ -12,25 +14,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ResolvedTableType implements ResolvedTableTypeInterface
 {
-    /**
-     * @var TableTypeInterface
-     */
-    private $innerType;
-
-    /**
-     * @var Extension\TableTypeExtensionInterface[]
-     */
-    private $typeExtensions;
-
-    /**
-     * @var ResolvedTableTypeInterface|null
-     */
-    private $parent;
-
-    /**
-     * @var OptionsResolver
-     */
-    private $optionsResolver;
+    private TableTypeInterface $innerType;
+    /** @var Extension\TableTypeExtensionInterface[] */
+    private array                       $typeExtensions;
+    private ?ResolvedTableTypeInterface $parent;
+    private ?OptionsResolver            $optionsResolver = null;
 
 
     /**
@@ -59,15 +47,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
-    {
-        return $this->innerType->getBlockPrefix();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getParent()
+    public function getParent(): ResolvedTableTypeInterface
     {
         return $this->parent;
     }
@@ -75,7 +55,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function getInnerType()
+    public function getInnerType(): TableTypeInterface
     {
         return $this->innerType;
     }
@@ -83,7 +63,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function getTypeExtensions()
+    public function getTypeExtensions(): array
     {
         return $this->typeExtensions;
     }
@@ -91,7 +71,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function createBuilder(FactoryInterface $factory, $name, array $options = [])
+    public function createBuilder(TableFactoryInterface $factory, string $name, array $options = []): TableBuilderInterface
     {
         $options = $this->getOptionsResolver()->resolve($options);
 
@@ -104,7 +84,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function createView(TableInterface $table)
+    public function createView(TableInterface $table): View\TableView
     {
         return new View\TableView();
     }
@@ -112,7 +92,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildTable($builder, $options);
@@ -128,7 +108,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildView(View\TableView $view, TableInterface $table, array $options)
+    public function buildView(View\TableView $view, TableInterface $table, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildView($view, $table, $options);
@@ -144,7 +124,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildRowView($view, $row, $options);
@@ -160,7 +140,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function getOptionsResolver()
+    public function getOptionsResolver(): OptionsResolver
     {
         if (null === $this->optionsResolver) {
             if (null !== $this->parent) {

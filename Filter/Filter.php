@@ -1,28 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 use Ekyna\Component\Table\View;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class Filter
  * @package Ekyna\Component\Table\Filter
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Filter implements FilterInterface
+final class Filter implements FilterInterface
 {
-    /**
-     * @var FilterConfigInterface
-     */
-    private $config;
-
-    /**
-     * @var TableInterface
-     */
-    private $table;
+    private FilterConfigInterface $config;
+    private TableInterface $table;
 
 
     /**
@@ -38,7 +34,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function setTable(TableInterface $table)
+    public function setTable(TableInterface $table): FilterInterface
     {
         $this->table = $table;
 
@@ -48,7 +44,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function getTable()
+    public function getTable(): TableInterface
     {
         return $this->table;
     }
@@ -56,7 +52,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->config->getName();
     }
@@ -64,7 +60,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->config->getLabel();
     }
@@ -72,7 +68,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function getConfig()
+    public function getConfig(): FilterConfigInterface
     {
         return $this->config;
     }
@@ -80,7 +76,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function createAvailableView(View\TableView $tableView)
+    public function createAvailableView(View\TableView $tableView): View\AvailableFilterView
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();
@@ -95,7 +91,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function createActiveView(View\TableView $tableView, ActiveFilter $activeFilter)
+    public function createActiveView(View\TableView $tableView, ActiveFilter $activeFilter): View\ActiveFilterView
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();
@@ -110,7 +106,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function createForm()
+    public function createForm(): FormInterface
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();
@@ -121,7 +117,7 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, ActiveFilter $activeFilter)
+    public function applyFilter(AdapterInterface $adapter, ActiveFilter $activeFilter): void
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();

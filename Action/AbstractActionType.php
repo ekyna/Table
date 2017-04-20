@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\Extension\Core\Type\Action\ActionType;
@@ -15,7 +17,7 @@ abstract class AbstractActionType implements ActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildAction(ActionBuilderInterface $action, array $options)
+    public function buildAction(ActionBuilderInterface $builder, array $options): void
     {
     }
 
@@ -24,19 +26,20 @@ abstract class AbstractActionType implements ActionTypeInterface
      */
     public function execute(ActionInterface $action, array $options)
     {
+        return false;
     }
 
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ActionType::class;
     }

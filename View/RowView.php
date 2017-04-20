@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\View;
 
 /**
@@ -7,42 +9,34 @@ namespace Ekyna\Component\Table\View;
  * @package Ekyna\Component\Table\View
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class RowView
+final class RowView
 {
     /**
      * The variables assigned to this view.
-     *
-     * @var array
      */
-    public $vars = [];
+    public array $vars = [];
 
     /**
      * The data identifier (array index or entity id).
-     *
-     * @var string
      */
-    public $identifier;
+    public string $identifier;
 
     /**
      * Whether the row is selected.
-     *
-     * @var bool
      */
-    public $selected = false;
+    public bool $selected = false;
 
     /**
      * The cells views.
      *
      * @var CellView[]
      */
-    public $cells = [];
+    public array $cells = [];
 
     /**
      * The table view.
-     *
-     * @var TableView
      */
-    public $table;
+    public TableView $table;
 
 
     /**

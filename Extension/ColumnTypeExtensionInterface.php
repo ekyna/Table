@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Ekyna\Component\Table\Extension;
 
@@ -59,7 +60,7 @@ interface ColumnTypeExtensionInterface
      * @param RowInterface    $row     The current row
      * @param array           $options The options
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options);
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void;
 
 
     /**
@@ -72,19 +73,19 @@ interface ColumnTypeExtensionInterface
      *
      * @return bool Whether the sort has been applied.
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options);
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool;
 
     /**
      * Configures the options for this type.
      *
      * @param OptionsResolver $resolver The resolver for the options
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
-     * Returns the name of the type being extended.
+     * Returns the names of the types being extended.
      *
-     * @return string The name of the type being extended
+     * @return string[] The names of the types being extended
      */
-    public function getExtendedType();
+    public static function getExtendedTypes(): array;
 }

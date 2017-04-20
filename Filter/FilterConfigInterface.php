@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Symfony\Component\Form\FormFactoryInterface;
@@ -16,49 +18,49 @@ interface FilterConfigInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the filter type used to construct the filter.
      *
      * @return ResolvedFilterTypeInterface
      */
-    public function getType();
+    public function getType(): ResolvedFilterTypeInterface;
 
     /**
      * Returns the filter label.
      *
      * @return string
      */
-    public function getLabel();
+    public function getLabel(): string;
 
     /**
      * Returns the form factory.
      *
      * @return FormFactoryInterface
      */
-    public function getFormFactory();
+    public function getFormFactory(): FormFactoryInterface;
 
     /**
      * Returns the filter position.
      *
      * @return int
      */
-    public function getPosition();
+    public function getPosition(): int;
 
     /**
      * Returns the filter property path.
      *
      * @return string
      */
-    public function getPropertyPath();
+    public function getPropertyPath(): string;
 
     /**
      * Returns all options passed during the construction of the filter.
      *
      * @return array The passed options
      */
-    public function getOptions();
+    public function getOptions(): array;
 
     /**
      * Returns whether a specific option exists.
@@ -67,7 +69,7 @@ interface FilterConfigInterface
      *
      * @return bool Whether the option exists
      */
-    public function hasOption($name);
+    public function hasOption(string $name): bool;
 
     /**
      * Returns the value of a specific option.
@@ -77,5 +79,5 @@ interface FilterConfigInterface
      *
      * @return mixed The option value
      */
-    public function getOption($name, $default = null);
+    public function getOption(string $name, $default = null);
 }

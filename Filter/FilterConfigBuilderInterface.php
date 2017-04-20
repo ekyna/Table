@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Symfony\Component\Form\FormFactoryInterface;
@@ -16,50 +18,50 @@ interface FilterConfigBuilderInterface extends FilterConfigInterface
      *
      * @param ResolvedFilterTypeInterface $type
      *
-     * @return $this
+     * @return $this|FilterConfigBuilderInterface
      */
-    public function setType(ResolvedFilterTypeInterface $type);
+    public function setType(ResolvedFilterTypeInterface $type): FilterConfigBuilderInterface;
 
     /**
      * Sets the filter label.
      *
      * @param string $label
      *
-     * @return $this
+     * @return $this|FilterConfigBuilderInterface
      */
-    public function setLabel($label);
+    public function setLabel(string $label): FilterConfigBuilderInterface;
 
     /**
      * Sets the form factory.
      *
      * @param FormFactoryInterface $formFactory
      *
-     * @return $this
+     * @return $this|FilterConfigBuilderInterface
      */
-    public function setFormFactory(FormFactoryInterface $formFactory);
+    public function setFormFactory(FormFactoryInterface $formFactory): FilterConfigBuilderInterface;
 
     /**
      * Sets the filter position.
      *
      * @param int $position
      *
-     * @return $this
+     * @return $this|FilterConfigBuilderInterface
      */
-    public function setPosition($position);
+    public function setPosition(int $position): FilterConfigBuilderInterface;
 
     /**
      * Sets the filter property path.
      *
      * @param string $path
      *
-     * @return $this
+     * @return $this|FilterConfigBuilderInterface
      */
-    public function setPropertyPath($path);
+    public function setPropertyPath(string $path): FilterConfigBuilderInterface;
 
     /**
      * Builds and returns the filter configuration.
      *
      * @return FilterConfigInterface
      */
-    public function getFilterConfig();
+    public function getFilterConfig(): FilterConfigInterface;
 }

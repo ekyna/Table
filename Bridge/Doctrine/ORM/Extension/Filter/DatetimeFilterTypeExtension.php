@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Util\FilterUtil;
@@ -11,6 +14,8 @@ use Ekyna\Component\Table\Extension\Core\Type\Filter\DateTimeType;
 use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
+
+use function in_array;
 
 /**
  * Class DatetimeFilterTypeExtension
@@ -27,7 +32,7 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
         FilterInterface $filter,
         ActiveFilter $activeFilter,
         array $options
-    ) {
+    ): bool {
         if (!$adapter instanceof EntityAdapter) {
             return false;
         }
@@ -38,11 +43,10 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
         $operator = $activeFilter->getOperator();
 
         if (in_array($operator, [FilterOperator::EQUAL, FilterOperator::NOT_EQUAL])) {
-            /** @var \DateTime $start */
+            /** @var DateTime $start */
             $start = clone $activeFilter->getValue();
-            $start->setTime(0, 0, 0, 0);
+            $start->setTime(0, 0);
 
-            /** @var \DateTime $end */
             $end = clone $start;
             $end->setTime(23, 59, 59, 999999);
 
@@ -78,14 +82,14 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
         $parameter  = FilterUtil::buildParameterName($filter->getName());
         $expression = FilterUtil::buildExpression($property, $operator = $activeFilter->getOperator(), $parameter);
 
-        /** @var \DateTime $date */
+        /** @var DateTime $date */
         $date = clone $activeFilter->getValue();
 
         if (!$options['time']) {
             if ($operator === FilterOperator::LOWER_THAN_OR_EQUAL) {
                 $date->setTime(23, 59, 59, 999999);
             } else {
-                $date->setTime(0, 0, 0, 0);
+                $date->setTime(0, 0);
             }
         }
 
@@ -99,8 +103,8 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return DateTimeType::class;
+        return [DateTimeType::class];
     }
 }

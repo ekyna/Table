@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Column\ColumnBuilderInterface;
@@ -21,36 +23,40 @@ abstract class AbstractColumnTypeExtension implements ColumnTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function buildColumn(ColumnBuilderInterface $builder, array $options)
+    public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildHeadView(HeadView $view, ColumnInterface $column, array $options)
+    public function buildHeadView(HeadView $view, ColumnInterface $column, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
-    {
-
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        ActiveSort $activeSort,
+        array $options
+    ): bool {
+        return false;
     }
 
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 }

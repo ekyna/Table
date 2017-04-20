@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context;
 
 use Symfony\Component\Form\FormInterface;
@@ -14,87 +16,87 @@ interface ContextInterface
     /**
      * Resets the context.
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function reset();
+    public function reset(): ContextInterface;
 
     /**
      * Returns whether the context is at its default state.
      *
      * @return bool
      */
-    public function isDefault();
+    public function isDefault(): bool;
 
     /**
      * Returns the maximum rows per page.
      *
      * @return int
      */
-    public function getMaxPerPage();
+    public function getMaxPerPage(): int;
 
     /**
      * Sets the maximum rows per page.
      *
      * @param int $max
      *
-     * @return int
+     * @return $this|ContextInterface
      */
-    public function setMaxPerPage($max);
+    public function setMaxPerPage(int $max): ContextInterface;
 
     /**
      * Returns the current page number.
      *
      * @return int
      */
-    public function getCurrentPage();
+    public function getCurrentPage(): int;
 
     /**
      * Sets the current page number.
      *
      * @param int $num
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function setCurrentPage($num);
+    public function setCurrentPage(int $num): ContextInterface;
 
     /**
      * Returns the visible columns.
      *
-     * @return array|\string[]
+     * @return array|string[]
      */
-    public function getVisibleColumns();
+    public function getVisibleColumns(): array;
 
     /**
      * Returns the active sort.
      *
      * @return ActiveSort|null
      */
-    public function getActiveSort();
+    public function getActiveSort(): ?ActiveSort;
 
     /**
      * Sets the visible columns.
      *
-     * @param array|\string[] $names
+     * @param array|string[] $names
      *
-     * @return Context
+     * @return $this|ContextInterface
      */
-    public function setVisibleColumns(array $names);
+    public function setVisibleColumns(array $names): ContextInterface;
 
     /**
      * Sets the active sort.
      *
      * @param ActiveSort|null $sort
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function setActiveSort(ActiveSort $sort = null);
+    public function setActiveSort(ActiveSort $sort = null): ContextInterface;
 
     /**
      * Returns the activeFilters.
      *
      * @return ActiveFilter[]
      */
-    public function getActiveFilters();
+    public function getActiveFilters(): array;
 
     /**
      * Returns whether an active filter exists for the given id.
@@ -103,138 +105,140 @@ interface ContextInterface
      *
      * @return bool
      */
-    public function hasActiveFilter($id);
+    public function hasActiveFilter(string $id): bool;
 
     /**
      * Adds the active filter.
      *
      * @param ActiveFilter $filter
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function addActiveFilter(ActiveFilter $filter);
+    public function addActiveFilter(ActiveFilter $filter): ContextInterface;
 
     /**
      * Removes the active filter by its id.
      *
      * @param string $id
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function removeActiveFilter($id);
+    public function removeActiveFilter(string $id): ContextInterface;
 
     /**
      * Returns the selected rows identifiers.
      *
      * @return array
      */
-    public function getSelectedIdentifiers();
+    public function getSelectedIdentifiers(): array;
 
     /**
      * Sets the selected rows identifiers.
      *
      * @param array $identifiers
      *
-     * @return Context
+     * @return $this|ContextInterface
      */
-    public function setSelectedIdentifiers(array $identifiers);
+    public function setSelectedIdentifiers(array $identifiers): ContextInterface;
 
     /**
      * Returns the filter label.
      *
      * @return string
      */
-    public function getFilterLabel();
+    public function getFilterLabel(): string;
 
     /**
      * Sets the filter label.
      *
-     * @param string $filterLabel
+     * @param string $label
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function setFilterLabel($filterLabel);
+    public function setFilterLabel(string $label): ContextInterface;
 
     /**
      * Returns the active filter form.
      *
-     * @return FormInterface
+     * @return FormInterface|null
      */
-    public function getFilterForm();
+    public function getFilterForm(): ?FormInterface;
 
     /**
      * Sets the active filter form.
      *
-     * @param FormInterface $filterForm
+     * @param FormInterface|null $form
      *
-     * @return self
+     * @return $this|ContextInterface
      */
-    public function setFilterForm(FormInterface $filterForm);
+    public function setFilterForm(?FormInterface $form): ContextInterface;
 
     /**
      * Returns whether all rows should be processed.
      *
      * @return bool
      */
-    public function getAll();
+    public function getAll(): bool;
 
     /**
      * Sets whether all rows should be processed.
      *
      * @param bool $all
      *
-     * @return Context
+     * @return $this|ContextInterface
      */
-    public function setAll($all);
+    public function setAll(bool $all): ContextInterface;
 
     /**
      * Returns the selected action.
      *
      * @return string
      */
-    public function getAction();
+    public function getAction(): string;
 
     /**
      * Sets the selected action.
      *
      * @param string $name
+     *
+     * @return $this|ContextInterface
      */
-    public function setAction($name);
+    public function setAction(string $name): ContextInterface;
 
     /**
      * Returns the selected export format.
      *
      * @return string
      */
-    public function getFormat();
+    public function getFormat(): string;
 
     /**
      * Sets the selected export format.
      *
      * @param string $format
      *
-     * @return Context
+     * @return $this|ContextInterface
      */
-    public function setFormat($format);
+    public function setFormat(string $format): ContextInterface;
 
     /**
      * Returns whether at least one row is selected.
      *
      * @return bool
      */
-    public function hasSelection();
+    public function hasSelection(): bool;
 
     /**
      * Returns the array representation of the context.
      *
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 
     /**
      * Loads the context from the given data array.
      *
      * @param array $data
      */
-    public function fromArray(array $data);
+    public function fromArray(array $data): void;
 }

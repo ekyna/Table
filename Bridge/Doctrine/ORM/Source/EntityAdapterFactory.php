@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Source;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Source\AdapterFactoryInterface;
+use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 
 /**
@@ -14,10 +18,7 @@ use Ekyna\Component\Table\TableInterface;
  */
 class EntityAdapterFactory implements AdapterFactoryInterface
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $registry;
+    private ManagerRegistry $registry;
 
 
     /**
@@ -33,7 +34,7 @@ class EntityAdapterFactory implements AdapterFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createAdapter(TableInterface $table)
+    public function createAdapter(TableInterface $table): AdapterInterface
     {
         $source = $table->getConfig()->getSource();
 
@@ -41,7 +42,7 @@ class EntityAdapterFactory implements AdapterFactoryInterface
             throw new UnexpectedTypeException($source, EntitySource::class);
         }
 
-        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        /** @var EntityManagerInterface $manager */
         $manager = $this->registry->getManagerForClass($source->getClass());
 
         return new EntityAdapter($table, $manager);

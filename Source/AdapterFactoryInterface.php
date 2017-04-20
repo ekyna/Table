@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 use Ekyna\Component\Table\TableInterface;
@@ -18,5 +20,5 @@ interface AdapterFactoryInterface
      *
      * @return AdapterInterface
      */
-    public function createAdapter(TableInterface $table);
+    public function createAdapter(TableInterface $table): AdapterInterface;
 }

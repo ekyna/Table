@@ -1,56 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\Util\Config;
+
+use function array_key_exists;
 
 /**
  * Class ColumnBuilder
  * @package Ekyna\Component\Table\Column
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ColumnBuilder implements ColumnBuilderInterface
+final class ColumnBuilder implements ColumnBuilderInterface
 {
-    /**
-     * @var bool
-     */
-    private $locked = false;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var ResolvedColumnTypeInterface
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var int
-     */
-    private $position;
-
-    /**
-     * @var string
-     */
-    private $propertyPath;
-
-    /**
-     * @var bool
-     */
-    private $sortable;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private bool                        $locked       = false;
+    private string                      $name;
+    private ResolvedColumnTypeInterface $type;
+    private string                      $label;
+    private int                         $position;
+    private ?string                     $propertyPath = null;
+    private bool                        $sortable;
+    private array                       $options;
 
 
     /**
@@ -59,18 +32,18 @@ class ColumnBuilder implements ColumnBuilderInterface
      * @param string $name
      * @param array  $options
      */
-    public function __construct($name, array $options = [])
+    public function __construct(string $name, array $options = [])
     {
         Config::validateName($name);
 
-        $this->name = (string)$name;
+        $this->name = $name;
         $this->options = $options;
     }
 
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -78,7 +51,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getType()
+    public function getType(): ResolvedColumnTypeInterface
     {
         return $this->type;
     }
@@ -86,7 +59,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -94,7 +67,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -102,7 +75,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getPropertyPath()
+    public function getPropertyPath(): ?string
     {
         return $this->propertyPath;
     }
@@ -110,7 +83,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isSortable()
+    public function isSortable(): bool
     {
         return $this->sortable;
     }
@@ -118,7 +91,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -126,7 +99,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function hasOption($name)
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
@@ -134,7 +107,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOption($name, $default = null)
+    public function getOption(string $name, $default = null)
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
@@ -142,7 +115,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setType(ResolvedColumnTypeInterface $type)
+    public function setType(ResolvedColumnTypeInterface $type): ColumnBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -154,7 +127,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setLabel($label)
+    public function setLabel(string $label): ColumnBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -166,7 +139,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setPosition($position)
+    public function setPosition(int $position): ColumnBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -178,7 +151,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setPropertyPath($path)
+    public function setPropertyPath(?string $path): ColumnBuilderInterface
     {
         $this->propertyPath = $path;
 
@@ -188,9 +161,9 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setSortable($sortable)
+    public function setSortable(bool $sortable): ColumnBuilderInterface
     {
-        $this->sortable = (bool)$sortable;
+        $this->sortable = $sortable;
 
         return $this;
     }
@@ -198,7 +171,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getColumnConfig()
+    public function getColumnConfig(): ColumnConfigInterface
     {
         $this->preventIfLocked();
 
@@ -212,7 +185,7 @@ class ColumnBuilder implements ColumnBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getColumn()
+    public function getColumn(): ColumnInterface
     {
         $this->preventIfLocked();
 
@@ -224,7 +197,7 @@ class ColumnBuilder implements ColumnBuilderInterface
      *
      * @throws Exception\BadMethodCallException
      */
-    private function preventIfLocked()
+    private function preventIfLocked(): void
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('The config builder cannot be modified anymore.');

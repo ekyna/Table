@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 /**
@@ -14,21 +16,28 @@ interface ActionConfigInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
+
+    /**
+     * Returns the action label.
+     *
+     * @return string
+     */
+    public function getLabel(): string;
 
     /**
      * Returns the action type used to construct the column.
      *
      * @return ResolvedActionTypeInterface
      */
-    public function getType();
+    public function getType(): ResolvedActionTypeInterface;
 
     /**
      * Returns all options passed during the construction of the action.
      *
      * @return array The passed options
      */
-    public function getOptions();
+    public function getOptions(): array;
 
     /**
      * Returns whether a specific option exists.
@@ -37,7 +46,7 @@ interface ActionConfigInterface
      *
      * @return bool Whether the option exists
      */
-    public function hasOption($name);
+    public function hasOption(string $name): bool;
 
     /**
      * Returns the value of a specific option.
@@ -47,5 +56,5 @@ interface ActionConfigInterface
      *
      * @return mixed The option value
      */
-    public function getOption($name, $default = null);
+    public function getOption(string $name, $default = null);
 }

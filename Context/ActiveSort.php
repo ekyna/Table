@@ -1,25 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
+
+use function count;
 
 /**
  * Class ActiveSort
  * @package Ekyna\Component\Table\Context
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ActiveSort
+final class ActiveSort
 {
-    /**
-     * @var string
-     */
-    private $columnName;
-
-    /**
-     * @var string
-     */
-    private $direction;
+    private string $columnName;
+    private string $direction;
 
 
     /**
@@ -28,10 +25,10 @@ class ActiveSort
      * @param string $columnName
      * @param string $direction
      */
-    public function __construct($columnName, $direction)
+    public function __construct(string $columnName, string $direction)
     {
-        $this->columnName = (string)$columnName;
-        $this->direction = (string)$direction;
+        $this->columnName = $columnName;
+        $this->direction = $direction;
     }
 
     /**
@@ -39,7 +36,7 @@ class ActiveSort
      *
      * @return string
      */
-    public function getColumnName()
+    public function getColumnName(): string
     {
         return $this->columnName;
     }
@@ -49,7 +46,7 @@ class ActiveSort
      *
      * @return string
      */
-    public function getDirection()
+    public function getDirection(): string
     {
         return $this->direction;
     }
@@ -59,7 +56,7 @@ class ActiveSort
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             $this->columnName,
@@ -74,12 +71,12 @@ class ActiveSort
      *
      * @return ActiveSort
      */
-    static public function createFromArray(array $data)
+    public static function createFromArray(array $data): ActiveSort
     {
-        if (2 != count($data)) {
-            throw new InvalidArgumentException("Expected data as a 2 length array.");
+        if (2 !== count($data)) {
+            throw new InvalidArgumentException('Expected data as a 2 length array.');
         }
 
-        return new static($data[0], $data[1]);
+        return new self($data[0], $data[1]);
     }
 }

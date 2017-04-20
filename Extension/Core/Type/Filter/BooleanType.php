@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -14,6 +16,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+use function array_keys;
+
 /**
  * Class BooleanType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
@@ -21,23 +25,21 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class BooleanType extends AbstractFilterType
 {
-    const MODE_DEFAULT     = 'default';
-    const MODE_IS_NULL     = 'is_null';
-    const MODE_IS_NOT_NULL = 'is_not_null';
+    public const MODE_DEFAULT     = 'default';
+    public const MODE_IS_NULL     = 'is_null';
+    public const MODE_IS_NOT_NULL = 'is_not_null';
 
 
-    /**
-     * @inheritDoc
-     */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
-        $view->vars['value'] = $activeFilter->getValue() === 'yes' ? 'ekyna_core.value.yes' : 'ekyna_core.value.no';
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void {
+        $view->vars['value'] = array_keys($options['choices'])[$activeFilter->getValue() ? 1 : 0];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         $builder
             ->add('operator', ChoiceType::class, [
@@ -49,32 +51,29 @@ class BooleanType extends AbstractFilterType
                 ]),
             ])
             ->add('value', ChoiceType::class, [
-                'label'    => false,
-                'required' => true,
-                'choices'  => [
-                    // TODO component's own translations
-                    'ekyna_core.value.yes' => 'yes',
-                    'ekyna_core.value.no'  => 'no',
-                ],
+                'label'       => false,
+                'required'    => true,
+                'choices'     => $options['choices'],
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
                 ],
             ]);
 
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): bool {
         if (!$adapter instanceof ArrayAdapter) {
             return false;
         }
 
         $operator = $activeFilter->getOperator();
-        $value = $activeFilter->getValue() === 'yes';
+        $value = $activeFilter->getValue();
 
         if ($options['mode'] !== self::MODE_DEFAULT) {
             $value = $options['mode'] === self::MODE_IS_NULL ? $value : !$value;
@@ -92,25 +91,23 @@ class BooleanType extends AbstractFilterType
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
         $resolver
             ->setDefaults([
-                'mode' => self::MODE_DEFAULT,
+                'mode'    => self::MODE_DEFAULT,
+                'choices' => [
+                    'No'  => false,
+                    'Yes' => true,
+                ],
             ])
             ->setAllowedTypes('mode', 'string')
             ->setAllowedValues('mode', [self::MODE_DEFAULT, self::MODE_IS_NULL, self::MODE_IS_NOT_NULL]);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getParent()
+    public function getParent(): ?string
     {
         return FilterType::class;
     }

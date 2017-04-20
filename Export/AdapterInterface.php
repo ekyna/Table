@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Export;
 
 use Ekyna\Component\Table\TableInterface;
@@ -13,29 +15,16 @@ interface AdapterInterface
 {
     /**
      * Export the given table using the given format.
-     *
-     * @param TableInterface $table
-     * @param string         $format
-     *
-     * @return string
      */
-    public function export(TableInterface $table, $format);
+    public function export(TableInterface $table, string $format): ?string;
 
     /**
      * Returns the mime type for the given format.
-     *
-     * @param string $format
-     *
-     * @return string
      */
-    public function getMimeType($format);
+    public function getMimeType(string $format): string;
 
     /**
      * Returns whether the given format is supported.
-     *
-     * @param string $format
-     *
-     * @return bool
      */
-    public function supports($format);
+    public function supports(string $format): bool;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -11,12 +13,12 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class FilterHandler implements HandlerInterface
+final class FilterHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         // Abort if table's filters are not enabled
         if (!$table->getConfig()->isFilterable()) {

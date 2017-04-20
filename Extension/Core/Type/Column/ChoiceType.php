@@ -1,12 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Column\AbstractColumnType;
 use Ekyna\Component\Table\Column\ColumnInterface;
 use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\View\CellView;
+use IteratorAggregate;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function array_search;
+use function is_array;
+use function is_null;
+use function iterator_to_array;
 
 /**
  * Class ChoiceType
@@ -18,12 +26,13 @@ class ChoiceType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $value = $view->vars['value'];
 
-        if ($value instanceof \IteratorAggregate) {
-            $value = (array) $value->getIterator();
+        if ($value instanceof IteratorAggregate) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $value = iterator_to_array($value->getIterator());
         } elseif (is_null($value)) {
             $value = [];
         } elseif (!is_array($value)) {
@@ -51,9 +60,9 @@ class ChoiceType extends AbstractColumnType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired('choices')
@@ -65,7 +74,7 @@ class ChoiceType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return PropertyType::class;
     }

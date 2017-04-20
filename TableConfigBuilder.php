@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Util\ColumnSort;
@@ -12,115 +14,29 @@ use Symfony\Component\Form\Util\StringUtil;
  */
 class TableConfigBuilder implements TableConfigBuilderInterface
 {
-    /**
-     * @var bool
-     */
-    private $locked;
-
-    /**
-     * @var string
-     */
-    private $hash;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var ResolvedTableTypeInterface
-     */
-    private $type;
-
-    /**
-     * @var Source\SourceInterface
-     */
-    private $source;
-
-    /**
-     * @var string
-     */
-    private $dataClass;
-
-    /**
-     * @var array
-     */
-    private $perPageChoices;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var array
-     */
-    private $defaultSorts = [];
-
-    /**
-     * @var bool
-     */
-    private $sortable;
-
-    /**
-     * @var bool
-     */
-    private $filterable;
-
-    /**
-     * @var bool
-     */
-    private $batchable;
-
-    /**
-     * @var bool
-     */
-    private $exportable;
-
-    /**
-     * @var bool
-     */
-    private $profileable;
-
-    /**
-     * @var bool
-     */
-    private $configurable;
-
-    /**
-     * @var string
-     */
-    private $selectionMode;
-
-    /**
-     * @var Http\AdapterInterface
-     */
-    private $httpAdapter;
-
-    /**
-     * @var Context\Session\StorageInterface
-     */
-    private $sessionStorage;
-
-    /**
-     * @var Context\Profile\StorageInterface
-     */
-    private $profileStorage;
-
-    /**
-     * @var Export\AdapterInterface
-     */
-    private $exportAdapters = [];
-
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private bool                              $locked         = false;
+    private string                            $hash;
+    private string                            $name;
+    private ResolvedTableTypeInterface        $type;
+    private Source\SourceInterface            $source;
+    private string                            $dataClass;
+    private array                             $perPageChoices;
+    private string                            $url;
+    private array                             $defaultSorts   = [];
+    private bool                              $sortable;
+    private bool                              $filterable;
+    private bool                              $batchable;
+    private bool                              $exportable;
+    private bool                              $profileable;
+    private bool                              $configurable;
+    private ?string                           $selectionMode  = null;
+    private Http\AdapterInterface             $httpAdapter;
+    private Context\Session\StorageInterface  $sessionStorage;
+    private ?Context\Profile\StorageInterface $profileStorage = null;
+    /** @var Export\AdapterInterface[] */
+    private array                 $exportAdapters = [];
+    private TableFactoryInterface $factory;
+    private array                 $options;
 
 
     /**
@@ -129,18 +45,18 @@ class TableConfigBuilder implements TableConfigBuilderInterface
      * @param string $name
      * @param array  $options
      */
-    public function __construct($name, array $options = [])
+    public function __construct(string $name, array $options = [])
     {
         Util\Config::validateName($name);
 
-        $this->name = (string)$name;
+        $this->name = $name;
         $this->options = $options;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
@@ -148,7 +64,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -156,7 +72,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getType()
+    public function getType(): ResolvedTableTypeInterface
     {
         return $this->type;
     }
@@ -164,7 +80,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getSource()
+    public function getSource(): Source\SourceInterface
     {
         return $this->source;
     }
@@ -172,7 +88,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getDataClass()
+    public function getDataClass(): string
     {
         return $this->dataClass;
     }
@@ -180,7 +96,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getPerPageChoices()
+    public function getPerPageChoices(): array
     {
         return $this->perPageChoices;
     }
@@ -188,7 +104,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -196,7 +112,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getDefaultSorts()
+    public function getDefaultSorts(): array
     {
         return $this->defaultSorts;
     }
@@ -204,7 +120,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isSortable()
+    public function isSortable(): bool
     {
         return $this->sortable;
     }
@@ -212,7 +128,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isFilterable()
+    public function isFilterable(): bool
     {
         return $this->filterable;
     }
@@ -220,7 +136,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isBatchable()
+    public function isBatchable(): bool
     {
         return $this->batchable;
     }
@@ -228,7 +144,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isExportable()
+    public function isExportable(): bool
     {
         return $this->exportable;
     }
@@ -236,7 +152,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isConfigurable()
+    public function isConfigurable(): bool
     {
         return $this->configurable;
     }
@@ -244,7 +160,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function isProfileable()
+    public function isProfileable(): bool
     {
         return $this->profileable;
     }
@@ -252,7 +168,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getSelectionMode()
+    public function getSelectionMode(): ?string
     {
         return $this->selectionMode;
     }
@@ -260,7 +176,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getHttpAdapter()
+    public function getHttpAdapter(): Http\AdapterInterface
     {
         return $this->httpAdapter;
     }
@@ -268,7 +184,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getSessionStorage()
+    public function getSessionStorage(): Context\Session\StorageInterface
     {
         return $this->sessionStorage;
     }
@@ -276,7 +192,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getProfileStorage()
+    public function getProfileStorage(): ?Context\Profile\StorageInterface
     {
         return $this->profileStorage;
     }
@@ -284,7 +200,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function hasExportAdapters()
+    public function hasExportAdapters(): bool
     {
         return !empty($this->exportAdapters);
     }
@@ -292,7 +208,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getExportAdapters()
+    public function getExportAdapters(): array
     {
         return $this->exportAdapters;
     }
@@ -300,15 +216,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getFactory()
+    public function getFactory(): TableFactoryInterface
     {
         return $this->factory;
     }
@@ -316,7 +224,15 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function hasOption($name)
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
@@ -324,7 +240,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getOption($name, $default = null)
+    public function getOption(string $name, $default = null)
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
@@ -332,7 +248,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setType(ResolvedTableTypeInterface $type)
+    public function setType(ResolvedTableTypeInterface $type): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -344,7 +260,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setSource(Source\SourceInterface $source)
+    public function setSource(Source\SourceInterface $source): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -356,7 +272,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setDataClass($class)
+    public function setDataClass(string $class): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -368,7 +284,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setUrl($url)
+    public function setUrl(string $url): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -380,7 +296,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setPerPageChoices(array $choices)
+    public function setPerPageChoices(array $choices): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -392,7 +308,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function addDefaultSort($propertyPath, $direction = null)
+    public function addDefaultSort(string $propertyPath, string $direction = null): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -410,11 +326,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setSortable($enabled)
+    public function setSortable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->sortable = (bool)$enabled;
+        $this->sortable = $enabled;
 
         return $this;
     }
@@ -422,11 +338,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setFilterable($enabled)
+    public function setFilterable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->filterable = (bool)$enabled;
+        $this->filterable = $enabled;
 
         return $this;
     }
@@ -434,11 +350,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setBatchable($enabled)
+    public function setBatchable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->batchable = (bool)$enabled;
+        $this->batchable = $enabled;
 
         return $this;
     }
@@ -446,11 +362,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setExportable($enabled)
+    public function setExportable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->exportable = (bool)$enabled;
+        $this->exportable = $enabled;
 
         return $this;
     }
@@ -458,11 +374,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setConfigurable($enabled)
+    public function setConfigurable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->configurable = (bool)$enabled;
+        $this->configurable = $enabled;
 
         return $this;
     }
@@ -470,11 +386,11 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setProfileable($enabled)
+    public function setProfileable(bool $enabled): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
-        $this->profileable = (bool)$enabled;
+        $this->profileable = $enabled;
 
         return $this;
     }
@@ -482,7 +398,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setSelectionMode($mode)
+    public function setSelectionMode(string $mode = null): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -494,7 +410,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setHttpAdapter(Http\AdapterInterface $adapter)
+    public function setHttpAdapter(Http\AdapterInterface $adapter): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -506,7 +422,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setSessionStorage(Context\Session\StorageInterface $storage)
+    public function setSessionStorage(Context\Session\StorageInterface $storage): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -518,7 +434,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setProfileStorage(Context\Profile\StorageInterface $storage)
+    public function setProfileStorage(Context\Profile\StorageInterface $storage): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -530,7 +446,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function addExportAdapter(Export\AdapterInterface $adapter)
+    public function addExportAdapter(Export\AdapterInterface $adapter): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -542,7 +458,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function setFactory(FactoryInterface $factory)
+    public function setFactory(TableFactoryInterface $factory): TableConfigBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -554,7 +470,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getTableConfig()
+    public function getTableConfig(): TableConfigInterface
     {
         $this->preventIfLocked();
 
@@ -563,7 +479,7 @@ class TableConfigBuilder implements TableConfigBuilderInterface
 
         // Generate hash
         $prefix = StringUtil::fqcnToBlockPrefix(get_class($this->type->getInnerType()));
-        $config->hash = crc32($prefix . '_' . $this->name);
+        $config->hash = hash('crc32', $prefix . '_' . $this->name);
 
         // Lock
         $config->locked = true;
@@ -576,10 +492,12 @@ class TableConfigBuilder implements TableConfigBuilderInterface
      *
      * @throws Exception\BadMethodCallException
      */
-    protected function preventIfLocked()
+    protected function preventIfLocked(): void
     {
-        if ($this->locked) {
-            throw new Exception\BadMethodCallException('The config builder cannot be modified anymore.');
+        if (!$this->locked) {
+            return;
         }
+
+        throw new Exception\BadMethodCallException('The config builder cannot be modified anymore.');
     }
 }

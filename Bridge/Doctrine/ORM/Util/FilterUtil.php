@@ -1,38 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Util;
 
 use Doctrine\ORM\Query\Expr;
 use Ekyna\Component\Table\Util\FilterOperator;
+
+use function sprintf;
 
 /**
  * Class FilterUtil
  * @package Ekyna\Component\Table\Bridge\Doctrine\ORM\Util
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-abstract class FilterUtil
+final class FilterUtil
 {
-    /**
-     * @var int
-     */
-    static private $count = 0;
+    private static int $count = 0;
 
 
     /**
      * Builds the query builder expression.
      *
-     * @param string $property
-     * @param string $operator
-     * @param string $parameter
+     * @param string      $property
+     * @param int         $operator
+     * @param string|null $parameter
      *
      * @return string|Expr\Comparison|Expr\Func
      */
-    static public function buildExpression($property, $operator, $parameter = null)
+    public static function buildExpression(string $property, int $operator, string $parameter = null)
     {
         FilterOperator::isValid($operator, true);
 
         $expr = new Expr();
-        switch (intval($operator)) {
+        switch ($operator) {
             case FilterOperator::NOT_EQUAL:
                 return $expr->neq($property, $parameter);
             case FilterOperator::LOWER_THAN:
@@ -51,17 +52,13 @@ abstract class FilterUtil
                 return $expr->isMemberOf($parameter, $property);
             case FilterOperator::NOT_MEMBER:
                 return $expr->not($expr->isMemberOf($parameter, $property));
+            case FilterOperator::START_WITH:
+            case FilterOperator::END_WITH:
             case FilterOperator::LIKE:
                 return $expr->like($property, $parameter);
-            case FilterOperator::NOT_LIKE:
-                return $expr->notLike($property, $parameter);
-            case FilterOperator::START_WITH:
-                return $expr->like($property, $parameter);
             case FilterOperator::NOT_START_WITH:
-                return $expr->notLike($property, $parameter);
-            case FilterOperator::END_WITH:
-                return $expr->like($property, $parameter);
             case FilterOperator::NOT_END_WITH:
+            case FilterOperator::NOT_LIKE:
                 return $expr->notLike($property, $parameter);
             case FilterOperator::IS_NULL:
                 return $expr->isNull($property);
@@ -75,28 +72,28 @@ abstract class FilterUtil
     /**
      * Builds the query builder parameter name.
      *
-     * @param string $name
+     * @param string|null $name
      *
      * @return string
      */
-    static public function buildParameterName($name = null)
+    public static function buildParameterName(string $name = null): string
     {
-        return ':' . ($name ?: 'filter_') . static::$count++;
+        return ':' . ($name ?: 'filter_') . self::$count++;
     }
 
     /**
      * Builds the query builder parameter value.
      *
-     * @param string $operator
+     * @param int $operator
      * @param mixed  $value
      *
      * @return Expr\Literal|mixed
      */
-    static public function buildParameterValue($operator, $value)
+    public static function buildParameterValue(int $operator, $value): Expr\Literal
     {
         FilterOperator::isValid($operator, true);
 
-        switch (intval($operator)) {
+        switch ($operator) {
             case FilterOperator::LIKE:
             case FilterOperator::NOT_LIKE:
                 return sprintf('%%%s%%', $value);
@@ -109,5 +106,12 @@ abstract class FilterUtil
             default:
                 return $value;
         }
+    }
+
+    /**
+     * Disabled constructor.
+     */
+    private function __construct()
+    {
     }
 }

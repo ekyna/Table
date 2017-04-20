@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Context\Profile;
 
 use Ekyna\Component\Table\TableInterface;
@@ -18,7 +20,7 @@ interface StorageInterface
      *
      * @return bool
      */
-    public function has($key);
+    public function has(string $key): bool;
 
     /**
      * Returns the profile for the given key.
@@ -27,7 +29,7 @@ interface StorageInterface
      *
      * @return ProfileInterface
      */
-    public function get($key);
+    public function get(string $key): ProfileInterface;
 
     /**
      * Returns all the profiles for the given table.
@@ -36,7 +38,7 @@ interface StorageInterface
      *
      * @return ProfileInterface[]
      */
-    public function all(TableInterface $table);
+    public function all(TableInterface $table): array;
 
     /**
      * Creates the given profile.
@@ -44,19 +46,19 @@ interface StorageInterface
      * @param TableInterface $table
      * @param string         $name
      */
-    public function create(TableInterface $table, $name);
+    public function create(TableInterface $table, string $name);
 
     /**
      * Saves the given profile.
      *
      * @param ProfileInterface $profile
      */
-    public function save(ProfileInterface $profile);
+    public function save(ProfileInterface $profile): void;
 
     /**
      * Removes the given profile.
      *
      * @param ProfileInterface $profile
      */
-    public function remove(ProfileInterface $profile);
+    public function remove(ProfileInterface $profile): void;
 }

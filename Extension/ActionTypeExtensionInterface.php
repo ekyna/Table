@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Action\ActionBuilderInterface;
@@ -24,7 +26,7 @@ interface ActionTypeExtensionInterface
      * @param ActionBuilderInterface $builder The action builder
      * @param array                  $options The options
      */
-    public function buildAction(ActionBuilderInterface $builder, array $options);
+    public function buildAction(ActionBuilderInterface $builder, array $options): void;
 
     /**
      * Applies the action to the adapter.
@@ -34,19 +36,19 @@ interface ActionTypeExtensionInterface
      *
      * @return bool Whether the action has been applied.
      */
-    public function execute(ActionInterface $action, array $options);
+    public function execute(ActionInterface $action, array $options): bool;
 
     /**
      * Configures the options for this type.
      *
      * @param OptionsResolver $resolver The resolver for the options
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
-     * Returns the name of the type being extended.
+     * Returns the names of the types being extended.
      *
-     * @return string The name of the type being extended
+     * @return string[] The names of the types being extended
      */
-    public function getExtendedType();
+    public static function getExtendedTypes(): array;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -13,40 +15,24 @@ use Twig\TwigFunction;
 class TableExtension extends AbstractExtension
 {
     /**
-     * @var TwigRenderer
+     * @inheritDoc
      */
-    private $renderer;
-
-
-    /**
-     * Constructor.
-     *
-     * @param TwigRenderer $renderer
-     */
-    public function __construct(TwigRenderer $renderer)
-    {
-        $this->renderer = $renderer;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction(
                 'ekyna_table_render',
-                [$this->renderer, 'render'],
+                [TableRenderer::class, 'renderTable'],
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
                 'ekyna_table_cell',
-                [$this->renderer, 'renderCell'],
+                [TableRenderer::class, 'renderCell'],
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
                 'ekyna_table_pager',
-                [$this->renderer, 'renderPager'],
+                [TableRenderer::class, 'renderPager'],
                 ['is_safe' => ['html']]
             ),
         ];

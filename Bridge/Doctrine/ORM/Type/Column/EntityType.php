@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Type\Column;
 
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
@@ -11,7 +13,13 @@ use Ekyna\Component\Table\Extension\Core\Type\Column\PropertyType;
 use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\View\CellView;
+use IteratorAggregate;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function is_array;
+use function is_callable;
+use function is_null;
+use function iterator_to_array;
 
 /**
  * Class EntityType
@@ -23,7 +31,7 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildColumn(ColumnBuilderInterface $builder, array $options)
+    public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
         if (is_callable($options['entity_label'])) {
             $builder->setSortable(false);
@@ -33,12 +41,13 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $value = $row->getData($column->getConfig()->getPropertyPath());
 
-        if ($value instanceof \IteratorAggregate) {
-            $value = (array)$value->getIterator();
+        if ($value instanceof IteratorAggregate) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $value = iterator_to_array($value->getIterator());
         } elseif (is_null($value)) {
             $value = [];
         } elseif (!is_array($value)) {
@@ -76,7 +85,7 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool
     {
         if ($adapter instanceof EntityAdapter) {
             /**
@@ -100,7 +109,7 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefault('entity_label', null)
@@ -110,7 +119,7 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'choice';
     }
@@ -118,7 +127,7 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return PropertyType::class;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 /**
@@ -14,14 +16,23 @@ interface ActionConfigBuilderInterface extends ActionConfigInterface
      *
      * @param ResolvedActionTypeInterface $type
      *
-     * @return $this
+     * @return $this|ActionConfigBuilderInterface
      */
-    public function setType(ResolvedActionTypeInterface $type);
+    public function setType(ResolvedActionTypeInterface $type): ActionConfigBuilderInterface;
+
+    /**
+     * Sets the action label.
+     *
+     * @param string $label
+     *
+     * @return $this|ActionConfigBuilderInterface
+     */
+    public function setLabel(string $label): ActionConfigBuilderInterface;
 
     /**
      * Builds and returns the action configuration.
      *
      * @return ActionConfigInterface
      */
-    public function getActionConfig();
+    public function getActionConfig(): ActionConfigInterface;
 }

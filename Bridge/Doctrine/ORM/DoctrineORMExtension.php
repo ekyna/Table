@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Ekyna\Component\Table\Extension\AbstractTableExtension;
 
 /**
@@ -12,10 +14,7 @@ use Ekyna\Component\Table\Extension\AbstractTableExtension;
  */
 class DoctrineORMExtension extends AbstractTableExtension
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $registry;
+    private ManagerRegistry $registry;
 
 
     /**
@@ -31,7 +30,7 @@ class DoctrineORMExtension extends AbstractTableExtension
     /**
      * @inheritDoc
      */
-    protected function loadAdapterFactories()
+    protected function loadAdapterFactories(): array
     {
         return [
             new Source\EntityAdapterFactory($this->registry),
@@ -41,7 +40,7 @@ class DoctrineORMExtension extends AbstractTableExtension
     /**
      * @inheritDoc
      */
-    protected function loadColumnTypes()
+    protected function loadColumnTypes(): array
     {
         return [
             new Type\Column\EntityType(),
@@ -51,7 +50,7 @@ class DoctrineORMExtension extends AbstractTableExtension
     /**
      * @inheritDoc
      */
-    protected function loadColumnTypeExtensions()
+    protected function loadColumnTypeExtensions(): array
     {
         return [
             new Extension\Column\PropertyTypeExtension(),
@@ -61,7 +60,7 @@ class DoctrineORMExtension extends AbstractTableExtension
     /**
      * @inheritDoc
      */
-    protected function loadFilterTypes()
+    protected function loadFilterTypes(): array
     {
         return [
             new Type\Filter\EntityType($this->registry),
@@ -71,7 +70,7 @@ class DoctrineORMExtension extends AbstractTableExtension
     /**
      * @inheritDoc
      */
-    protected function loadFilterTypeExtensions()
+    protected function loadFilterTypeExtensions(): array
     {
         return [
             new Extension\Filter\FilterTypeExtension(),

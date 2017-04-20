@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 use Ekyna\Component\Table\Context\ActiveSort;
@@ -14,22 +16,11 @@ use Ekyna\Component\Table\View;
  * @package Ekyna\Component\Table\Column
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Column implements ColumnInterface
+final class Column implements ColumnInterface
 {
-    /**
-     * @var ColumnConfigInterface
-     */
-    private $config;
-
-    /**
-     * @var TableInterface
-     */
-    private $table;
-
-    /**
-     * @var string
-     */
-    private $sortDirection;
+    private ColumnConfigInterface $config;
+    private ?TableInterface       $table = null;
+    private string                $sortDirection;
 
 
     /**
@@ -47,7 +38,7 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function setTable(TableInterface $table)
+    public function setTable(TableInterface $table = null): ColumnInterface
     {
         $this->table = $table;
 
@@ -55,9 +46,9 @@ class Column implements ColumnInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTable()
+    public function getTable(): ?TableInterface
     {
         return $this->table;
     }
@@ -65,7 +56,7 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->config->getName();
     }
@@ -73,15 +64,15 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->config->getLabel();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getConfig()
+    public function getConfig(): ColumnConfigInterface
     {
         return $this->config;
     }
@@ -89,26 +80,26 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function isSorted()
+    public function isSorted(): bool
     {
-        return $this->config->isSortable() && $this->sortDirection !== ColumnSort::NONE;
+        return $this->config->isSortable() && ($this->sortDirection !== ColumnSort::NONE);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getSortDirection()
+    public function getSortDirection(): string
     {
         return $this->sortDirection;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setSortDirection($direction)
+    public function setSortDirection(string $sort): ColumnInterface
     {
-        if ($this->config->isSortable() && ColumnSort::isValid($direction, true)) {
-            $this->sortDirection = $direction;
+        if ($this->config->isSortable() && ColumnSort::isValid($sort, true)) {
+            $this->sortDirection = $sort;
         }
 
         return $this;
@@ -117,7 +108,7 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function createHeadView(View\TableView $tableView)
+    public function createHeadView(View\TableView $tableView): View\HeadView
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();
@@ -132,7 +123,7 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function createCellView(View\RowView $rowView, RowInterface $row)
+    public function createCellView(View\RowView $rowView, RowInterface $row): View\CellView
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();
@@ -147,7 +138,7 @@ class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ActiveSort $activeSort)
+    public function applySort(AdapterInterface $adapter, ActiveSort $activeSort): void
     {
         $type = $this->config->getType();
         $options = $this->config->getOptions();

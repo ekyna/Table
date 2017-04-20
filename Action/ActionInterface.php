@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\TableInterface;
@@ -14,32 +16,39 @@ interface ActionInterface
     /**
      * Sets the table.
      *
-     * @param TableInterface $table
+     * @param TableInterface|null $table
      *
-     * @return self
+     * @return ActionInterface
      */
-    public function setTable(TableInterface $table);
+    public function setTable(TableInterface $table = null): ActionInterface;
 
     /**
      * Returns the table.
      *
-     * @return TableInterface
+     * @return TableInterface|null
      */
-    public function getTable();
+    public function getTable(): ?TableInterface;
 
     /**
      * Returns the action's name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
+
+    /**
+     * Returns the action's label.
+     *
+     * @return string
+     */
+    public function getLabel(): string;
 
     /**
      * Returns the config.
      *
      * @return ActionConfigInterface
      */
-    public function getConfig();
+    public function getConfig(): ActionConfigInterface;
 
     /**
      * Executes the action.

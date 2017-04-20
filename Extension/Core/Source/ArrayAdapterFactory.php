@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Source;
 
 use Ekyna\Component\Table\Source\AdapterFactoryInterface;
+use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 
 /**
@@ -15,7 +18,7 @@ class ArrayAdapterFactory implements AdapterFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createAdapter(TableInterface $table)
+    public function createAdapter(TableInterface $table): AdapterInterface
     {
         return new ArrayAdapter($table);
     }

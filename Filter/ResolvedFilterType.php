@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -12,34 +14,24 @@ use Ekyna\Component\Table\View;
 use Ekyna\Component\Table\View\ActiveFilterView;
 use Ekyna\Component\Table\View\AvailableFilterView;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function get_class;
 
 /**
  * Class ResolvedFilterType
  * @package Ekyna\Component\Table\Filter
  * @author  Etienne Dauvergne <contact@ekyna.com>
+ *
+ * @property FilterTypeExtensionInterface[] $typeExtensions
  */
-class ResolvedFilterType implements ResolvedFilterTypeInterface
+final class ResolvedFilterType implements ResolvedFilterTypeInterface
 {
-    /**
-     * @var FilterTypeInterface
-     */
-    private $innerType;
-
-    /**
-     * @var FilterTypeExtensionInterface[]
-     */
-    private $typeExtensions;
-
-    /**
-     * @var ResolvedFilterTypeInterface|null
-     */
-    private $parent;
-
-    /**
-     * @var OptionsResolver
-     */
-    private $optionsResolver;
+    private FilterTypeInterface          $innerType;
+    private array                        $typeExtensions;
+    private ?ResolvedFilterTypeInterface $parent;
+    private ?OptionsResolver             $optionsResolver = null;
 
 
     /**
@@ -51,7 +43,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
      */
     public function __construct(
         FilterTypeInterface $innerType,
-        array $typeExtensions = array(),
+        array $typeExtensions = [],
         ResolvedFilterTypeInterface $parent = null
     ) {
         foreach ($typeExtensions as $extension) {
@@ -68,7 +60,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return $this->innerType->getBlockPrefix();
     }
@@ -76,7 +68,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?ResolvedFilterTypeInterface
     {
         return $this->parent;
     }
@@ -84,7 +76,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function getInnerType()
+    public function getInnerType(): FilterTypeInterface
     {
         return $this->innerType;
     }
@@ -92,16 +84,19 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function getTypeExtensions()
+    public function getTypeExtensions(): array
     {
         return $this->typeExtensions;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function createBuilder(FormFactoryInterface $factory, $name, array $options = array())
-    {
+    public function createBuilder(
+        FormFactoryInterface $factory,
+        string $name,
+        array $options = []
+    ): FilterBuilderInterface {
         $options = $this->getOptionsResolver()->resolve($options);
 
         $builder = new FilterBuilder($name, $factory, $options);
@@ -113,7 +108,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options)
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildFilter($builder, $options);
@@ -129,7 +124,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function createAvailableView(FilterInterface $filter, View\TableView $table)
+    public function createAvailableView(FilterInterface $filter, View\TableView $table): View\AvailableFilterView
     {
         return new View\AvailableFilterView($table);
     }
@@ -137,7 +132,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options)
+    public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildAvailableView($view, $filter, $options);
@@ -153,7 +148,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function createActiveView(FilterInterface $filter, View\TableView $table)
+    public function createActiveView(FilterInterface $filter, View\TableView $table): View\ActiveFilterView
     {
         return new View\ActiveFilterView($table);
     }
@@ -161,8 +156,12 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void {
         if (null !== $this->parent) {
             $this->parent->buildActiveView($view, $filter, $activeFilter, $options);
         }
@@ -177,7 +176,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function createForm(FilterInterface $filter, array $options)
+    public function createForm(FilterInterface $filter, array $options): FormInterface
     {
         $builder = $filter
             ->getConfig()
@@ -207,8 +206,12 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): bool {
         foreach ($this->typeExtensions as $extension) {
             if ($extension->applyFilter($adapter, $filter, $activeFilter, $options)) {
                 return true;
@@ -226,14 +229,14 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
         throw new LogicException(
             "None of the extensions, type or parent type were able to apply the filter to the adapter.\n" .
             "Did you forget to return true in some 'applyFilter' methods ? Or maybe you need to create " .
-            "a filter type extension that supports the " . get_class($adapter) . " adapter."
+            'a filter type extension that supports the ' . get_class($adapter) . ' adapter.'
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function getOptionsResolver()
+    public function getOptionsResolver(): OptionsResolver
     {
         if (null === $this->optionsResolver) {
             if (null !== $this->parent) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\View;
 
 use Ekyna\Component\Table\Util\ColumnSort;
@@ -9,14 +11,12 @@ use Ekyna\Component\Table\Util\ColumnSort;
  * @package Ekyna\Component\Table\View
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class HeadView
+final class HeadView
 {
     /**
      * The variables assigned to this view.
-     *
-     * @var array
      */
-    public $vars = [
+    public array $vars = [
         'name'      => null,
         'full_name' => null,
         'label'     => null,
@@ -26,10 +26,8 @@ class HeadView
 
     /**
      * The table view.
-     *
-     * @var TableView
      */
-    public $table;
+    public TableView $table;
 
 
     /**

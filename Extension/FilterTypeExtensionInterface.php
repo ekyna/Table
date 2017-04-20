@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -29,7 +31,7 @@ interface FilterTypeExtensionInterface
      * @param FilterBuilderInterface $builder The filter builder
      * @param array                  $options The options
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options);
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void;
 
     /**
      * Builds the available filter view.
@@ -38,7 +40,7 @@ interface FilterTypeExtensionInterface
      * @param FilterInterface     $filter
      * @param array               $options
      */
-    public function buildAvailableFilterView(AvailableFilterView $view, FilterInterface $filter, array $options);
+    public function buildAvailableFilterView(AvailableFilterView $view, FilterInterface $filter, array $options): void;
 
     /**
      * Builds the active filter view.
@@ -48,7 +50,7 @@ interface FilterTypeExtensionInterface
      * @param ActiveFilter     $activeFilter
      * @param array            $options
      */
-    public function buildActiveFilterView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options);
+    public function buildActiveFilterView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options): void;
 
     /**
      * Builds the filter form.
@@ -59,7 +61,7 @@ interface FilterTypeExtensionInterface
      *
      * @return bool Whether the filter form has been built.
      */
-    public function buildFilterForm(FormBuilderInterface $builder, FilterInterface $filter, array $options);
+    public function buildFilterForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool;
 
     /**
      * Applies the filter to the adapter.
@@ -71,19 +73,19 @@ interface FilterTypeExtensionInterface
      *
      * @return bool Whether the filter has been applied.
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options);
+    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options): bool;
 
     /**
      * Configures the options for this type.
      *
      * @param OptionsResolver $resolver The resolver for the options
      */
-    public function configureOptions(OptionsResolver $resolver);
+    public function configureOptions(OptionsResolver $resolver): void;
 
     /**
-     * Returns the name of the type being extended.
+     * Returns the names of the types being extended.
      *
-     * @return string The name of the type being extended
+     * @return string[] The names of the types being extended
      */
-    public function getExtendedType();
+    public static function getExtendedTypes(): array;
 }

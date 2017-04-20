@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Column;
 
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
@@ -19,7 +21,7 @@ class PropertyTypeExtension extends AbstractColumnTypeExtension
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool
     {
         if (!$adapter instanceof EntityAdapter) {
             return false;
@@ -37,8 +39,8 @@ class PropertyTypeExtension extends AbstractColumnTypeExtension
     /**
      * @inheritDoc
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return PropertyType::class;
+        return [PropertyType::class];
     }
 }

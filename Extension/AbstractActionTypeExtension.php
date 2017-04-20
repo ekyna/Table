@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Action\ActionBuilderInterface;
@@ -16,14 +18,14 @@ abstract class AbstractActionTypeExtension implements ActionTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function buildAction(ActionBuilderInterface $builder, array $options)
+    public function buildAction(ActionBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function execute(ActionInterface $action, array $options)
+    public function execute(ActionInterface $action, array $options): bool
     {
         return false;
     }
@@ -31,7 +33,7 @@ abstract class AbstractActionTypeExtension implements ActionTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 }

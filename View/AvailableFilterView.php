@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\View;
 
 /**
@@ -7,14 +9,12 @@ namespace Ekyna\Component\Table\View;
  * @package Ekyna\Component\Table\View
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class AvailableFilterView
+final class AvailableFilterView
 {
     /**
      * The variables assigned to this view.
-     *
-     * @var array
      */
-    public $vars = [
+    public array $vars = [
         'name'      => null,
         'full_name' => null,
         'label'     => null,
@@ -22,10 +22,8 @@ class AvailableFilterView
 
     /**
      * The table view.
-     *
-     * @var TableView
      */
-    public $table;
+    public TableView $table;
 
 
     /**

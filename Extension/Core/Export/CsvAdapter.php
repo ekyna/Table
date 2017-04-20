@@ -1,10 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Export;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Export\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
+use Exception;
+
+use function array_keys;
+use function array_replace;
+use function fclose;
+use function fopen;
+use function fputcsv;
+use function in_array;
+use function rewind;
+use function stream_get_contents;
 
 /**
  * Class CsvAdapter
@@ -13,30 +25,18 @@ use Ekyna\Component\Table\TableInterface;
  */
 class CsvAdapter implements AdapterInterface
 {
-    /**
-     * @var array
-     */
-    private $options;
+    private array $options;
 
-
-    /**
-     * Constructor.
-     *
-     * @param array $options
-     */
     public function __construct(array $options = [])
     {
         $this->options = array_replace([
-            'delimiter'   => ';',
+            'delimiter'   => ',',
             'enclosure'   => '"',
             'escape_char' => '\\',
         ], $options);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function export(TableInterface $table, $format)
+    public function export(TableInterface $table, string $format): ?string
     {
         $rows = $table->getSourceAdapter()->getSelection($table->getContext());
 
@@ -56,7 +56,7 @@ class CsvAdapter implements AdapterInterface
 
                     try {
                         $toString = (string)$value;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $toString = null;
                     }
 
@@ -79,12 +79,24 @@ class CsvAdapter implements AdapterInterface
         foreach ($data as $datum) {
             if (null === $headers) {
                 $headers = array_keys($datum);
-                fputcsv($handle, $headers, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
+                fputcsv(
+                    $handle,
+                    $headers,
+                    $this->options['delimiter'],
+                    $this->options['enclosure'],
+                    $this->options['escape_char']
+                );
             } elseif (array_keys($datum) !== $headers) {
                 throw new InvalidArgumentException('Unexpected data');
             }
 
-            fputcsv($handle, $datum, $this->options['delimiter'], $this->options['enclosure'], $this->options['escape_char']);
+            fputcsv(
+                $handle,
+                $datum,
+                $this->options['delimiter'],
+                $this->options['enclosure'],
+                $this->options['escape_char']
+            );
         }
 
         rewind($handle);
@@ -94,18 +106,12 @@ class CsvAdapter implements AdapterInterface
         return $content;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getMimeType($format)
+    public function getMimeType(string $format): string
     {
         return 'text/csv';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function supports($format)
+    public function supports(string $format): bool
     {
         return strtolower($format) === 'csv';
     }

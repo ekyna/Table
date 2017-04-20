@@ -1,6 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
+
+use Ekyna\Component\Table\Action\ActionInterface;
+use Ekyna\Component\Table\Filter\FilterInterface;
+
+use function array_keys;
+use function in_array;
+use function is_null;
+use function is_string;
+use function strtoupper;
+use function uasort;
+use function ucfirst;
 
 /**
  * Class Table
@@ -9,50 +22,22 @@ namespace Ekyna\Component\Table;
  */
 final class Table implements TableInterface
 {
-    /**
-     * @var TableConfigInterface
-     */
-    private $config;
+    private TableConfigInterface $config;
 
-    /**
-     * @var Column\ColumnInterface[]
-     */
-    private $columns;
+    /** @var Column\ColumnInterface[] */
+    private array $columns = [];
+    /** @var Filter\FilterInterface[] */
+    private array $filters = [];
+    /** @var Action\ActionInterface[] */
+    private array $actions = [];
 
-    /**
-     * @var Filter\FilterInterface[]
-     */
-    private $filters;
+    private ?Http\ParametersHelper $parametersHelper = null;
+    private ?Context\ContextInterface $context = null;
+    private ?Source\AdapterInterface $sourceAdapter = null;
 
-    /**
-     * @var Action\ActionInterface[]
-     */
-    private $actions;
-
-    /**
-     * @var Http\ParametersHelper
-     */
-    private $parametersHelper;
-
-    /**
-     * @var Context\ContextInterface
-     */
-    private $context;
-
-    /**
-     * @var Source\AdapterInterface
-     */
-    private $sourceAdapter;
-
-    /**
-     * @var bool
-     */
-    private $locked = false;
-
-    /**
-     * @var TableError[]
-     */
-    private $errors;
+    private bool $locked = false;
+    /** @var TableError[] */
+    private array $errors = [];
 
     /**
      * Constructor.
@@ -62,17 +47,12 @@ final class Table implements TableInterface
     public function __construct(TableConfigInterface $config)
     {
         $this->config = $config;
-
-        $this->columns = [];
-        $this->filters = [];
-        $this->actions = [];
-        $this->errors = [];
     }
 
     /**
      * @inheritDoc
      */
-    public function addColumn($column, $type = null, array $options = [])
+    public function addColumn($column, $type = null, array $options = []): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot add columns to a locked table.');
@@ -80,17 +60,12 @@ final class Table implements TableInterface
 
         if (!$column instanceof Column\ColumnInterface) {
             if (!is_string($column)) {
-                throw new Exception\UnexpectedTypeException($column, 'string or ' . Column\ColumnInterface::class);
+                throw new Exception\UnexpectedTypeException($column, ['string', Column\ColumnInterface::class]);
             }
 
-            if (null !== $type && !is_string($type) && !$type instanceof Column\ColumnTypeInterface) {
-                throw new Exception\UnexpectedTypeException($type, 'string or ' . Column\ColumnTypeInterface::class);
+            if (!is_null($type) && !is_string($type) && !$type instanceof Column\ColumnTypeInterface) {
+                throw new Exception\UnexpectedTypeException($type, ['string', Column\ColumnTypeInterface::class]);
             }
-
-            /* TODO default type ?
-            if (null === $type && null === $this->config->getDataClass()) {
-                $type = 'Symfony\Component\Form\Extension\Core\Type\TextType';
-            }*/
 
             if (null === $type) {
                 throw new Exception\InvalidArgumentException('Column type guessing is not yet supported.');
@@ -110,7 +85,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getColumn($name)
+    public function getColumn(string $name): Column\ColumnInterface
     {
         if (isset($this->columns[$name])) {
             return $this->columns[$name];
@@ -122,7 +97,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function hasColumn($name)
+    public function hasColumn(string $name): bool
     {
         return isset($this->columns[$name]);
     }
@@ -130,14 +105,14 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function removeColumn($name)
+    public function removeColumn(string $name): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot remove columns from a locked table.');
         }
 
         if (isset($this->columns[$name])) {
-            $this->columns[$name]->setTable(null);
+            $this->columns[$name]->setTable();
 
             unset($this->columns[$name]);
         }
@@ -148,7 +123,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         return $this->columns;
     }
@@ -156,7 +131,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function addFilter($filter, $type = null, array $options = [])
+    public function addFilter($filter, $type = null, array $options = []): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot add filters to a locked table.');
@@ -164,17 +139,12 @@ final class Table implements TableInterface
 
         if (!$filter instanceof Filter\FilterInterface) {
             if (!is_string($filter)) {
-                throw new Exception\UnexpectedTypeException($filter, 'string or ' . Filter\FilterInterface::class);
+                throw new Exception\UnexpectedTypeException($filter, ['string', Filter\FilterInterface::class]);
             }
 
-            if (null !== $type && !is_string($type) && !$type instanceof Filter\FilterTypeInterface) {
-                throw new Exception\UnexpectedTypeException($type, 'string or ' . Filter\FilterTypeInterface::class);
+            if (!is_null($type) && !is_string($type) && !$type instanceof Filter\FilterTypeInterface) {
+                throw new Exception\UnexpectedTypeException($type, ['string', Filter\FilterTypeInterface::class]);
             }
-
-            /* TODO default type ?
-            if (null === $type && null === $this->config->getDataClass()) {
-                $type = 'Symfony\Component\Form\Extension\Core\Type\TextType';
-            }*/
 
             if (null === $type) {
                 throw new Exception\InvalidArgumentException('Filter type guessing is not yet supported.');
@@ -194,7 +164,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getFilter($name)
+    public function getFilter(string $name): FilterInterface
     {
         if (isset($this->filters[$name])) {
             return $this->filters[$name];
@@ -206,7 +176,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function hasFilter($name)
+    public function hasFilter(string $name): bool
     {
         return isset($this->filters[$name]);
     }
@@ -214,7 +184,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function removeFilter($name)
+    public function removeFilter(string $name): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot remove filters from a locked table.');
@@ -232,7 +202,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }
@@ -240,7 +210,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function addAction($action, $type = null, array $options = [])
+    public function addAction($action, $type = null, array $options = []): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot add actions to a locked table.');
@@ -248,11 +218,11 @@ final class Table implements TableInterface
 
         if (!$action instanceof Action\ActionInterface) {
             if (!is_string($action)) {
-                throw new Exception\UnexpectedTypeException($action, 'string or ' . Action\ActionInterface::class);
+                throw new Exception\UnexpectedTypeException($action, ['string', Action\ActionInterface::class]);
             }
 
-            if (null !== $type && !is_string($type) && !$type instanceof Action\ActionTypeInterface) {
-                throw new Exception\UnexpectedTypeException($type, 'string or ' . Action\ActionTypeInterface::class);
+            if (!is_null($type) && !is_string($type) && !$type instanceof Action\ActionTypeInterface) {
+                throw new Exception\UnexpectedTypeException($type, ['string', Action\ActionTypeInterface::class]);
             }
 
             if (null === $type) {
@@ -272,7 +242,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getAction($name)
+    public function getAction(string $name): ActionInterface
     {
         if (isset($this->actions[$name])) {
             return $this->actions[$name];
@@ -284,7 +254,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function hasAction($name)
+    public function hasAction(string $name): bool
     {
         return isset($this->actions[$name]);
     }
@@ -292,14 +262,14 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function removeAction($name)
+    public function removeAction(string $name): TableInterface
     {
         if ($this->locked) {
             throw new Exception\BadMethodCallException('You cannot remove actions from a locked table.');
         }
 
         if (isset($this->actions[$name])) {
-            $this->actions[$name]->setTable(null);
+            $this->actions[$name]->setTable();
 
             unset($this->actions[$name]);
         }
@@ -310,7 +280,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getActions()
+    public function getActions(): array
     {
         return $this->actions;
     }
@@ -318,7 +288,7 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function addError(TableError $error)
+    public function addError(TableError $error): TableInterface
     {
         $this->errors[] = $error;
 
@@ -328,39 +298,39 @@ final class Table implements TableInterface
     /**
      * @inheritDoc
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getConfig()
+    public function getConfig(): TableConfigInterface
     {
         return $this->config;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->config->getHash();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->config->getName();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function handleRequest($request = null)
+    public function handleRequest(object $request = null): ?object
     {
         if ($this->locked) {
             throw new Exception\LogicException("Context has already been loaded. Don't call handleRequest() more than once.");
@@ -383,7 +353,7 @@ final class Table implements TableInterface
      *
      * @return Context\ContextInterface
      */
-    public function getContext()
+    public function getContext(): Context\ContextInterface
     {
         if (!$this->locked) {
             throw new Exception\LogicException(
@@ -402,9 +372,9 @@ final class Table implements TableInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParametersHelper()
+    public function getParametersHelper(): Http\ParametersHelper
     {
         if (!$this->locked) {
             throw new Exception\LogicException(
@@ -420,9 +390,9 @@ final class Table implements TableInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getSourceAdapter()
+    public function getSourceAdapter(): Source\AdapterInterface
     {
         if (!$this->locked) {
             throw new Exception\LogicException(
@@ -440,9 +410,9 @@ final class Table implements TableInterface
     /**
      * Sorts the columns and filers.
      */
-    public function sortElements()
+    public function sortElements(): void
     {
-        $sort = function ($a, $b) {
+        $sort = function ($a, $b): int {
             /**
              * @var Column\ColumnInterface|Filter\FilterInterface $a
              * @var Column\ColumnInterface|Filter\FilterInterface $b
@@ -450,7 +420,7 @@ final class Table implements TableInterface
             $aPos = $a->getConfig()->getPosition();
             $bPos = $b->getConfig()->getPosition();
 
-            if ($aPos == $bPos) {
+            if ($aPos === $bPos) {
                 return 0;
             }
 
@@ -463,9 +433,9 @@ final class Table implements TableInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function createView()
+    public function createView(): View\TableView
     {
         $context = $this->getContext();
 
@@ -473,7 +443,7 @@ final class Table implements TableInterface
         $options = $this->config->getOptions();
 
         // Sort the columns, filters and actions
-        //$this->sortElements();
+        $this->sortElements();
 
         // Create the table view
         $tableView = $type->createView($this);
@@ -500,8 +470,8 @@ final class Table implements TableInterface
                 foreach ($activeFilters as $activeFilter) {
                     foreach ($this->filters as $name => $child) {
                         if ($name === $activeFilter->getFilterName()) {
-                            $tableView->active_filters[$activeFilter->getId()] =
-                                $child->createActiveView($tableView, $activeFilter);
+                            $filter = $child->createActiveView($tableView, $activeFilter);
+                            $tableView->active_filters[$activeFilter->getId()] = $filter;
                             continue 2;
                         }
                     }
@@ -571,7 +541,7 @@ final class Table implements TableInterface
      *
      * @return array
      */
-    private function buildUiVars()
+    private function buildUiVars(): array
     {
         $context = $this->getContext();
         $params = $this->getParametersHelper();
@@ -600,13 +570,11 @@ final class Table implements TableInterface
         if ($this->config->isBatchable() && !empty($this->actions)) {
             $actionChoices = [];
             foreach ($this->actions as $action) {
-                $label = $action->getConfig()->getOption('label');
-                //$translationDomain = $action->getConfig()->getOption('translation_domain');
+                $label = $action->getConfig()->getLabel();
 
                 $actionChoices[] = [
                     'value' => $action->getName(),
                     'label' => $label ?: ucfirst($action->getName()),
-                    //'translation_domain' => $translationDomain,
                 ];
             }
 
@@ -703,9 +671,9 @@ final class Table implements TableInterface
     /**
      * Returns the table's selection mode.
      *
-     * @return null|string
+     * @return string|null
      */
-    private function getSelectionMode()
+    private function getSelectionMode(): ?string
     {
         if (null !== $mode = $this->config->getSelectionMode()) {
             return $mode;
@@ -729,7 +697,7 @@ final class Table implements TableInterface
      *
      * @return View\RowView
      */
-    private function createRowView(View\TableView $view)
+    private function createRowView(View\TableView $view): View\RowView
     {
         return new View\RowView($view);
     }

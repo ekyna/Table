@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 use Symfony\Component\HttpFoundation\Request;
+
+use function is_string;
+use function sprintf;
 
 /**
  * Class TableBuilder
@@ -11,45 +16,25 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
 {
-    /**
-     * @var Column\ColumnBuilderInterface[]
-     */
-    private $columns = [];
-
-    /**
-     * @var array
-     */
-    private $unresolvedColumns = [];
-
-    /**
-     * @var Filter\FilterBuilderInterface[]
-     */
-    private $filters = [];
-
-    /**
-     * @var array
-     */
-    private $unresolvedFilters = [];
-
-    /**
-     * @var Action\ActionBuilderInterface[]
-     */
-    private $actions = [];
-
-    /**
-     * @var array
-     */
-    private $unresolvedActions = [];
+    /** @var Column\ColumnBuilderInterface[] */
+    private array $columns           = [];
+    private array $unresolvedColumns = [];
+    /** @var Filter\FilterBuilderInterface[] */
+    private array $filters           = [];
+    private array $unresolvedFilters = [];
+    /** @var Action\ActionBuilderInterface[] */
+    private array $actions           = [];
+    private array $unresolvedActions = [];
 
 
     /**
      * Constructor.
      *
-     * @param string           $name
-     * @param FactoryInterface $factory
-     * @param array            $options
+     * @param string                $name
+     * @param TableFactoryInterface $factory
+     * @param array                 $options
      */
-    public function __construct($name, FactoryInterface $factory, array $options = [])
+    public function __construct(string $name, TableFactoryInterface $factory, array $options = [])
     {
         parent::__construct($name, $options);
 
@@ -57,9 +42,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function addColumn($column, $type = null, array $options = [])
+    public function addColumn($column, string $type = null, array $options = []): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -73,11 +58,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
         }
 
         if (!is_string($column)) {
-            throw new Exception\UnexpectedTypeException($column, 'string or ' . Column\ColumnBuilderInterface::class);
-        }
-
-        if (null !== $type && !is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string or ' . Column\ColumnTypeInterface::class);
+            throw new Exception\UnexpectedTypeException($column, ['string', Column\ColumnBuilderInterface::class]);
         }
 
         $this->columns[$column] = null;
@@ -92,13 +73,13 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     /**
      * Creates a column builder.
      *
-     * @param string $name
-     * @param string $type
-     * @param array  $options
+     * @param string      $name
+     * @param string|null $type
+     * @param array       $options
      *
      * @return Column\ColumnBuilderInterface
      */
-    public function createColumn($name, $type = null, array $options = [])
+    public function createColumn(string $name, string $type = null, array $options = []): Column\ColumnBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -106,14 +87,14 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
             return $this->getFactory()->createColumnBuilder($name, $type, $options);
         }
 
-        throw new \InvalidArgumentException('Column type guessing is not yet supported.');
+        throw new Exception\InvalidArgumentException('Column type guessing is not yet supported.');
         // TODO return $this->getFormFactory()->createBuilderForProperty($this->getDataClass(), $name, $options);
     }
 
     /**
      * @inheritDoc
      */
-    public function getColumn($name)
+    public function getColumn(string $name): Column\ColumnBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -129,9 +110,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function removeColumn($name)
+    public function removeColumn(string $name): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -141,9 +122,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function addFilter($filter, $type = null, array $options = [])
+    public function addFilter($filter, string $type = null, array $options = []): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -157,11 +138,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
         }
 
         if (!is_string($filter)) {
-            throw new Exception\UnexpectedTypeException($filter, 'string or ' . Filter\FilterBuilderInterface::class);
-        }
-
-        if (null !== $type && !is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string or ' . Filter\FilterTypeInterface::class);
+            throw new Exception\UnexpectedTypeException($filter, ['string', Filter\FilterBuilderInterface::class]);
         }
 
         $this->filters[$filter] = null;
@@ -176,13 +153,13 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     /**
      * Creates a filter builder.
      *
-     * @param string $name
-     * @param string $type
-     * @param array  $options
+     * @param string      $name
+     * @param string|null $type
+     * @param array       $options
      *
      * @return Filter\FilterBuilderInterface
      */
-    public function createFilter($name, $type = null, array $options = [])
+    public function createFilter(string $name, string $type = null, array $options = []): Filter\FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -190,14 +167,14 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
             return $this->getFactory()->createFilterBuilder($name, $type, $options);
         }
 
-        throw new \InvalidArgumentException('Filter type guessing is not yet supported.');
+        throw new Exception\InvalidArgumentException('Filter type guessing is not yet supported.');
         // TODO return $this->getFormFactory()->createFilterBuilderForProperty($this->getDataClass(), $name, $options);
     }
 
     /**
      * @inheritDoc
      */
-    public function getFilter($name)
+    public function getFilter(string $name): Filter\FilterBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -213,9 +190,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function removeFilter($name)
+    public function removeFilter(string $name): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -225,9 +202,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function addAction($action, $type = null, array $options = [])
+    public function addAction($action, string $type = null, array $options = []): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -244,10 +221,6 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
             throw new Exception\UnexpectedTypeException($action, 'string or ' . Action\ActionBuilderInterface::class);
         }
 
-        if (null !== $type && !is_string($type)) {
-            throw new Exception\UnexpectedTypeException($type, 'string or ' . Action\ActionTypeInterface::class);
-        }
-
         $this->actions[$action] = null;
         $this->unresolvedActions[$action] = [
             'type'    => $type,
@@ -260,13 +233,13 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     /**
      * Creates a action builder.
      *
-     * @param string $name
-     * @param string $type
-     * @param array  $options
+     * @param string      $name
+     * @param string|null $type
+     * @param array       $options
      *
      * @return Action\ActionBuilderInterface
      */
-    public function createAction($name, $type = null, array $options = [])
+    public function createAction(string $name, string $type = null, array $options = []): Action\ActionBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -274,14 +247,14 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
             return $this->getFactory()->createActionBuilder($name, $type, $options);
         }
 
-        throw new \InvalidArgumentException('Action type guessing is not yet supported.');
+        throw new Exception\InvalidArgumentException('Action type guessing is not yet supported.');
         // TODO return $this->getFormFactory()->createActionBuilderForProperty($this->getDataClass(), $name, $options);
     }
 
     /**
      * @inheritDoc
      */
-    public function getAction($name)
+    public function getAction(string $name): Action\ActionBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -297,9 +270,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function removeAction($name)
+    public function removeAction(string $name): TableBuilderInterface
     {
         $this->preventIfLocked();
 
@@ -311,13 +284,13 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     /**
      * @inheritDoc
      */
-    public function getTableConfig()
+    public function getTableConfig(): TableConfigInterface
     {
         if (!$this->getSource()) {
             throw new Exception\BadMethodCallException("You must define the table's source first.");
         }
 
-        /** @var $config self */
+        /** @var self $config */
         $config = parent::getTableConfig();
 
         $config->columns = [];
@@ -328,9 +301,9 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTable(Request $request = null)
+    public function getTable(Request $request = null): TableInterface
     {
         $this->preventIfLocked();
 
@@ -362,7 +335,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
      *
      * @return Column\ColumnBuilderInterface
      */
-    private function resolveColumn($name)
+    private function resolveColumn(string $name): Column\ColumnBuilderInterface
     {
         $info = $this->unresolvedColumns[$name];
         $child = $this->createColumn($name, $info['type'], $info['options']);
@@ -379,7 +352,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
      *
      * @return Filter\FilterBuilderInterface
      */
-    private function resolveFilter($name)
+    private function resolveFilter(string $name): Filter\FilterBuilderInterface
     {
         $info = $this->unresolvedFilters[$name];
         $child = $this->createFilter($name, $info['type'], $info['options']);
@@ -396,7 +369,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
      *
      * @return Action\ActionBuilderInterface
      */
-    private function resolveAction($name)
+    private function resolveAction(string $name): Action\ActionBuilderInterface
     {
         $info = $this->unresolvedActions[$name];
         $child = $this->createAction($name, $info['type'], $info['options']);
@@ -409,7 +382,7 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
     /**
      * Converts all unresolved elements into builder instances.
      */
-    private function resolveElements()
+    private function resolveElements(): void
     {
         foreach ($this->unresolvedColumns as $name => $info) {
             $this->columns[$name] = $this->createColumn($name, $info['type'], $info['options']);

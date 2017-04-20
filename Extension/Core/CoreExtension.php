@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core;
 
 use Ekyna\Component\Table\Extension\AbstractTableExtension;
@@ -12,50 +14,50 @@ use Ekyna\Component\Table\Extension\AbstractTableExtension;
 class CoreExtension extends AbstractTableExtension
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function loadTableTypes()
+    protected function loadTableTypes(): array
     {
         return [
-            new Type\TableType,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function loadColumnTypes()
-    {
-        return [
-            new Type\Column\BooleanType,
-            new Type\Column\ChoiceType,
-            new Type\Column\DateTimeType,
-            new Type\Column\NumberType,
-            new Type\Column\TextType,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function loadFilterTypes()
-    {
-        return [
-            new Type\Filter\BooleanType,
-            new Type\Filter\ChoiceType,
-            new Type\Filter\DateTimeType,
-            new Type\Filter\NumberType,
-            new Type\Filter\TextType,
+            new Type\TableType(),
         ];
     }
 
     /**
      * @inheritDoc
      */
-    protected function loadAdapterFactories()
+    protected function loadColumnTypes(): array
     {
         return [
-            new Source\ArrayAdapterFactory,
+            new Type\Column\BooleanType(),
+            new Type\Column\ChoiceType(),
+            new Type\Column\DateTimeType(),
+            new Type\Column\NumberType(),
+            new Type\Column\TextType(),
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function loadFilterTypes(): array
+    {
+        return [
+            new Type\Filter\BooleanType(),
+            new Type\Filter\ChoiceType(),
+            new Type\Filter\DateTimeType(),
+            new Type\Filter\NumberType(),
+            new Type\Filter\TextType(),
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function loadAdapterFactories(): array
+    {
+        return [
+            new Source\ArrayAdapterFactory(),
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\Extension\ActionTypeExtensionInterface;
@@ -15,23 +17,23 @@ interface ResolvedActionTypeInterface
     /**
      * Returns the parent type.
      *
-     * @return self|null The parent type or null
+     * @return ResolvedActionTypeInterface|null The parent type or null
      */
-    public function getParent();
+    public function getParent(): ?ResolvedActionTypeInterface;
 
     /**
      * Returns the wrapped action type.
      *
      * @return ActionTypeInterface The wrapped action type
      */
-    public function getInnerType();
+    public function getInnerType(): ActionTypeInterface;
 
     /**
      * Returns the extensions of the wrapped action type.
      *
      * @return ActionTypeExtensionInterface[] An array of {@link ActionTypeExtensionInterface} instances
      */
-    public function getTypeExtensions();
+    public function getTypeExtensions(): array;
 
     /**
      * Creates a new action builder for this type.
@@ -41,7 +43,7 @@ interface ResolvedActionTypeInterface
      *
      * @return ActionBuilderInterface The created action builder
      */
-    public function createBuilder($name, array $options = []);
+    public function createBuilder(string $name, array $options = []): ActionBuilderInterface;
 
     /**
      * Configures a action builder for the type hierarchy.
@@ -49,7 +51,7 @@ interface ResolvedActionTypeInterface
      * @param ActionBuilderInterface $builder The builder to configure
      * @param array                  $options The options used for the configuration
      */
-    public function buildAction(ActionBuilderInterface $builder, array $options);
+    public function buildAction(ActionBuilderInterface $builder, array $options): void;
 
     /**
      * Executes the action.
@@ -66,5 +68,5 @@ interface ResolvedActionTypeInterface
      *
      * @return OptionsResolver The options resolver
      */
-    public function getOptionsResolver();
+    public function getOptionsResolver(): OptionsResolver;
 }

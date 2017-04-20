@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Source;
 
 /**
@@ -14,5 +16,5 @@ interface SourceInterface
      *
      * @return string
      */
-    static public function getFactory();
+    public static function getFactory(): string;
 }

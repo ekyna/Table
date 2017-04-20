@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http;
 
 use Ekyna\Component\Table\TableInterface;
@@ -15,20 +17,20 @@ interface AdapterInterface
      * Builds the parameters.
      *
      * @param TableInterface $table
-     * @param mixed          $request
+     * @param object|null    $request
      *
      * @return ParametersHelper
      */
-    public function loadParameters(TableInterface $table, $request = null);
+    public function loadParameters(TableInterface $table, object $request = null): ParametersHelper;
 
     /**
      * Creates and returns a redirection from the given table.
      *
      * @param TableInterface $table
      *
-     * @return mixed
+     * @return object
      */
-    public function redirect(TableInterface $table);
+    public function redirect(TableInterface $table): object;
 
     /**
      * Adds the flash message to the session.
@@ -36,16 +38,16 @@ interface AdapterInterface
      * @param string $type
      * @param string $message
      */
-    public function addFlash($type, $message);
+    public function addFlash(string $type, string $message): void;
 
     /**
      * Creates and returns a redirection.
      *
      * @param string|null $url
      *
-     * @return mixed The redirection response
+     * @return object The redirection response
      */
-    public function createRedirection($url = null);
+    public function createRedirection(string $url = null): object;
 
     /**
      * Creates and returns a new response.
@@ -54,7 +56,7 @@ interface AdapterInterface
      * @param int    $code
      * @param array  $headers
      *
-     * @return mixed The response
+     * @return object The response
      */
-    public function createResponse($body, $code = 200, array $headers = []);
+    public function createResponse(string $body, int $code = 200, array $headers = []): object;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\TableInterface;
@@ -9,17 +11,10 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Action
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Action implements ActionInterface
+final class Action implements ActionInterface
 {
-    /**
-     * @var ActionConfigInterface
-     */
-    private $config;
-
-    /**
-     * @var TableInterface
-     */
-    private $table;
+    private ActionConfigInterface $config;
+    private ?TableInterface       $table = null;
 
 
     /**
@@ -35,7 +30,7 @@ class Action implements ActionInterface
     /**
      * @inheritDoc
      */
-    public function setTable(TableInterface $table)
+    public function setTable(TableInterface $table = null): ActionInterface
     {
         $this->table = $table;
 
@@ -43,9 +38,9 @@ class Action implements ActionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTable()
+    public function getTable(): ?TableInterface
     {
         return $this->table;
     }
@@ -53,15 +48,23 @@ class Action implements ActionInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->config->getName();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getConfig()
+    public function getLabel(): string
+    {
+        return $this->config->getLabel();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConfig(): ActionConfigInterface
     {
         return $this->config;
     }

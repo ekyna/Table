@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
 
 /**
@@ -9,34 +11,23 @@ namespace Ekyna\Component\Table;
  */
 class TableError
 {
-    /**
-     * @var string
-     */
-    private $message;
-
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @var null|string
-     */
-    private $translationDomain;
+    private string  $message;
+    private array   $parameters;
+    private ?string $transDomain;
 
 
     /**
      * Constructor.
      *
-     * @param string $message
-     * @param array  $parameters
-     * @param string $translationDomain
+     * @param string      $message
+     * @param array       $parameters
+     * @param string|null $transDomain
      */
-    public function __construct($message, $parameters = [], $translationDomain = null)
+    public function __construct(string $message, array $parameters = [], string $transDomain = null)
     {
         $this->message = $message;
         $this->parameters = $parameters;
-        $this->translationDomain = $translationDomain;
+        $this->transDomain = $transDomain;
     }
 
     /**
@@ -44,7 +35,7 @@ class TableError
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -56,7 +47,7 @@ class TableError
      *
      * @return TableError
      */
-    public function setMessage($message)
+    public function setMessage(string $message): TableError
     {
         $this->message = $message;
 
@@ -68,7 +59,7 @@ class TableError
      *
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
@@ -80,7 +71,7 @@ class TableError
      *
      * @return TableError
      */
-    public function setParameters(array $parameters = [])
+    public function setParameters(array $parameters = []): TableError
     {
         $this->parameters = $parameters;
 
@@ -90,23 +81,23 @@ class TableError
     /**
      * Returns the translation domain.
      *
-     * @return null|string
+     * @return string|null
      */
-    public function getTranslationDomain()
+    public function getTransDomain(): ?string
     {
-        return $this->translationDomain;
+        return $this->transDomain;
     }
 
     /**
      * Sets the translation domain.
      *
-     * @param null|string $domain
+     * @param string|null $domain
      *
      * @return TableError
      */
-    public function setTranslationDomain($domain = null)
+    public function setTransDomain(string $domain = null): TableError
     {
-        $this->translationDomain = $domain;
+        $this->transDomain = $domain;
 
         return $this;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
 use Ekyna\Component\Table\Column\AbstractColumnType;
@@ -19,9 +21,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PropertyType extends AbstractColumnType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $view->vars = array_replace($view->vars, [
             'value' => $row->getData($column->getConfig()->getPropertyPath()),
@@ -31,8 +33,12 @@ class PropertyType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
-    {
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        ActiveSort $activeSort,
+        array $options
+    ): bool {
         if (!$adapter instanceof ArrayAdapter) {
             return false;
         }
@@ -50,7 +56,7 @@ class PropertyType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'sortable' => true,
@@ -60,7 +66,7 @@ class PropertyType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ColumnType::class;
     }

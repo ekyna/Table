@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Extension;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -21,36 +23,28 @@ abstract class AbstractFilterTypeExtension implements FilterTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options)
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildAvailableFilterView(AvailableFilterView $view, FilterInterface $filter, array $options)
+    public function buildAvailableFilterView(AvailableFilterView $view, FilterInterface $filter, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildActiveFilterView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    public function buildActiveFilterView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function buildFilterForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
-    {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    public function buildFilterForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
         return false;
     }
@@ -58,7 +52,15 @@ abstract class AbstractFilterTypeExtension implements FilterTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options): bool
+    {
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
     }
 }

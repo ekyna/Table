@@ -1,34 +1,72 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Symfony\DependencyInjection;
 
-use Ekyna\Component\Table\Extension\TableExtensionInterface;
+use Ekyna\Component\Table\Action\ActionTypeInterface;
+use Ekyna\Component\Table\Column\ColumnTypeInterface;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Ekyna\Component\Table\Extension\TableExtensionInterface;
+use Ekyna\Component\Table\Filter\FilterTypeInterface;
+use Ekyna\Component\Table\Source\AdapterFactoryInterface;
+use Ekyna\Component\Table\TableTypeInterface;
+use Psr\Container\ContainerInterface;
+
+use function array_search;
+use function class_exists;
+use function in_array;
 
 /**
  * Class DependencyInjectionExtension
  * @package Ekyna\Component\Table\Bridge\Symfony\DependencyInjection
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class DependencyInjectionExtension implements TableExtensionInterface
 {
-    private $container;
+    /**
+     * @var ContainerInterface
+     */
+    private ContainerInterface $container;
 
-    private $tableTypeServiceIds;
-    private $tableTypeExtensionServiceIds;
+    /** @var string[] */
+    private array $tableTypeServiceIds;
+    /** @var string[] */
+    private array $tableTypeExtensionServiceIds;
 
-    private $columnTypeServiceIds;
-    private $columnTypeExtensionServiceIds;
+    /** @var string[] */
+    private array $columnTypeServiceIds;
+    /** @var string[] */
+    private array $columnTypeExtensionServiceIds;
 
-    private $filterTypeServiceIds;
-    private $filterTypeExtensionServiceIds;
+    /** @var string[] */
+    private array $filterTypeServiceIds;
+    /** @var string[] */
+    private array $filterTypeExtensionServiceIds;
 
-    private $actionTypeServiceIds;
-    private $actionTypeExtensionServiceIds;
+    /** @var string[] */
+    private array $actionTypeServiceIds;
+    /** @var string[] */
+    private array $actionTypeExtensionServiceIds;
 
-    private $adapterFactoryServiceIds;
+    /** @var string[] */
+    private array $adapterFactoryServiceIds;
 
+
+    /**
+     * Constructor.
+     *
+     * @param ContainerInterface $container
+     * @param string[]           $tableTypeServiceIds
+     * @param string[]           $tableTypeExtensionServiceIds
+     * @param string[]           $columnTypeServiceIds
+     * @param string[]           $columnTypeExtensionServiceIds
+     * @param string[]           $filterTypeServiceIds
+     * @param string[]           $filterTypeExtensionServiceIds
+     * @param string[]           $actionTypeServiceIds
+     * @param string[]           $actionTypeExtensionServiceIds
+     * @param string[]           $adapterFactoryServiceIds
+     */
     public function __construct(
         ContainerInterface $container,
         array $tableTypeServiceIds,
@@ -54,265 +92,269 @@ class DependencyInjectionExtension implements TableExtensionInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTableType($name)
+    public function getTableType(string $name): TableTypeInterface
     {
-        if (!isset($this->tableTypeServiceIds[$name])) {
-            throw new InvalidArgumentException(sprintf(
-                'The table type "%s" is not registered with the service container.',
-                $name
-            ));
-        }
-
-        return $this->container->get($this->tableTypeServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasTableType($name)
-    {
-        return isset($this->tableTypeServiceIds[$name]);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getService($name, $this->tableTypeServiceIds);
     }
 
     /**
      * @inheritDoc
      */
-    public function getTableTypeExtensions($name)
+    public function hasTableType(string $name): bool
     {
-        $extensions = array();
+        return $this->hasService($name, $this->tableTypeServiceIds);
+    }
 
-        if (isset($this->tableTypeExtensionServiceIds[$name])) {
-            foreach ($this->tableTypeExtensionServiceIds[$name] as $serviceId) {
-                $extensions[] = $extension = $this->container->get($serviceId);
+    /**
+     * @inheritDoc
+     */
+    public function getTableTypeExtensions(string $name): array
+    {
+        return $this->getExtensions($name, $this->tableTypeServiceIds, $this->tableTypeExtensionServiceIds);
+    }
 
-                // validate result of getExtendedType() to ensure it is consistent with the service definition
-                if ($extension->getExtendedType() !== $name) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'The extended type specified for the service "%s" does not match '.
-                            'the actual extended type. Expected "%s", given "%s".',
-                            $serviceId,
-                            $name,
-                            $extension->getExtendedType()
-                        )
-                    );
-                }
+    /**
+     * @inheritDoc
+     */
+    public function hasTableTypeExtensions(string $name): bool
+    {
+        return $this->hasExtensions($name, $this->tableTypeServiceIds, $this->tableTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getColumnType(string $name): ColumnTypeInterface
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getService($name, $this->columnTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasColumnType(string $name): bool
+    {
+        return $this->hasService($name, $this->columnTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getColumnTypeExtensions(string $name): array
+    {
+        return $this->getExtensions($name, $this->columnTypeServiceIds, $this->columnTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasColumnTypeExtensions(string $name): bool
+    {
+        return $this->hasExtensions($name, $this->columnTypeServiceIds, $this->columnTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilterType(string $name): FilterTypeInterface
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getService($name, $this->filterTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasFilterType(string $name): bool
+    {
+        return $this->hasService($name, $this->filterTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilterTypeExtensions(string $name): array
+    {
+        return $this->getExtensions($name, $this->filterTypeServiceIds, $this->filterTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasFilterTypeExtensions(string $name): bool
+    {
+        return $this->hasExtensions($name, $this->filterTypeServiceIds, $this->filterTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActionType(string $name): ActionTypeInterface
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getService($name, $this->actionTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasActionType(string $name): bool
+    {
+        return $this->hasService($name, $this->actionTypeServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActionTypeExtensions(string $name): array
+    {
+        return $this->getExtensions($name, $this->actionTypeServiceIds, $this->actionTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasActionTypeExtensions(string $name): bool
+    {
+        return $this->hasExtensions($name, $this->actionTypeServiceIds, $this->actionTypeExtensionServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAdapterFactory(string $name): AdapterFactoryInterface
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getService($name, $this->adapterFactoryServiceIds);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasAdapterFactory(string $name): bool
+    {
+        return $this->hasService($name, $this->adapterFactoryServiceIds);
+    }
+
+    /**
+     * Returns the type.
+     *
+     * @param string $name
+     * @param array  $serviceIds
+     *
+     * @return object
+     */
+    private function getService(string $name, array $serviceIds): object
+    {
+        // By class
+        if (isset($serviceIds[$name])) {
+            if ($this->container->has($serviceIds[$name])) {
+                return $this->container->get($serviceIds[$name]);
             }
         }
 
-        return $extensions;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasTableTypeExtensions($name)
-    {
-        return isset($this->tableTypeExtensionServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getColumnType($name)
-    {
-        if (!isset($this->columnTypeServiceIds[$name])) {
-            throw new InvalidArgumentException(sprintf(
-                'The column field type "%s" is not registered with the service container.',
-                $name
-            ));
+        // By name
+        $id = array_search($name, $serviceIds, true);
+        if ((false !== $id) && $this->container->has($id)) {
+            return $this->container->get($id);
         }
 
-        return $this->container->get($this->columnTypeServiceIds[$name]);
+        throw new InvalidArgumentException(sprintf(
+            'The table type "%s" is not registered in the service container.',
+            $name
+        ));
     }
 
     /**
-     * @inheritdoc
+     * Returns whether the service exists.
+     *
+     * @param string $name
+     * @param array  $serviceIds
+     *
+     * @return bool
      */
-    public function hasColumnType($name)
+    private function hasService(string $name, array $serviceIds): bool
     {
-        return isset($this->columnTypeServiceIds[$name]);
+        return isset($serviceIds[$name]) || in_array($name, $serviceIds, true);
     }
 
     /**
-     * @inheritDoc
+     * Returns the service class.
+     *
+     * @param string $name
+     * @param array  $services
+     *
+     * @return string|null
      */
-    public function getColumnTypeExtensions($name)
+    private function getServiceClass(string $name, array $services): ?string
     {
-        $extensions = array();
+        if (class_exists($name)) {
+            return $name;
+        }
 
-        if (isset($this->columnTypeExtensionServiceIds[$name])) {
-            foreach ($this->columnTypeExtensionServiceIds[$name] as $serviceId) {
-                $extensions[] = $extension = $this->container->get($serviceId);
+        if (false !== $id = array_search($name, $services, true)) {
+            return $id;
+        }
 
-                // validate result of getExtendedType() to ensure it is consistent with the service definition
-                if ($extension->getExtendedType() !== $name) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'The extended type specified for the service "%s" does not match '.
-                            'the actual extended type. Expected "%s", given "%s".',
-                            $serviceId,
-                            $name,
-                            $extension->getExtendedType()
-                        )
-                    );
-                }
+        return null;
+    }
+
+    /**
+     * Returns the extensions for the given type.
+     *
+     * @param string $name       The type
+     * @param array  $types      The types services map
+     * @param array  $extensions The types extensions
+     *
+     * @return array
+     */
+    private function getExtensions(string $name, array $types, array $extensions): array
+    {
+        $class = $this->getServiceClass($name, $types);
+
+        if (!isset($extensions[$class]) || empty(isset($extensions[$class]))) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($extensions[$class] as $serviceId) {
+            $result[] = $extension = $this->container->get($serviceId);
+
+            // validate result of getExtendedType() to ensure it is consistent with the service definition
+            if (in_array($name, $extension->getExtendedTypes(), true)) {
+                continue;
             }
-        }
 
-        return $extensions;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasColumnTypeExtensions($name)
-    {
-        return isset($this->columnTypeExtensionServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFilterType($name)
-    {
-        if (!$this->filterTypeServiceIds[$name]) {
             throw new InvalidArgumentException(sprintf(
-                'The filter field type "%s" is not registered with the service container.',
-                $name
+                'The extended type specified for the service "%s" does not match ' .
+                'the actual extended type. Expected "%s", given "%s".',
+                $serviceId,
+                $name,
+                $extension->getExtendedType()
             ));
         }
 
-        return $this->container->get($this->filterTypeServiceIds[$name]);
+        return $result;
     }
 
     /**
-     * @inheritdoc
+     * Returns whether extensions are registered for the given type.
+     *
+     * @param string $name       The type
+     * @param array  $types      The types services map
+     * @param array  $extensions The types extensions
+     *
+     * @return bool
      */
-    public function hasFilterType($name)
+    private function hasExtensions(string $name, array $types, array $extensions): bool
     {
-        return isset($this->filterTypeServiceIds[$name]);
-    }
+        $class = $this->getServiceClass($name, $types);
 
-    /**
-     * @inheritDoc
-     */
-    public function getFilterTypeExtensions($name)
-    {
-        $extensions = array();
-
-        if (isset($this->filterTypeExtensionServiceIds[$name])) {
-            foreach ($this->filterTypeExtensionServiceIds[$name] as $serviceId) {
-                $extensions[] = $extension = $this->container->get($serviceId);
-
-                // validate result of getExtendedType() to ensure it is consistent with the service definition
-                if ($extension->getExtendedType() !== $name) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'The extended type specified for the service "%s" does not match '.
-                            'the actual extended type. Expected "%s", given "%s".',
-                            $serviceId,
-                            $name,
-                            $extension->getExtendedType()
-                        )
-                    );
-                }
-            }
-        }
-
-        return $extensions;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFilterTypeExtensions($name)
-    {
-        return isset($this->filterTypeExtensionServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getActionType($name)
-    {
-        if (!$this->actionTypeServiceIds[$name]) {
-            throw new InvalidArgumentException(sprintf(
-                'The action field type "%s" is not registered with the service container.',
-                $name
-            ));
-        }
-
-        return $this->container->get($this->actionTypeServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasActionType($name)
-    {
-        return isset($this->actionTypeServiceIds[$name]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getActionTypeExtensions($name)
-    {
-        $extensions = array();
-
-        if (isset($this->actionTypeExtensionServiceIds[$name])) {
-            foreach ($this->actionTypeExtensionServiceIds[$name] as $serviceId) {
-                $extensions[] = $extension = $this->container->get($serviceId);
-
-                // validate result of getExtendedType() to ensure it is consistent with the service definition
-                if ($extension->getExtendedType() !== $name) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'The extended type specified for the service "%s" does not match '.
-                            'the actual extended type. Expected "%s", given "%s".',
-                            $serviceId,
-                            $name,
-                            $extension->getExtendedType()
-                        )
-                    );
-                }
-            }
-        }
-
-        return $extensions;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasActionTypeExtensions($name)
-    {
-        return isset($this->actionTypeExtensionServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAdapterFactory($name)
-    {
-        if (!$this->adapterFactoryServiceIds[$name]) {
-            throw new InvalidArgumentException(sprintf(
-                'The filter field type "%s" is not registered with the service container.',
-                $name
-            ));
-        }
-
-        return $this->container->get($this->adapterFactoryServiceIds[$name]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasAdapterFactory($name)
-    {
-        return isset($this->adapterFactoryServiceIds[$name]);
+        return isset($extensions[$class]) && !empty($extensions[$class]);
     }
 }

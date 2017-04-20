@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Filter;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -22,28 +24,28 @@ interface ResolvedFilterTypeInterface
      *
      * @return string The prefix of the template block name
      */
-    public function getBlockPrefix();
+    public function getBlockPrefix(): string;
 
     /**
      * Returns the parent type.
      *
-     * @return self|null The parent type or null
+     * @return ResolvedFilterTypeInterface|null The parent type or null
      */
-    public function getParent();
+    public function getParent(): ?ResolvedFilterTypeInterface;
 
     /**
      * Returns the wrapped filter type.
      *
      * @return FilterTypeInterface The wrapped filter type
      */
-    public function getInnerType();
+    public function getInnerType(): FilterTypeInterface;
 
     /**
      * Returns the extensions of the wrapped filter type.
      *
      * @return FilterTypeExtensionInterface[] An array of {@link FilterTypeExtensionInterface} instances
      */
-    public function getTypeExtensions();
+    public function getTypeExtensions(): array;
 
     /**
      * Creates a new filter builder for this type.
@@ -54,7 +56,11 @@ interface ResolvedFilterTypeInterface
      *
      * @return FilterBuilderInterface The created filter builder
      */
-    public function createBuilder(FormFactoryInterface $factory, $name, array $options = []);
+    public function createBuilder(
+        FormFactoryInterface $factory,
+        string $name,
+        array $options = []
+    ): FilterBuilderInterface;
 
     /**
      * Configures a filter builder for the type hierarchy.
@@ -62,7 +68,7 @@ interface ResolvedFilterTypeInterface
      * @param FilterBuilderInterface $builder The builder to configure
      * @param array                  $options The options used for the configuration
      */
-    public function buildFilter(FilterBuilderInterface $builder, array $options);
+    public function buildFilter(FilterBuilderInterface $builder, array $options): void;
 
     /**
      * Creates a new available filter view for a filter of this type.
@@ -72,7 +78,7 @@ interface ResolvedFilterTypeInterface
      *
      * @return View\AvailableFilterView The created available filter view
      */
-    public function createAvailableView(FilterInterface $filter, View\TableView $table);
+    public function createAvailableView(FilterInterface $filter, View\TableView $table): View\AvailableFilterView;
 
     /**
      * Builds the available filter view.
@@ -91,7 +97,7 @@ interface ResolvedFilterTypeInterface
      *
      * @return View\ActiveFilterView The created active filter view
      */
-    public function createActiveView(FilterInterface $filter, View\TableView $table);
+    public function createActiveView(FilterInterface $filter, View\TableView $table): View\ActiveFilterView;
 
     /**
      * Builds the active filter view.
@@ -101,7 +107,12 @@ interface ResolvedFilterTypeInterface
      * @param ActiveFilter          $activeFilter
      * @param array                 $options
      */
-    public function buildActiveView(View\ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options);
+    public function buildActiveView(
+        View\ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): void;
 
     /**
      * Creates the filter form.
@@ -111,7 +122,7 @@ interface ResolvedFilterTypeInterface
      *
      * @return FormInterface The filter form
      */
-    public function createForm(FilterInterface $filter, array $options);
+    public function createForm(FilterInterface $filter, array $options): FormInterface;
 
     /**
      * Applies the filter to the adapter.
@@ -123,12 +134,17 @@ interface ResolvedFilterTypeInterface
      *
      * @return bool Whether the filter has been applied.
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options);
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ): bool;
 
     /**
      * Returns the configured options resolver used for this type.
      *
      * @return OptionsResolver The options resolver
      */
-    public function getOptionsResolver();
+    public function getOptionsResolver(): OptionsResolver;
 }

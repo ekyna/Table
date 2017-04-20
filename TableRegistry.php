@@ -1,49 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table;
+
+use function array_merge;
+use function class_exists;
+use function get_class;
+use function is_subclass_of;
 
 /**
  * Class TableRegistry
  * @package Ekyna\Component\Table
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class Registry implements RegistryInterface
+class TableRegistry implements RegistryInterface
 {
-    /**
-     * Extensions
-     * @var Extension\TableExtensionInterface[] An array of TableExtensionInterface
-     */
-    private $extensions = [];
+    /** @var Extension\TableExtensionInterface[] */
+    private array                        $extensions = [];
+    private ResolvedTypeFactoryInterface $resolvedTypeFactory;
 
-    /**
-     * @var array
-     */
-    private $tableTypes = [];
-
-    /**
-     * @var array
-     */
-    private $columnTypes = [];
-
-    /**
-     * @var array
-     */
-    private $filterTypes = [];
-
-    /**
-     * @var array
-     */
-    private $actionTypes = [];
-
-    /**
-     * @var ResolvedTypeFactoryInterface
-     */
-    private $resolvedTypeFactory;
-
-    /**
-     * @var array
-     */
-    private $adapterFactories;
+    /** @var ResolvedTableTypeInterface[] */
+    private array $tableTypes = [];
+    /** @var Column\ResolvedColumnTypeInterface[] */
+    private array $columnTypes = [];
+    /** @var Filter\ResolvedFilterTypeInterface[] */
+    private array $filterTypes = [];
+    /** @var Action\ResolvedActionTypeInterface[] */
+    private array $actionTypes = [];
+    /** @var Source\AdapterFactoryInterface[] */
+    private array $adapterFactories = [];
 
 
     /**
@@ -65,9 +51,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTableType($name)
+    public function getTableType(string $name): ResolvedTableTypeInterface
     {
         if (!isset($this->tableTypes[$name])) {
             $type = null;
@@ -81,7 +67,7 @@ class Registry implements RegistryInterface
 
             if (!$type) {
                 // Support fully-qualified class names
-                if (class_exists($name) && in_array(TableTypeInterface::class, class_implements($name))) {
+                if (class_exists($name) && is_subclass_of($name, TableTypeInterface::class)) {
                     $type = new $name();
                 } else {
                     throw new Exception\InvalidArgumentException(sprintf('Could not load type "%s"', $name));
@@ -102,7 +88,7 @@ class Registry implements RegistryInterface
      *
      * @return ResolvedTableTypeInterface The resolved type
      */
-    private function resolveTableType(TableTypeInterface $type)
+    private function resolveTableType(TableTypeInterface $type): ResolvedTableTypeInterface
     {
         $typeExtensions = [];
         $parentType = $type->getParent();
@@ -123,9 +109,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasTableType($name)
+    public function hasTableType(string $name): bool
     {
         if (isset($this->tableTypes[$name])) {
             return true;
@@ -141,9 +127,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getColumnType($name)
+    public function getColumnType(string $name): Column\ResolvedColumnTypeInterface
     {
         if (!isset($this->columnTypes[$name])) {
             $type = null;
@@ -157,7 +143,7 @@ class Registry implements RegistryInterface
 
             if (!$type) {
                 // Support fully-qualified class names
-                if (class_exists($name) && in_array(Column\ColumnTypeInterface::class, class_implements($name))) {
+                if (class_exists($name) && is_subclass_of($name, Column\ColumnTypeInterface::class)) {
                     $type = new $name();
                 } else {
                     throw new Exception\InvalidArgumentException(sprintf('Could not load type "%s"', $name));
@@ -178,7 +164,7 @@ class Registry implements RegistryInterface
      *
      * @return Column\ResolvedColumnTypeInterface The resolved type
      */
-    private function resolveColumnType(Column\ColumnTypeInterface $type)
+    private function resolveColumnType(Column\ColumnTypeInterface $type): Column\ResolvedColumnTypeInterface
     {
         $typeExtensions = [];
         $parentType = $type->getParent();
@@ -199,9 +185,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasColumnType($name)
+    public function hasColumnType(string $name): bool
     {
         if (isset($this->columnTypes[$name])) {
             return true;
@@ -217,9 +203,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getFilterType($name)
+    public function getFilterType(string $name): Filter\ResolvedFilterTypeInterface
     {
         if (!isset($this->filterTypes[$name])) {
             $type = null;
@@ -233,7 +219,7 @@ class Registry implements RegistryInterface
 
             if (!$type) {
                 // Support fully-qualified class names
-                if (class_exists($name) && in_array(Filter\FilterTypeInterface::class, class_implements($name))) {
+                if (class_exists($name) && is_subclass_of($name, Filter\FilterTypeInterface::class)) {
                     $type = new $name();
                 } else {
                     throw new Exception\InvalidArgumentException(sprintf('Could not load type "%s"', $name));
@@ -254,7 +240,7 @@ class Registry implements RegistryInterface
      *
      * @return Filter\ResolvedFilterTypeInterface The resolved type
      */
-    private function resolveFilterType(Filter\FilterTypeInterface $type)
+    private function resolveFilterType(Filter\FilterTypeInterface $type): Filter\ResolvedFilterTypeInterface
     {
         $typeExtensions = [];
         $parentType = $type->getParent();
@@ -275,9 +261,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasFilterType($name)
+    public function hasFilterType(string $name): bool
     {
         if (isset($this->filterTypes[$name])) {
             return true;
@@ -293,9 +279,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getActionType($name)
+    public function getActionType(string $name): Action\ResolvedActionTypeInterface
     {
         if (!isset($this->actionTypes[$name])) {
             $type = null;
@@ -309,7 +295,7 @@ class Registry implements RegistryInterface
 
             if (!$type) {
                 // Support fully-qualified class names
-                if (class_exists($name) && in_array(Action\ActionTypeInterface::class, class_implements($name))) {
+                if (class_exists($name) && is_subclass_of($name, Action\ActionTypeInterface::class)) {
                     $type = new $name();
                 } else {
                     throw new Exception\InvalidArgumentException(sprintf('Could not load type "%s"', $name));
@@ -330,7 +316,7 @@ class Registry implements RegistryInterface
      *
      * @return Action\ResolvedActionTypeInterface The resolved type
      */
-    private function resolveActionType(Action\ActionTypeInterface $type)
+    private function resolveActionType(Action\ActionTypeInterface $type): Action\ResolvedActionTypeInterface
     {
         $typeExtensions = [];
         $parentType = $type->getParent();
@@ -351,9 +337,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasActionType($name)
+    public function hasActionType(string $name): bool
     {
         if (isset($this->actionTypes[$name])) {
             return true;
@@ -369,9 +355,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getAdapterFactory($name)
+    public function getAdapterFactory(string $name): Source\AdapterFactoryInterface
     {
         if (!isset($this->adapterFactories[$name])) {
             $adapter = null;
@@ -385,7 +371,7 @@ class Registry implements RegistryInterface
 
             if (!$adapter) {
                 // Support fully-qualified class names
-                if (class_exists($name) && in_array(Source\AdapterFactoryInterface::class, class_implements($name))) {
+                if (class_exists($name) && is_subclass_of($name, Source\AdapterFactoryInterface::class)) {
                     $adapter = new $name();
                 } else {
                     throw new Exception\InvalidArgumentException(sprintf('Could not load adapter "%s"', $name));
@@ -399,9 +385,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasAdapterFactory($name)
+    public function hasAdapterFactory(string $name): bool
     {
         if (isset($this->adapterFactories[$name])) {
             return true;
@@ -417,9 +403,9 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return $this->extensions;
     }

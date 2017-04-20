@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\View;
 
 /**
@@ -7,14 +9,12 @@ namespace Ekyna\Component\Table\View;
  * @package Ekyna\Component\Table\View
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class CellView
+final class CellView
 {
     /**
      * The variables assigned to this view.
-     *
-     * @var array
      */
-    public $vars = [
+    public array $vars = [
         'value'  => null,
         'type'   => null,
         'sorted' => false,
@@ -22,10 +22,8 @@ class CellView
 
     /**
      * The row view.
-     *
-     * @var RowView
      */
-    public $row;
+    public RowView $row;
 
 
     /**

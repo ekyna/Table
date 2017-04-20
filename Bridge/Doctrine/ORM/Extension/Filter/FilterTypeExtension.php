@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
@@ -20,7 +22,7 @@ class FilterTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options): bool
     {
         if (!$adapter instanceof EntityAdapter) {
             return false;
@@ -43,8 +45,8 @@ class FilterTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): array
     {
-        return FilterType::class;
+        return [FilterType::class];
     }
 }

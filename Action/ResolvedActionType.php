@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Action;
 
 use Ekyna\Component\Table\Exception\LogicException;
@@ -11,28 +13,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class ResolvedActionType
  * @package Ekyna\Component\Table\Action
  * @author  Etienne Dauvergne <contact@ekyna.com>
+ *
+ * @property ActionTypeExtensionInterface[] $typeExtensions
  */
-class ResolvedActionType implements ResolvedActionTypeInterface
+final class ResolvedActionType implements ResolvedActionTypeInterface
 {
-    /**
-     * @var ActionTypeInterface
-     */
-    private $innerType;
-
-    /**
-     * @var ActionTypeExtensionInterface[]
-     */
-    private $typeExtensions;
-
-    /**
-     * @var ResolvedActionTypeInterface|null
-     */
-    private $parent;
-
-    /**
-     * @var OptionsResolver
-     */
-    private $optionsResolver;
+    private ActionTypeInterface          $innerType;
+    private array                        $typeExtensions;
+    private ?ResolvedActionTypeInterface $parent;
+    private ?OptionsResolver             $optionsResolver = null;
 
 
     /**
@@ -61,7 +50,7 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?ResolvedActionTypeInterface
     {
         return $this->parent;
     }
@@ -69,7 +58,7 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function getInnerType()
+    public function getInnerType(): ActionTypeInterface
     {
         return $this->innerType;
     }
@@ -77,15 +66,15 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function getTypeExtensions()
+    public function getTypeExtensions(): array
     {
         return $this->typeExtensions;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function createBuilder($name, array $options = [])
+    public function createBuilder($name, array $options = []): ActionBuilderInterface
     {
         $options = $this->getOptionsResolver()->resolve($options);
 
@@ -98,7 +87,7 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function buildAction(ActionBuilderInterface $builder, array $options)
+    public function buildAction(ActionBuilderInterface $builder, array $options): void
     {
         if (null !== $this->parent) {
             $this->parent->buildAction($builder, $options);
@@ -117,16 +106,16 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     public function execute(ActionInterface $action, array $options)
     {
         foreach ($this->typeExtensions as $extension) {
-            if (null !== $response = $extension->execute($action, $options)) {
+            if (false !== $response = $extension->execute($action, $options)) {
                 return $response;
             }
         }
 
-        if (null !== $response = $this->innerType->execute($action, $options)) {
+        if (false !== $response = $this->innerType->execute($action, $options)) {
             return $response;
         }
 
-        if (null !== $this->parent) {
+        if (false !== $this->parent) {
             return $this->parent->execute($action, $options);
         }
 
@@ -139,7 +128,7 @@ class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function getOptionsResolver()
+    public function getOptionsResolver(): OptionsResolver
     {
         if (null === $this->optionsResolver) {
             if (null !== $this->parent) {

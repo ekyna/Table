@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\TableInterface;
@@ -9,12 +11,12 @@ use Ekyna\Component\Table\TableInterface;
  * @package Ekyna\Component\Table\Http\Handler
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class LoadHandler implements HandlerInterface
+final class LoadHandler implements HandlerInterface
 {
     /**
      * @inheritDoc
      */
-    public function execute(TableInterface $table, $request)
+    public function execute(TableInterface $table, object $request = null): ?object
     {
         $context = $table->getContext();
         $parameters = $table->getParametersHelper();
@@ -40,5 +42,7 @@ class LoadHandler implements HandlerInterface
         // Selected identifiers
         $context->setSelectedIdentifiers($parameters->getIdentifiersValue());
         $context->setAll($parameters->getAllValue());
+
+        return null;
     }
 }

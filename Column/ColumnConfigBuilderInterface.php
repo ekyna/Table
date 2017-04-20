@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Component\Table\Column;
 
 /**
@@ -14,50 +16,50 @@ interface ColumnConfigBuilderInterface extends ColumnConfigInterface
      *
      * @param ResolvedColumnTypeInterface $type
      *
-     * @return $this
+     * @return $this|ColumnConfigBuilderInterface
      */
-    public function setType(ResolvedColumnTypeInterface $type);
+    public function setType(ResolvedColumnTypeInterface $type): ColumnConfigBuilderInterface;
 
     /**
      * Sets the column label.
      *
      * @param string $label
      *
-     * @return $this
+     * @return $this|ColumnConfigBuilderInterface
      */
-    public function setLabel($label);
+    public function setLabel(string $label): ColumnConfigBuilderInterface;
 
     /**
      * Sets the column position.
      *
      * @param int $position
      *
-     * @return $this
+     * @return $this|ColumnConfigBuilderInterface
      */
-    public function setPosition($position);
+    public function setPosition(int $position): ColumnConfigBuilderInterface;
 
     /**
      * Sets the column property path.
      *
-     * @param string $path
+     * @param string|null $path
      *
-     * @return $this
+     * @return $this|ColumnConfigBuilderInterface
      */
-    public function setPropertyPath($path);
+    public function setPropertyPath(?string $path): ColumnConfigBuilderInterface;
 
     /**
      * Sets whether the column is sortable.
      *
      * @param bool $sortable
      *
-     * @return $this
+     * @return $this|ColumnConfigBuilderInterface
      */
-    public function setSortable($sortable);
+    public function setSortable(bool $sortable): ColumnConfigBuilderInterface;
 
     /**
      * Builds and returns the column configuration.
      *
      * @return ColumnConfigInterface
      */
-    public function getColumnConfig();
+    public function getColumnConfig(): ColumnConfigInterface;
 }
