@@ -28,6 +28,8 @@ final class FilterOperator
     const NOT_END_WITH          = 14;
     const IS_NULL               = 15;
     const IS_NOT_NULL           = 16;
+    const MEMBER                = 17;
+    const NOT_MEMBER            = 18;
 
 
     /**
@@ -41,7 +43,7 @@ final class FilterOperator
     public static function isValid($operator, $throwException = false)
     {
         $operator = intval($operator);
-        if ($operator > 0 && $operator <= self::IS_NOT_NULL) {
+        if ($operator > 0 && $operator <= self::NOT_MEMBER) {
             return true;
         }
         if ($throwException) {
@@ -75,8 +77,10 @@ final class FilterOperator
             case self::GREATER_THAN_OR_EQUAL:
                 return 'est supérieur ou égal à';
             case self::IN:
+            case self::MEMBER:
                 return 'est parmi';
             case self::NOT_IN:
+            case self::NOT_MEMBER:
                 return 'n\'est pas parmi';
             case self::LIKE:
                 return 'contient';
@@ -140,6 +144,10 @@ final class FilterOperator
                 return $expr->isNull($property);
             case self::IS_NOT_NULL:
                 return $expr->isNotNull($property);
+            case self::MEMBER:
+                return $expr->isMemberOf($parameter, $property);
+            case self::NOT_MEMBER:
+                return $expr->not($expr->isMemberOf($parameter, $property));
             default  :
                 return $expr->eq($property, $parameter);
         }
