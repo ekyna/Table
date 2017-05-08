@@ -2,11 +2,13 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
-use Doctrine\ORM\QueryBuilder;
-use Ekyna\Component\Table\AbstractFilterType;
-use Ekyna\Component\Table\TableView;
+use Ekyna\Component\Table\Context\ActiveFilter;
+use Ekyna\Component\Table\Extension\Core\Source\ArrayAdapter;
+use Ekyna\Component\Table\Filter\AbstractFilterType;
+use Ekyna\Component\Table\Filter\FilterInterface;
+use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
-use Ekyna\Component\Table\View\ActiveFilter;
+use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,6 +24,67 @@ class BooleanType extends AbstractFilterType
     const MODE_IS_NULL     = 'is_null';
     const MODE_IS_NOT_NULL = 'is_not_null';
 
+
+    /**
+     * @inheritDoc
+     */
+    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    {
+        $view->vars['value'] = $activeFilter->getValue() ? 'ekyna_core.value.yes' : 'ekyna_core.value.no';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
+    {
+        $builder
+            ->add('operator', ChoiceType::class, [
+                'label'   => false,
+                'choices' => FilterOperator::getChoices([
+                    FilterOperator::EQUAL,
+                    FilterOperator::NOT_EQUAL,
+                ]),
+            ])
+            ->add('value', ChoiceType::class, [
+                'label'   => false,
+                'choices' => [
+                    // TODO component's own translations
+                    'ekyna_core.value.yes' => '1',
+                    'ekyna_core.value.no'  => '0',
+                ],
+            ]);
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
+    {
+        if (!$adapter instanceof ArrayAdapter) {
+            return false;
+        }
+
+        $operator = $activeFilter->getOperator();
+        $value = $activeFilter->getValue();
+
+        if ($options['mode'] !== self::MODE_DEFAULT) {
+            $value = $options['mode'] === self::MODE_IS_NULL ? $value : !$value;
+            $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
+        }
+
+        $adapter->addFilterClosure(
+            $adapter->buildFilterClosure(
+                $filter->getConfig()->getPropertyPath(),
+                $operator,
+                $value
+            )
+        );
+
+        return true;
+    }
 
     /**
      * @inheritdoc
@@ -41,85 +104,8 @@ class BooleanType extends AbstractFilterType
     /**
      * @inheritdoc
      */
-    public function buildFilterFrom(FormBuilderInterface $form, array $options)
+    public function getParent()
     {
-        $form
-            ->add('operator', ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices($this->getOperators()),
-            ])
-            ->add('value', ChoiceType::class, [
-                'label'   => false,
-                'choices' => [
-                    'ekyna_core.value.yes' => '1',
-                    'ekyna_core.value.no'  => '0',
-                ],
-            ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildActiveFilter(TableView $view, array $data, array $options)
-    {
-        $activeFilter = new ActiveFilter();
-        $activeFilter->setVars([
-            'full_name' => $data['full_name'],
-            'id'        => $data['id'],
-            'field'     => $data['label'],
-            'operator'  => FilterOperator::getLabel($data['operator']),
-            'value'     => $data['value'] ? 'ekyna_core.value.yes' : 'ekyna_core.value.no',
-        ]);
-        $view->active_filters[] = $activeFilter;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function applyFilter(QueryBuilder $qb, array $data, array $options)
-    {
-        self::$filterCount++;
-        $alias = $qb->getRootAliases()[0];
-
-        if ($options['mode'] === self::MODE_DEFAULT) {
-            $qb
-                ->andWhere(FilterOperator::buildExpression(
-                    $alias . '.' . $data['property_path'],
-                    $data['operator'],
-                    ':filter_' . self::$filterCount
-                ))
-                ->setParameter(
-                    'filter_' . self::$filterCount,
-                    FilterOperator::buildParameter($data['operator'], $data['value'])
-                );
-        } else {
-            $value = $options['mode'] === self::MODE_IS_NULL ? $data['value'] : !$data['value'];
-            $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
-
-            $qb->andWhere(FilterOperator::buildExpression(
-                $alias . '.' . $data['property_path'],
-                $operator,
-                ':filter_' . self::$filterCount
-            ));
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOperators()
-    {
-        return [
-            FilterOperator::EQUAL,
-            FilterOperator::NOT_EQUAL,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'boolean';
+        return FilterType::class;
     }
 }

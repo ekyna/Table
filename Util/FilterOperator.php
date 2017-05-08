@@ -2,7 +2,6 @@
 
 namespace Ekyna\Component\Table\Util;
 
-use Doctrine\ORM\Query\Expr;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 
 /**
@@ -10,7 +9,7 @@ use Ekyna\Component\Table\Exception\InvalidArgumentException;
  * @package Ekyna\Component\Table\Util
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-final class FilterOperator
+abstract class FilterOperator
 {
     const EQUAL                 = 1;
     const NOT_EQUAL             = 2;
@@ -20,17 +19,35 @@ final class FilterOperator
     const GREATER_THAN_OR_EQUAL = 6;
     const IN                    = 7;
     const NOT_IN                = 8;
-    const LIKE                  = 9;
-    const NOT_LIKE              = 10;
-    const START_WITH            = 11;
-    const NOT_START_WITH        = 12;
-    const END_WITH              = 13;
-    const NOT_END_WITH          = 14;
-    const IS_NULL               = 15;
-    const IS_NOT_NULL           = 16;
-    const MEMBER                = 17;
-    const NOT_MEMBER            = 18;
+    const MEMBER                = 9;
+    const NOT_MEMBER            = 10;
+    const LIKE                  = 11;
+    const NOT_LIKE              = 12;
+    const START_WITH            = 13;
+    const NOT_START_WITH        = 14;
+    const END_WITH              = 15;
+    const NOT_END_WITH          = 16;
+    const IS_NULL               = 17;
+    const IS_NOT_NULL           = 18;
 
+
+    /**
+     * @deprecated
+     * @todo remove
+     */
+    static public function buildExpression()
+    {
+        throw new \Exception("Please use FilterUtil::buildExpression();");
+    }
+
+    /**
+     * @deprecated
+     * @todo remove
+     */
+    static public function buildParameter()
+    {
+        throw new \Exception("Please use FilterUtil::buildParameterValue();");
+    }
 
     /**
      * Returns whether the operator is valid or not.
@@ -40,12 +57,13 @@ final class FilterOperator
      *
      * @return bool
      */
-    public static function isValid($operator, $throwException = false)
+    static public function isValid($operator, $throwException = false)
     {
         $operator = intval($operator);
-        if ($operator > 0 && $operator <= self::NOT_MEMBER) {
+        if ($operator > 0 && $operator <= static::IS_NOT_NULL) {
             return true;
         }
+
         if ($throwException) {
             throw new InvalidArgumentException('Unexpected filter operator.');
         }
@@ -60,123 +78,42 @@ final class FilterOperator
      *
      * @return string
      */
-    public static function getLabel($operator)
+    static public function getLabel($operator)
     {
-        self::isValid($operator, true);
+        static::isValid($operator, true);
 
         // TODO translations
         switch (intval($operator)) {
-            case self::NOT_EQUAL:
+            case static::NOT_EQUAL:
                 return 'est différent de';
-            case self::LOWER_THAN:
+            case static::LOWER_THAN:
                 return 'est inférieur à';
-            case self::LOWER_THAN_OR_EQUAL:
+            case static::LOWER_THAN_OR_EQUAL:
                 return 'est inférieur ou égal à';
-            case self::GREATER_THAN:
+            case static::GREATER_THAN:
                 return 'est supérieur à';
-            case self::GREATER_THAN_OR_EQUAL:
+            case static::GREATER_THAN_OR_EQUAL:
                 return 'est supérieur ou égal à';
-            case self::IN:
-            case self::MEMBER:
+            case static::IN:
+            case static::MEMBER:
                 return 'est parmi';
-            case self::NOT_IN:
-            case self::NOT_MEMBER:
+            case static::NOT_IN:
+            case static::NOT_MEMBER:
                 return 'n\'est pas parmi';
-            case self::LIKE:
+            case static::LIKE:
                 return 'contient';
-            case self::NOT_LIKE:
+            case static::NOT_LIKE:
                 return 'ne contient pas';
-            case self::START_WITH:
+            case static::START_WITH:
                 return 'commence par';
-            case self::NOT_START_WITH:
+            case static::NOT_START_WITH:
                 return 'ne commence pas par';
-            case self::END_WITH:
+            case static::END_WITH:
                 return 'se termine par';
-            case self::NOT_END_WITH:
+            case static::NOT_END_WITH:
                 return 'ne se termine pas par';
             default:
                 return 'est égal à';
-        }
-    }
-
-    /**
-     * Builds the orm expression.
-     *
-     * @param string $property
-     * @param string $operator
-     * @param string $parameter
-     *
-     * @return Expr\Comparison|Expr\Func
-     */
-    public static function buildExpression($property, $operator, $parameter = null)
-    {
-        self::isValid($operator, true);
-
-        $expr = new Expr();
-        switch (intval($operator)) {
-            case self::NOT_EQUAL:
-                return $expr->neq($property, $parameter);
-            case self::LOWER_THAN:
-                return $expr->lt($property, $parameter);
-            case self::LOWER_THAN_OR_EQUAL:
-                return $expr->lte($property, $parameter);
-            case self::GREATER_THAN:
-                return $expr->gt($property, $parameter);
-            case self::GREATER_THAN_OR_EQUAL:
-                return $expr->gte($property, $parameter);
-            case self::IN:
-                return $expr->in($property, $parameter);
-            case self::NOT_IN:
-                return $expr->notIn($property, $parameter);
-            case self::LIKE:
-                return $expr->like($property, $parameter);
-            case self::NOT_LIKE:
-                return $expr->notLike($property, $parameter);
-            case self::START_WITH:
-                return $expr->like($property, $parameter);
-            case self::NOT_START_WITH:
-                return $expr->notLike($property, $parameter);
-            case self::END_WITH:
-                return $expr->like($property, $parameter);
-            case self::NOT_END_WITH:
-                return $expr->notLike($property, $parameter);
-            case self::IS_NULL:
-                return $expr->isNull($property);
-            case self::IS_NOT_NULL:
-                return $expr->isNotNull($property);
-            case self::MEMBER:
-                return $expr->isMemberOf($parameter, $property);
-            case self::NOT_MEMBER:
-                return $expr->not($expr->isMemberOf($parameter, $property));
-            default  :
-                return $expr->eq($property, $parameter);
-        }
-    }
-
-    /**
-     * Builds the parameter value.
-     *
-     * @param string $operator
-     * @param mixed  $value
-     *
-     * @return Expr\Literal
-     */
-    public static function buildParameter($operator, $value)
-    {
-        self::isValid($operator, true);
-
-        switch (intval($operator)) {
-            case self::LIKE:
-            case self::NOT_LIKE:
-                return sprintf('%%%s%%', $value);
-            case self::START_WITH:
-            case self::NOT_START_WITH:
-                return sprintf('%s%%', $value);
-            case self::END_WITH:
-            case self::NOT_END_WITH:
-                return sprintf('%%%s', $value);
-            default:
-                return $value;
         }
     }
 
@@ -187,11 +124,11 @@ final class FilterOperator
      *
      * @return array
      */
-    public static function getChoices(array $operators)
+    static public function getChoices(array $operators)
     {
         $choices = [];
         foreach ($operators as $operator) {
-            $choices[self::getLabel($operator)] = $operator;
+            $choices[static::getLabel($operator)] = $operator;
         }
 
         return $choices;

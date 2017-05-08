@@ -2,7 +2,7 @@
 
 namespace Ekyna\Component\Table\Extension\Core;
 
-use Ekyna\Component\Table\AbstractTableExtension;
+use Ekyna\Component\Table\Extension\AbstractTableExtension;
 
 /**
  * Class CoreExtension
@@ -27,18 +27,11 @@ class CoreExtension extends AbstractTableExtension
     protected function loadColumnTypes()
     {
         return [
-            new Type\Column\IdType,
-            new Type\Column\SelectorType,
-            new Type\Column\TextType,
-            new Type\Column\NumberType,
-            new Type\Column\PriceType,
-            new Type\Column\ChoiceType,
-            new Type\Column\CountryType,
             new Type\Column\BooleanType,
-            new Type\Column\DatetimeType,
-            new Type\Column\ImageType,
-            new Type\Column\AnchorType,
-            new Type\Column\ActionsType,
+            new Type\Column\ChoiceType,
+            new Type\Column\DateTimeType,
+            new Type\Column\NumberType,
+            new Type\Column\TextType,
         ];
     }
 
@@ -48,12 +41,21 @@ class CoreExtension extends AbstractTableExtension
     protected function loadFilterTypes()
     {
         return [
-            new Type\Filter\TextType,
-            new Type\Filter\NumberType,
-            new Type\Filter\DatetimeType,
             new Type\Filter\BooleanType,
             new Type\Filter\ChoiceType,
-            new Type\Filter\CountryType,
+            new Type\Filter\DateTimeType,
+            new Type\Filter\NumberType,
+            new Type\Filter\TextType,
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function loadAdapterFactories()
+    {
+        return [
+            new Source\ArrayAdapterFactory,
         ];
     }
 }

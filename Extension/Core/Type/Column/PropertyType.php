@@ -2,11 +2,13 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
-use Ekyna\Component\Table\AbstractColumnType;
-use Ekyna\Component\Table\Table;
-use Ekyna\Component\Table\View\Column;
-use Ekyna\Component\Table\View\Cell;
-use Symfony\Component\OptionsResolver\Options;
+use Ekyna\Component\Table\Column\AbstractColumnType;
+use Ekyna\Component\Table\Column\ColumnInterface;
+use Ekyna\Component\Table\Context\ActiveSort;
+use Ekyna\Component\Table\Extension\Core\Source\ArrayAdapter;
+use Ekyna\Component\Table\Source\AdapterInterface;
+use Ekyna\Component\Table\Source\RowInterface;
+use Ekyna\Component\Table\View\CellView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -14,59 +16,52 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-abstract class PropertyType extends AbstractColumnType
+class PropertyType extends AbstractColumnType
 {
     /**
      * @inheritdoc
      */
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    {
+        $view->vars = array_replace($view->vars, [
+            'value' => $row->getData($column->getConfig()->getPropertyPath()),
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
+    {
+        if (!$adapter instanceof ArrayAdapter) {
+            return false;
+        }
+
+        $closure = $adapter->buildSortClosure(
+            $column->getConfig()->getPropertyPath(),
+            $activeSort->getDirection()
+        );
+
+        $adapter->addSortClosure($closure);
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
-            'sortable'      => false,
-            'filterable'    => false,
-            'label'         => function (Options $options) {
-                return ucfirst($options['name']);
-            },
-            'property_path' => function (Options $options) {
-                return $options['name'];
-            },
-        ]);
-
-        $resolver->setRequired(['sortable', 'label', 'property_path']);
-
-        $resolver->setAllowedTypes('sortable', 'bool');
-        $resolver->setAllowedTypes('label', 'string');
-        $resolver->setAllowedTypes('property_path', ['null', 'string']);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildViewColumn(Column $column, Table $table, array $options)
-    {
-        parent::buildViewColumn($column, $table, $options);
-
-        $column->setVars([
-            'label'    => $options['label'],
-            'sortable' => $options['sortable'],
-            'sort_by'  => $options['property_path'],
-            'sort_dir' => $options['sort_dir'],
-            'sorted'   => $options['sorted'],
+            'sortable' => true,
         ]);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildViewCell(Cell $cell, Table $table, array $options)
+    public function getParent()
     {
-        parent::buildViewCell($cell, $table, $options);
-
-        $cell->setVars([
-            'value'  => $table->getCurrentRowData($options['property_path']),
-            'sorted' => $options['sorted'],
-        ]);
+        return ColumnType::class;
     }
 }

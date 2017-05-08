@@ -2,8 +2,10 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
-use Ekyna\Component\Table\Table;
-use Ekyna\Component\Table\View\Cell;
+use Ekyna\Component\Table\Column\AbstractColumnType;
+use Ekyna\Component\Table\Column\ColumnInterface;
+use Ekyna\Component\Table\Source\RowInterface;
+use Ekyna\Component\Table\View\CellView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -11,40 +13,37 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class NumberType extends PropertyType
+class NumberType extends AbstractColumnType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
+     */
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
+    {
+        $view->vars['precision'] = $options['precision'];
+        $view->vars['append'] = $options['append'];
+    }
+
+    /**
+     * @inheritDoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults([
-            'precision' => 2,
-            'append'    => null,
-        ]);
-
         $resolver
+            ->setDefaults([
+                'precision' => 2,
+                'append'    => null,
+                'alignment' => 'right',
+            ])
             ->setAllowedTypes('precision', 'int')
             ->setAllowedTypes('append', ['null', 'string']);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildViewCell(Cell $cell, Table $table, array $options)
+    public function getParent()
     {
-        parent::buildViewCell($cell, $table, $options);
-
-        $cell->setVars([
-            'append'    => $options['append'],
-            'precision' => $options['precision'],
-        ]);
-    }
-
-    public function getName()
-    {
-        return 'number';
+        return PropertyType::class;
     }
 }

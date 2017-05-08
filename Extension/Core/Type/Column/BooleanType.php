@@ -2,8 +2,10 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
-use Ekyna\Component\Table\Table;
-use Ekyna\Component\Table\View\Cell;
+use Ekyna\Component\Table\Column\AbstractColumnType;
+use Ekyna\Component\Table\Column\ColumnInterface;
+use Ekyna\Component\Table\Source\RowInterface;
+use Ekyna\Component\Table\View\CellView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -11,46 +13,42 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class BooleanType extends PropertyType
+class BooleanType extends AbstractColumnType
 {
     /**
      * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'true_label'            => 'ekyna_core.value.yes',
-            'false_label'           => 'ekyna_core.value.no',
-            'true_class'            => 'label-success',
-            'false_class'           => 'label-danger',
-            'route_name'            => null,
-            'route_parameters'      => [],
-            'route_parameters_map'  => [],
-            'disable_property_path' => null,
-        ]);
-        $resolver->setRequired(['route_name']);
-
-        $resolver->setAllowedTypes('true_label', 'string');
-        $resolver->setAllowedTypes('false_label', 'string');
-        $resolver->setAllowedTypes('true_class', 'string');
-        $resolver->setAllowedTypes('false_class', 'string');
-        $resolver->setAllowedTypes('route_name', ['null', 'string']);
-        $resolver->setAllowedTypes('route_parameters', 'array');
-        $resolver->setAllowedTypes('route_parameters_map', 'array');
-        $resolver->setAllowedTypes('disable_property_path', ['null', 'string']);
+        $resolver
+            ->setDefaults([
+                'true_label'            => 'Yes',
+                'false_label'           => 'No',
+                'true_class'            => 'label-success',
+                'false_class'           => 'label-danger',
+                'route_name'            => null,
+                'route_parameters'      => [],
+                'route_parameters_map'  => [],
+                'disable_property_path' => null,
+            ])
+            ->setAllowedTypes('true_label', 'string')
+            ->setAllowedTypes('false_label', 'string')
+            ->setAllowedTypes('true_class', 'string')
+            ->setAllowedTypes('false_class', 'string')
+            ->setAllowedTypes('route_name', ['null', 'string'])
+            ->setAllowedTypes('route_parameters', 'array')
+            ->setAllowedTypes('route_parameters_map', 'array')
+            ->setAllowedTypes('disable_property_path', ['null', 'string']);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildViewCell(Cell $cell, Table $table, array $options)
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
     {
-        parent::buildViewCell($cell, $table, $options);
-
         $route = $options['route_name'];
         if (null !== $disablePath = $options['disable_property_path']) {
-            if ($table->getCurrentRowData($disablePath)) {
+            if ($row->getData($disablePath)) {
                 $route = null;
             }
         }
@@ -58,25 +56,24 @@ class BooleanType extends PropertyType
         if (null !== $route) {
             $parameters = $options['route_parameters'];
             foreach ($options['route_parameters_map'] as $key => $propertyPath) {
-                $parameters[$key] = $table->getCurrentRowData($propertyPath);
+                $parameters[$key] = $row->getData($propertyPath);
             }
         } else {
             $parameters = [];
         }
 
-        $cell->setVars([
-            'label'      => $cell->vars['value'] ? $options['true_label'] : $options['false_label'],
-            'class'      => $cell->vars['value'] ? $options['true_class'] : $options['false_class'],
-            'route'      => $route,
-            'parameters' => $parameters,
-        ]);
+        $view->vars['label'] = $view->vars['value'] ? $options['true_label'] : $options['false_label'];
+        $view->vars['class'] = $view->vars['value'] ? $options['true_class'] : $options['false_class'];
+
+        $view->vars['route'] = $route;
+        $view->vars['parameters'] = $parameters;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getName()
+    public function getParent()
     {
-        return 'boolean';
+        return PropertyType::class;
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
-use Ekyna\Component\Table\AbstractFilterType;
+use Ekyna\Component\Table\Filter\AbstractFilterType;
+use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,40 +16,34 @@ use Symfony\Component\Form\FormBuilderInterface;
 class TextType extends AbstractFilterType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildFilterFrom(FormBuilderInterface $form, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
     {
-        $form
+        $builder
             ->add('operator', FormType\ChoiceType::class, [
                 'label'   => false,
-                'choices' => FilterOperator::getChoices($this->getOperators()),
+                'choices' => FilterOperator::getChoices([
+                    FilterOperator::LIKE,
+                    FilterOperator::NOT_LIKE,
+                    FilterOperator::START_WITH,
+                    FilterOperator::NOT_START_WITH,
+                    FilterOperator::END_WITH,
+                    FilterOperator::NOT_START_WITH,
+                ]),
             ])
             ->add('value', FormType\TextType::class, [
                 'label' => false,
             ]);
+
+        return true;
     }
 
     /**
      * @inheritdoc
      */
-    public function getOperators()
+    public function getParent()
     {
-        return [
-            FilterOperator::LIKE,
-            FilterOperator::NOT_LIKE,
-            FilterOperator::START_WITH,
-            FilterOperator::NOT_START_WITH,
-            FilterOperator::END_WITH,
-            FilterOperator::NOT_START_WITH,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'text';
+        return FilterType::class;
     }
 }

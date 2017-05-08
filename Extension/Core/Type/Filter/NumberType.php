@@ -2,7 +2,8 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
-use Ekyna\Component\Table\AbstractFilterType;
+use Ekyna\Component\Table\Filter\AbstractFilterType;
+use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,14 +16,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 class NumberType extends AbstractFilterType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildFilterFrom(FormBuilderInterface $form, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
     {
-        $form
+        $builder
             ->add('operator', FormType\ChoiceType::class, [
                 'label'   => false,
-                'choices' => FilterOperator::getChoices($this->getOperators()),
+                'choices' => FilterOperator::getChoices([
+                    FilterOperator::EQUAL,
+                    FilterOperator::LOWER_THAN,
+                    FilterOperator::LOWER_THAN_OR_EQUAL,
+                    FilterOperator::GREATER_THAN,
+                    FilterOperator::GREATER_THAN_OR_EQUAL,
+                ]),
             ])
             ->add('value', FormType\NumberType::class, [
                 'label' => false,
@@ -32,22 +39,8 @@ class NumberType extends AbstractFilterType
     /**
      * @inheritdoc
      */
-    public function getOperators()
+    public function getParent()
     {
-        return [
-            FilterOperator::EQUAL,
-            FilterOperator::LOWER_THAN,
-            FilterOperator::LOWER_THAN_OR_EQUAL,
-            FilterOperator::GREATER_THAN,
-            FilterOperator::GREATER_THAN_OR_EQUAL,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'number';
+        return FilterType::class;
     }
 }

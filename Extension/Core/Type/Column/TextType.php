@@ -2,18 +2,31 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
+use Ekyna\Component\Table\Column\AbstractColumnType;
+use Ekyna\Component\Table\Column\ColumnInterface;
+use Ekyna\Component\Table\Source\RowInterface;
+use Ekyna\Component\Table\View\CellView;
+
 /**
  * Class TextType
  * @package Ekyna\Component\Table\Extension\Core\Type\Column
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class TextType extends PropertyType
+class TextType extends AbstractColumnType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getName()
+    public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options)
     {
-        return 'text';
+        $view->vars['value'] = (string) $view->vars['value'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParent()
+    {
+        return PropertyType::class;
     }
 }

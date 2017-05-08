@@ -2,10 +2,11 @@
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Filter;
 
-use Ekyna\Component\Table\AbstractFilterType;
-use Ekyna\Component\Table\TableView;
+use Ekyna\Component\Table\Context\ActiveFilter;
+use Ekyna\Component\Table\Filter\AbstractFilterType;
+use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
-use Ekyna\Component\Table\View\ActiveFilter;
+use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -18,87 +19,75 @@ use Symfony\Component\Form\Extension\Core\Type as Form;
 class ChoiceType extends AbstractFilterType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setDefaults([
-                'choices' => null,
-            ])
-            ->setRequired(['choices'])
-            ->setAllowedTypes('choices', 'array');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildFilterFrom(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
     {
         $builder
             ->add('operator', Form\ChoiceType::class, [
                 'label'   => false,
-                'choices' => FilterOperator::getChoices($this->getOperators()),
+                'choices' => FilterOperator::getChoices([
+                    FilterOperator::IN,
+                    FilterOperator::NOT_IN,
+                ]),
             ])
-            ->add(
-                $builder->create('value', Form\ChoiceType::class, [
-                    'label'    => false,
-                    'multiple' => true,
-                    'choices'  => $options['choices'],
-                ])
-            );;
+            ->add('value', Form\ChoiceType::class, [
+                'label'    => false,
+                'multiple' => true,
+                'choices'  => $options['choices'],
+            ]);
+
+        return true;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildActiveFilter(TableView $view, array $data, array $options)
+    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
     {
-        $value = $data['value'];
         $choices = $options['choices'];
-        $transform = function ($v) use ($choices) {
-            if (in_array($v, $choices)) {
-                return array_search($v, $choices);
-            }
 
-            return $v;
-        };
+        if ($options['choices_as_values']) {
+            $transform = function ($value) use ($choices) {
+                if (false !== $choice = array_search($value, $choices)) {
+                    return $choice;
+                }
 
+                return $value;
+            };
+        } else {
+            $transform = function ($value) use ($choices) {
+                return isset($choices[$value]) ? $choices[$value] : $value;
+            };
+        }
+
+        $value = $activeFilter->getValue();
         if (is_array($value)) {
             $value = array_map($transform, $value);
         } else {
             $value = $transform($value);
         }
 
-        $activeFilter = new ActiveFilter();
-        $activeFilter->setVars([
-            'full_name' => $data['full_name'],
-            'id'        => $data['id'],
-            'field'     => $data['label'],
-            'operator'  => FilterOperator::getLabel($data['operator']),
-            'value'     => $value,
-        ]);
-        $view->active_filters[] = $activeFilter;
+        $view->vars['value'] = $value;
     }
 
     /**
      * @inheritdoc
      */
-    public function getOperators()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return [
-            FilterOperator::IN,
-            FilterOperator::NOT_IN,
-        ];
+        $resolver
+            ->setRequired('choices')
+            ->setDefault('choices_as_values', true)
+            ->setAllowedTypes('choices', 'array')
+            ->setAllowedTypes('choices_as_values', 'bool');
     }
 
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getParent()
     {
-        return 'choice';
+        return FilterType::class;
     }
 }
