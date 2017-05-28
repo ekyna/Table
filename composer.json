@@ -1,18 +1,17 @@
 {
-    "name" : "ekyna/table",
-    "description" : "Html table from DBAL",
-    "type" : "component",
-    "authors" : [{
-            "name" : "Etienne Dauvergne",
-            "homepage" : "http://ekyna.com"
+    "name": "ekyna/table",
+    "description": "Generates html table from various sources",
+    "type": "component",
+    "authors": [
+        {
+            "name": "Etienne Dauvergne",
+            "homepage": "http://ekyna.com"
         }
     ],
-    "homepage" : "https://github.com/ekyna/Table",
-    "license" : [
-        "MIT"
-    ],
-    "require" : {
-        "php" : "^7.0",
+    "homepage": "https://github.com/ekyna/Table",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.0",
         "psr/http-message": "^1.0",
         "symfony/form": "~3.0",
         "twig/twig": "~2.0",
@@ -21,9 +20,9 @@
     "suggest": {
         "doctrine/orm": "To use entities as table source"
     },
-    "autoload" : {
-        "psr-4" : {
-            "Ekyna\\Component\\Table\\" : ""
+    "autoload": {
+        "psr-4": {
+            "Ekyna\\Component\\Table\\": ""
         }
     }
 }
