@@ -3,7 +3,9 @@
 namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\Context\ActiveFilter;
+use Ekyna\Component\Table\Exception\LogicException;
 use Ekyna\Component\Table\TableInterface;
+use Symfony\Component\Form\FormError;
 
 /**
  * Class FilterHandler
@@ -47,16 +49,23 @@ class FilterHandler implements HandlerInterface
         $activeFilter = new ActiveFilter($name . '_' . count($context->getActiveFilters()), $name);
 
         $form = $filter->createForm();
+        if (!isset($form['operator'], $form['value'])) {
+            throw new LogicException("Form must have both 'operator' and 'value' children.");
+        }
         $form->setData($activeFilter);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $context->addActiveFilter($activeFilter);
+            if (!empty($activeFilter->getValue())) {
+                $context->addActiveFilter($activeFilter);
 
-            return $table->getConfig()->getHttpAdapter()->createRedirection(
-                $table->getConfig()->getUrl()
-            );
+                return $table->getConfig()->getHttpAdapter()->createRedirection(
+                    $table->getConfig()->getUrl()
+                );
+            }
+
+            $form->get('value')->addError(new FormError('Please provide a value.'));
         }
 
         $context->setFilterForm($form);

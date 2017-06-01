@@ -35,8 +35,9 @@ class DateTimeType extends AbstractFilterType
     {
         $builder
             ->add('operator', FormType\ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices([
+                'label'    => false,
+                'required' => true,
+                'choices'  => FilterOperator::getChoices([
                     FilterOperator::EQUAL,
                     FilterOperator::NOT_EQUAL,
                     FilterOperator::LOWER_THAN,
@@ -46,9 +47,10 @@ class DateTimeType extends AbstractFilterType
                 ]),
             ])
             ->add('value', FormType\DateTimeType::class, [
-                'label'  => false,
-                'input'  => 'datetime',
-                'widget' => 'single_text',
+                'label'    => false,
+                'required' => true,
+                'input'    => 'datetime',
+                'widget'   => 'single_text',
             ]);
 
         return true;

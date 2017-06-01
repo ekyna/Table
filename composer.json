@@ -18,7 +18,8 @@
         "pagerfanta/pagerfanta": "^1.0"
     },
     "suggest": {
-        "doctrine/orm": "To use entities as table source"
+        "doctrine/orm": "To use entities as table source",
+        "symfony/doctrine-bridge": "To use entity filter"
     },
     "autoload": {
         "psr-4": {

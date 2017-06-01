@@ -23,6 +23,7 @@ class TextType extends AbstractFilterType
         $builder
             ->add('operator', FormType\ChoiceType::class, [
                 'label'   => false,
+                'required' => true,
                 'choices' => FilterOperator::getChoices([
                     FilterOperator::LIKE,
                     FilterOperator::NOT_LIKE,
@@ -34,6 +35,7 @@ class TextType extends AbstractFilterType
             ])
             ->add('value', FormType\TextType::class, [
                 'label' => false,
+                'required' => true,
             ]);
 
         return true;

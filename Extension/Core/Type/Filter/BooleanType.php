@@ -40,15 +40,17 @@ class BooleanType extends AbstractFilterType
     {
         $builder
             ->add('operator', ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices([
+                'label'    => false,
+                'required' => true,
+                'choices'  => FilterOperator::getChoices([
                     FilterOperator::EQUAL,
                     FilterOperator::NOT_EQUAL,
                 ]),
             ])
             ->add('value', ChoiceType::class, [
-                'label'   => false,
-                'choices' => [
+                'label'    => false,
+                'required' => true,
+                'choices'  => [
                     // TODO component's own translations
                     'ekyna_core.value.yes' => '1',
                     'ekyna_core.value.no'  => '0',

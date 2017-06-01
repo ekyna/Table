@@ -117,8 +117,7 @@ class TableExtension extends \Twig_Extension
             return '';
         }
 
-        // TODO use request helper ?
-        $pageParam = $view->vars['name'] . '_page';
+        $pageParam = $view->ui['page_name'];
 
         $options = array_merge([
             'pageParameter' => '[' . $pageParam . ']',

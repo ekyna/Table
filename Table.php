@@ -529,16 +529,17 @@ final class Table implements TableInterface
      */
     private function buildUiVars()
     {
-        $vars = [
-            'select'  => false,
-            'config'  => false,
-            'batch'   => false,
-            'export'  => false,
-            'profile' => false,
-        ];
-
         $context = $this->getContext();
         $params = $this->getParametersHelper();
+
+        $vars = [
+            'select'    => false,
+            'config'    => false,
+            'batch'     => false,
+            'export'    => false,
+            'profile'   => false,
+            'page_name' => $params->getPageName(),
+        ];
 
         // Select
         $select = false;
@@ -568,8 +569,8 @@ final class Table implements TableInterface
                 //$translationDomain = $action->getConfig()->getOption('translation_domain');
 
                 $actionChoices[] = [
-                    'value'              => $action->getName(),
-                    'label'              => $label ?: ucfirst($action->getName()),
+                    'value' => $action->getName(),
+                    'label' => $label ?: ucfirst($action->getName()),
                     //'translation_domain' => $translationDomain,
                 ];
             }

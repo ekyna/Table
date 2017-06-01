@@ -25,8 +25,9 @@ class ChoiceType extends AbstractFilterType
     {
         $builder
             ->add('operator', Form\ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices([
+                'label'    => false,
+                'required' => true,
+                'choices'  => FilterOperator::getChoices([
                     FilterOperator::IN,
                     FilterOperator::NOT_IN,
                 ]),
@@ -34,6 +35,7 @@ class ChoiceType extends AbstractFilterType
             ->add('value', Form\ChoiceType::class, [
                 'label'    => false,
                 'multiple' => true,
+                'required' => true,
                 'choices'  => $options['choices'],
             ]);
 

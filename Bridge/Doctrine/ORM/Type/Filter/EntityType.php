@@ -3,7 +3,7 @@
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Type\Filter;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Ekyna\Bundle\CoreBundle\Form\DataTransformer\IdentifierToObjectTransformer;
+use Ekyna\Component\Table\Bridge\Doctrine\ORM\Form\IdToObjectTransformer;
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Extension\Core\Type\Filter\FilterType;
@@ -53,6 +53,7 @@ class EntityType extends AbstractFilterType
         $valueOptions = [
             'label'         => false,
             'class'         => $options['class'],
+            'required'      => true,
             'multiple'      => true,
         ];
         if ($options['entity_label']) {
@@ -65,7 +66,7 @@ class EntityType extends AbstractFilterType
         $valueField = $builder
             ->create('value', FormEntityType::class, $valueOptions)
             ->addModelTransformer(
-                new IdentifierToObjectTransformer($this->getRepository($options))
+                new IdToObjectTransformer($this->getRepository($options))
             );
 
         if ($dataClass = $filter->getTable()->getConfig()->getDataClass()) {

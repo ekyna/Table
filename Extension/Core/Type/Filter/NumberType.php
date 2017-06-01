@@ -22,8 +22,9 @@ class NumberType extends AbstractFilterType
     {
         $builder
             ->add('operator', FormType\ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices([
+                'label'    => false,
+                'required' => true,
+                'choices'  => FilterOperator::getChoices([
                     FilterOperator::EQUAL,
                     FilterOperator::LOWER_THAN,
                     FilterOperator::LOWER_THAN_OR_EQUAL,
@@ -32,7 +33,8 @@ class NumberType extends AbstractFilterType
                 ]),
             ])
             ->add('value', FormType\NumberType::class, [
-                'label' => false,
+                'label'    => false,
+                'required' => true,
             ]);
     }
 
