@@ -42,7 +42,7 @@ abstract class AbstractColumnTypeExtension implements ColumnTypeExtensionInterfa
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
     {
 
     }

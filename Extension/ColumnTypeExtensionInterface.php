@@ -72,7 +72,7 @@ interface ColumnTypeExtensionInterface
      *
      * @return bool Whether the sort has been applied.
      */
-    public function applyFilter(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options);
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options);
 
     /**
      * Configures the options for this type.

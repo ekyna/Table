@@ -177,7 +177,7 @@ class ResolvedColumnType implements ResolvedColumnTypeInterface
     public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options)
     {
         foreach ($this->typeExtensions as $extension) {
-            if ($extension->applyFilter($adapter, $column, $activeSort, $options)) {
+            if ($extension->applySort($adapter, $column, $activeSort, $options)) {
                 return true;
             }
         }
