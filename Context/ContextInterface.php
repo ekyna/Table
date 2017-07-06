@@ -140,6 +140,22 @@ interface ContextInterface
     public function setSelectedIdentifiers(array $identifiers);
 
     /**
+     * Returns the filter label.
+     *
+     * @return string
+     */
+    public function getFilterLabel();
+
+    /**
+     * Sets the filter label.
+     *
+     * @param string $filterLabel
+     *
+     * @return self
+     */
+    public function setFilterLabel($filterLabel);
+
+    /**
      * Returns the active filter form.
      *
      * @return FormInterface

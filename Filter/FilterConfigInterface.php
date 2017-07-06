@@ -26,6 +26,13 @@ interface FilterConfigInterface
     public function getType();
 
     /**
+     * Returns the filter label.
+     *
+     * @return string
+     */
+    public function getLabel();
+
+    /**
      * Returns the form factory.
      *
      * @return FormFactoryInterface

@@ -26,6 +26,7 @@ class FilterType extends AbstractFilterType
     public function buildFilter(FilterBuilderInterface $builder, array $options)
     {
         $builder
+            ->setLabel($options['label'] ?: ucfirst($builder->getName()))
             ->setPosition($options['position'])
             ->setPropertyPath($options['property_path'] ?: $builder->getName());
     }
@@ -58,7 +59,7 @@ class FilterType extends AbstractFilterType
             'id'                 => $id,
             'name'               => $name,
             'full_name'          => $fullName,
-            'label'              => $options['label'] ?: ucfirst($name),
+            'label'              => $filter->getLabel(),
             'translation_domain' => $options['translation_domain'],
             'attr'               => $options['available_attr'],
             'add_filter_href'    => $addFilterHref, // TODO href in attr
@@ -97,7 +98,7 @@ class FilterType extends AbstractFilterType
             'id'                 => $id,
             'name'               => $name,
             'full_name'          => $fullName,
-            'label'              => $options['label'] ?: ucfirst($name),
+            'label'              => $filter->getLabel(),
             'translation_domain' => $options['translation_domain'],
             'attr'               => $options['active_attr'],
             'remove_filter_href' => $removeFilterHref, // TODO href in attr

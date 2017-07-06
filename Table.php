@@ -449,6 +449,7 @@ final class Table implements TableInterface
             // Add filter form view
             if ($form = $context->getFilterForm()) {
                 $tableView->filter_form = $form->createView();
+                $tableView->filter_label = $context->getFilterLabel();
             }
 
             // Builds active filters from the context

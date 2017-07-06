@@ -34,6 +34,11 @@ class FilterBuilder implements FilterBuilderInterface
     private $type;
 
     /**
+     * @var string
+     */
+    private $label;
+
+    /**
      * @var int
      */
     private $position;
@@ -80,6 +85,14 @@ class FilterBuilder implements FilterBuilderInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     /**
@@ -138,6 +151,18 @@ class FilterBuilder implements FilterBuilderInterface
         $this->preventIfLocked();
 
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLabel($label)
+    {
+        $this->preventIfLocked();
+
+        $this->label = $label;
 
         return $this;
     }

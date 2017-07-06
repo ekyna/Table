@@ -64,6 +64,14 @@ class Filter implements FilterInterface
     /**
      * @inheritDoc
      */
+    public function getLabel()
+    {
+        return $this->config->getLabel();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getConfig()
     {
         return $this->config;

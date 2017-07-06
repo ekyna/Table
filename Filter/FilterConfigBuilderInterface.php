@@ -21,6 +21,15 @@ interface FilterConfigBuilderInterface extends FilterConfigInterface
     public function setType(ResolvedFilterTypeInterface $type);
 
     /**
+     * Sets the filter label.
+     *
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setLabel($label);
+
+    /**
      * Sets the form factory.
      *
      * @param FormFactoryInterface $formFactory

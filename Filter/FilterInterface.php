@@ -31,11 +31,18 @@ interface FilterInterface
     public function getTable();
 
     /**
-     * Returns the column's name.
+     * Returns the filter's name.
      *
      * @return string
      */
     public function getName();
+
+    /**
+     * Returns the filter's label.
+     *
+     * @return string
+     */
+    public function getLabel();
 
     /**
      * Returns the config.

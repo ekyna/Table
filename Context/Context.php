@@ -43,6 +43,11 @@ class Context implements ContextInterface
     private $selectedIdentifiers;
 
     /**
+     * @var string
+     */
+    private $filterLabel;
+
+    /**
      * @var FormInterface
      */
     private $filterForm;
@@ -237,6 +242,24 @@ class Context implements ContextInterface
     public function setSelectedIdentifiers(array $identifiers)
     {
         $this->selectedIdentifiers = $identifiers;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilterLabel()
+    {
+        return $this->filterLabel;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFilterLabel($filterLabel)
+    {
+        $this->filterLabel = $filterLabel;
 
         return $this;
     }

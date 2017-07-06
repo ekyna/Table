@@ -68,6 +68,7 @@ class FilterHandler implements HandlerInterface
             $form->get('value')->addError(new FormError('Please provide a value.'));
         }
 
+        $context->setFilterLabel($filter->getLabel());
         $context->setFilterForm($form);
 
         return null;
