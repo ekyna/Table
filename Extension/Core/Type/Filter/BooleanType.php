@@ -30,7 +30,7 @@ class BooleanType extends AbstractFilterType
      */
     public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
     {
-        $view->vars['value'] = $activeFilter->getValue() ? 'ekyna_core.value.yes' : 'ekyna_core.value.no';
+        $view->vars['value'] = $activeFilter->getValue() === 'yes' ? 'ekyna_core.value.yes' : 'ekyna_core.value.no';
     }
 
     /**
@@ -52,8 +52,8 @@ class BooleanType extends AbstractFilterType
                 'required' => true,
                 'choices'  => [
                     // TODO component's own translations
-                    'ekyna_core.value.yes' => '1',
-                    'ekyna_core.value.no'  => '0',
+                    'ekyna_core.value.yes' => 'yes',
+                    'ekyna_core.value.no'  => 'no',
                 ],
             ]);
 
@@ -70,7 +70,7 @@ class BooleanType extends AbstractFilterType
         }
 
         $operator = $activeFilter->getOperator();
-        $value = $activeFilter->getValue();
+        $value = $activeFilter->getValue() === 'yes';
 
         if ($options['mode'] !== self::MODE_DEFAULT) {
             $value = $options['mode'] === self::MODE_IS_NULL ? $value : !$value;

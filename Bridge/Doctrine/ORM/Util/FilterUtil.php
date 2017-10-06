@@ -50,7 +50,7 @@ abstract class FilterUtil
             case FilterOperator::MEMBER:
                 return $expr->isMemberOf($parameter, $property);
             case FilterOperator::NOT_MEMBER:
-                return $expr->not($expr->notIn($property, $parameter));
+                return $expr->not($expr->isMemberOf($parameter, $property));
             case FilterOperator::LIKE:
                 return $expr->like($property, $parameter);
             case FilterOperator::NOT_LIKE:
