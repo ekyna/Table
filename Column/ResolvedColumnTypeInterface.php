@@ -99,8 +99,8 @@ interface ResolvedColumnTypeInterface
      * It is called before the children of the view are built.
      *
      * @param View\CellView   $view    The column cell view to configure
-     * @param RowInterface    $row     The current row
      * @param ColumnInterface $column  The column corresponding to the view
+     * @param RowInterface    $row     The current row
      * @param array           $options The options used for the configuration
      */
     public function buildCellView(View\CellView $view, ColumnInterface $column, RowInterface $row, array $options);

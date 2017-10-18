@@ -4,7 +4,6 @@ namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
 use Ekyna\Component\Table\View\TableView;
-use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

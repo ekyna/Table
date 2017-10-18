@@ -2,7 +2,7 @@
 
 namespace Ekyna\Component\Table\Bridge\Symfony\Export;
 
-use Ekyna\Component\Table\Export\AbstractAdapter;
+use Ekyna\Component\Table\Export\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @package Ekyna\Component\Table\Bridge\Symfony\Export
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class SerializerAdapter extends AbstractAdapter
+class SerializerAdapter implements AdapterInterface
 {
     /**
      * @var SerializerInterface
@@ -34,7 +34,28 @@ class SerializerAdapter extends AbstractAdapter
      */
     public function export(TableInterface $table, $format)
     {
-        return $this->serializer->serialize($this->getSelectedData($table), $format);
+        $rows = $table->getSourceAdapter()->getSelection($table->getContext());
+
+        $objects = [];
+        foreach ($rows as $row) {
+            $objects[] = $row->getData();
+        }
+
+        $columns = [];
+        $visibleColumns = $table->getContext()->getVisibleColumns();
+        foreach ($table->getColumns() as $column) {
+            // If column is visible
+            if (in_array($column->getName(), $visibleColumns, true)) {
+                if (!empty($propertyPath = $column->getConfig()->getPropertyPath())) {
+                    $columns[$column->getName()] = $propertyPath;
+                }
+            }
+        }
+
+        return $this->serializer->serialize($objects, $format, [
+            'groups'  => ['TableExport'],
+            'columns' => $columns,
+        ]);
     }
 
     /**

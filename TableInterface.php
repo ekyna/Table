@@ -57,7 +57,7 @@ interface TableInterface
     /**
      * Returns the columns.
      *
-     * @return Column\ColumnInterface
+     * @return Column\ColumnInterface[]
      */
     public function getColumns();
 
@@ -109,7 +109,7 @@ interface TableInterface
     /**
      * Returns the filters.
      *
-     * @return array|Filter\FilterInterface
+     * @return array|Filter\FilterInterface[]
      */
     public function getFilters();
 
@@ -161,7 +161,7 @@ interface TableInterface
     /**
      * Returns the actions.
      *
-     * @return array|Action\ActionInterface
+     * @return array|Action\ActionInterface[]
      */
     public function getActions();
 
