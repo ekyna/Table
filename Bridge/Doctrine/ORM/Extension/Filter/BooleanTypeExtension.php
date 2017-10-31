@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
+use Doctrine\DBAL\Types\Type;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Util\FilterUtil;
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -29,7 +30,7 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
 
         $property = $adapter->getQueryBuilderPath($filter->getConfig()->getPropertyPath());
         $operator = $activeFilter->getOperator();
-        $value = $activeFilter->getValue();
+        $value = $activeFilter->getValue() === 'yes';
 
         if ($options['mode'] === BooleanType::MODE_DEFAULT) {
             $parameter = FilterUtil::buildParameterName($filter->getName());
@@ -38,7 +39,7 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
             $adapter
                 ->getQueryBuilder()
                 ->andWhere($expression)
-                ->setParameter($parameter, $value);
+                ->setParameter($parameter, $value, Type::BOOLEAN);
         } else {
             $value = $options['mode'] === BooleanType::MODE_IS_NULL ? $value : !$value;
             $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
