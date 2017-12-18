@@ -9,6 +9,9 @@ use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\View\ActiveFilterView;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class DateTimeType
@@ -46,7 +49,7 @@ class DateTimeType extends AbstractFilterType
                     FilterOperator::GREATER_THAN_OR_EQUAL,
                 ]),
             ])
-            ->add('value', FormType\DateTimeType::class, [
+            ->add('value', $options['time'] ? FormType\DateTimeType::class : FormType\DateType::class, [
                 'label'    => false,
                 'required' => true,
                 'input'    => 'datetime',
@@ -54,6 +57,16 @@ class DateTimeType extends AbstractFilterType
             ]);
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefault('time', false)
+            ->setAllowedTypes('time', 'bool');
     }
 
     /**

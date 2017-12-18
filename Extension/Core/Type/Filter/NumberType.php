@@ -36,6 +36,8 @@ class NumberType extends AbstractFilterType
                 'label'    => false,
                 'required' => true,
             ]);
+
+        return true;
     }
 
     /**
