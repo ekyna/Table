@@ -116,7 +116,7 @@ class ActiveFilter
             $this->id,
             $this->filterName,
             $this->operator,
-            is_object($this->value) ? serialize($this->value) : $this->value,
+            serialize($this->value),
         ];
     }
 
@@ -135,13 +135,7 @@ class ActiveFilter
 
         $filter = new static($data[0], $data[1]);
         $filter->setOperator($data[2]);
-
-        try {
-            $value = unserialize($data[3]);
-        } catch (\Exception $e) {
-            $value = $data[3];
-        }
-        $filter->setValue($value);
+        $filter->setValue(unserialize($data[3]));
 
         return $filter;
     }
