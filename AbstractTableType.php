@@ -3,6 +3,7 @@
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
+use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\View\TableView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,6 +25,13 @@ abstract class AbstractTableType implements TableTypeInterface
      * @inheritDoc
      */
     public function buildView(TableView $view, TableInterface $table, array $options)
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
     {
     }
 

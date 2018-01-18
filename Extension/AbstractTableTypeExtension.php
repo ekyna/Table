@@ -2,9 +2,10 @@
 
 namespace Ekyna\Component\Table\Extension;
 
+use Ekyna\Component\Table\Source\RowInterface;
 use Ekyna\Component\Table\TableBuilderInterface;
 use Ekyna\Component\Table\TableInterface;
-use Ekyna\Component\Table\View\TableView;
+use Ekyna\Component\Table\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -24,7 +25,14 @@ abstract class AbstractTableTypeExtension implements TableTypeExtensionInterface
     /**
      * @inheritDoc
      */
-    public function buildView(TableView $view, TableInterface $table, array $options)
+    public function buildView(View\TableView $view, TableInterface $table, array $options)
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
     {
     }
 

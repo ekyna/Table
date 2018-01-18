@@ -503,6 +503,7 @@ final class Table implements TableInterface
         foreach ($grid->getRows() as $row) {
             // Builds the row view
             $rowView = $this->createRowView($tableView);
+            $type->buildRowView($rowView, $row, $options);
 
             $rowView->identifier = $row->getIdentifier();
             $rowView->selected = in_array($row->getIdentifier(), $context->getSelectedIdentifiers(), true);

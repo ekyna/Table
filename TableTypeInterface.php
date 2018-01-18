@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table;
 
+use Ekyna\Component\Table\Source\RowInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -27,6 +28,15 @@ interface TableTypeInterface
      * @param array          $options
      */
     public function buildView(View\TableView $view, TableInterface $table, array $options);
+
+    /**
+     * Builds the row view.
+     *
+     * @param View\RowView $view
+     * @param RowInterface $row
+     * @param array        $options
+     */
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options);
 
     /**
      * Sets the default options.

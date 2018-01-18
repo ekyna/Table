@@ -28,7 +28,7 @@ class DateTimeType extends AbstractFilterType
         /** @var \DateTime $date */
         $date = $activeFilter->getValue();
 
-        $view->vars['value'] = $date->format('d/m/Y H:i'); // TODO localized format.
+        $view->vars['value'] = $date->format($options['time'] ? 'd/m/Y H:i' : 'd/m/Y'); // TODO localized format.
     }
 
     /**

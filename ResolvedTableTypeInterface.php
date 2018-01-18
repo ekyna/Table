@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table;
 
+use Ekyna\Component\Table\Source\RowInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -78,6 +79,15 @@ interface ResolvedTableTypeInterface
      * @param array          $options The options used for the configuration
      */
     public function buildView(View\TableView $view, TableInterface $table, array $options);
+
+    /**
+     * Configures a row view for the type hierarchy.
+     *
+     * @param View\RowView $view    The row view to configure
+     * @param RowInterface $row     The row corresponding to the view
+     * @param array        $options The options used for the configuration
+     */
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options);
 
     /**
      * Returns the configured options resolver used for this type.

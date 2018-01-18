@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table;
 
+use Ekyna\Component\Table\Source\RowInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -137,6 +138,22 @@ class ResolvedTableType implements ResolvedTableTypeInterface
 
         foreach ($this->typeExtensions as $extension) {
             $extension->buildView($view, $table, $options);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildRowView(View\RowView $view, RowInterface $row, array $options)
+    {
+        if (null !== $this->parent) {
+            $this->parent->buildRowView($view, $row, $options);
+        }
+
+        $this->innerType->buildRowView($view, $row, $options);
+
+        foreach ($this->typeExtensions as $extension) {
+            $extension->buildRowView($view, $row, $options);
         }
     }
 
