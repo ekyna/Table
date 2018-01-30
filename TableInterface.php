@@ -48,7 +48,7 @@ interface TableInterface
      *
      * @param string $name The name of the column to column
      *
-     * @return $this
+     * @return self
      *
      * @throws Exception\BadMethodCallException If the table is locked.
      */
@@ -100,7 +100,7 @@ interface TableInterface
      *
      * @param string $name The name of the filter to filter
      *
-     * @return $this
+     * @return self
      *
      * @throws Exception\BadMethodCallException If the table is locked.
      */
@@ -152,7 +152,7 @@ interface TableInterface
      *
      * @param string $name The name of the action to action
      *
-     * @return $this
+     * @return self
      *
      * @throws Exception\BadMethodCallException If the table is locked.
      */
@@ -164,6 +164,22 @@ interface TableInterface
      * @return array|Action\ActionInterface[]
      */
     public function getActions();
+
+    /**
+     * Adds the table error.
+     *
+     * @param TableError $error
+     *
+     * @return self
+     */
+    public function addError(TableError $error);
+
+    /**
+     * Returns the errors.
+     *
+     * @return TableError[]
+     */
+    public function getErrors();
 
     /**
      * Returns the table's configuration.

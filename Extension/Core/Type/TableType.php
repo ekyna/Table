@@ -85,6 +85,7 @@ class TableType extends AbstractTableType
             'name'      => $name,
             'full_name' => $fullName,
             'attr'      => $options['attr'],
+            'errors'    => $table->getErrors(),
         ]);
     }
 

@@ -5,7 +5,7 @@
 <div class="table-filters">
     <div class="row filters-available">
         <div class="col-md-3">
-            <span class="filters-title">Filtres disponibles</span>
+            <span class="filters-title">Available filters</span>
         </div>
         <div class="col-md-9">
             <div class="filters-controls">{{ block('available_filters') }}</div>
@@ -15,7 +15,7 @@
     {% if table.filter_form %}
     <div class="row filters-form">
         <div class="col-md-3">
-            <span class="filters-title">Nouveau filtre <strong>{{ table.filter_label }}</strong></span>
+            <span class="filters-title">New filter <strong>{{ table.filter_label }}</strong></span>
         </div>
         <div class="col-md-9">
             <div class="filters-controls">
@@ -41,7 +41,7 @@
     {% if table.active_filters|length > 0 %}
     <div class="row filters-active">
         <div class="col-md-3">
-            <span class="filters-title">Filtres actifs</span>
+            <span class="filters-title">Active filters</span>
         </div>
         <div class="col-md-9">
             <div class="filters-controls">{{ block('active_filters') }}</div>
@@ -60,6 +60,7 @@
         {{ block('table_head') }}
         {{ block('table_body') }}
     </table>
+    {# TODO table footer #}
 </div>
 
 {% if table.pager.nbPages > 1 %}
@@ -154,7 +155,7 @@
         {% else %}
             {{ table.heads|length }}
         {% endif %}">
-            <p class="text-center"><em>Aucun élément disponible</em></p>
+            <p class="text-center"><em>No result</em></p>
         </td>
     </tr>
 {% endif %}
@@ -165,7 +166,6 @@
 
 {% block table_row %}
 {% spaceless %}
-{# TODO Row attributes #}
 {% set attr = row.vars.attr|default({})|merge({
     'id': table.vars.name ~ '_row_' ~ row.identifier,
     'data-id': row.identifier

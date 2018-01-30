@@ -49,6 +49,10 @@ final class Table implements TableInterface
      */
     private $locked = false;
 
+    /**
+     * @var TableError[]
+     */
+    private $errors;
 
     /**
      * Constructor.
@@ -62,6 +66,7 @@ final class Table implements TableInterface
         $this->columns = [];
         $this->filters = [];
         $this->actions = [];
+        $this->errors = [];
     }
 
     /**
@@ -308,6 +313,24 @@ final class Table implements TableInterface
     public function getActions()
     {
         return $this->actions;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addError(TableError $error)
+    {
+        $this->errors[] = $error;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Ekyna\Component\Table\Http\Handler;
 
+use Ekyna\Component\Table\TableError;
 use Ekyna\Component\Table\TableInterface;
 
 /**
@@ -28,7 +29,9 @@ class ProfileHandler implements HandlerInterface
 
         if ($parameters->isProfileLoadClicked()) {
             if (empty($key = $parameters->getProfileChoiceValue())) {
-                // TODO error
+                $table->addError(new TableError('error.profile_required', [], 'EkynaTable'));
+
+                return null;
             }
 
             $table->getContext()->fromArray($storage->get($key)->getData());
@@ -38,29 +41,36 @@ class ProfileHandler implements HandlerInterface
 
         if ($parameters->isProfileEditClicked()) {
             if (empty($key = $parameters->getProfileChoiceValue())) {
-                // TODO error
+                $table->addError(new TableError('error.profile_required', [], 'EkynaTable'));
+
+                return null;
             }
 
+            // TODO Not found error
             $profile = $storage->get($key);
             $profile->setData($table->getContext()->toArray());
             $storage->save($profile);
 
-            return;
+            return null;
         }
 
         if ($parameters->isProfileRemoveClicked()) {
             if (empty($key = $parameters->getProfileChoiceValue())) {
-                // TODO error
+                $table->addError(new TableError('error.profile_required', [], 'EkynaTable'));
+
+                return null;
             }
 
             $storage->remove($storage->get($key));
 
-            return;
+            return null;
         }
 
         if ($parameters->isProfileCreateClicked()) {
             if (empty($name = $parameters->getProfileNameValue())) {
-                // TODO error
+                $table->addError(new TableError('error.name_required', [], 'EkynaTable'));
+
+                return null;
             }
 
             $storage->create($table, $name);
