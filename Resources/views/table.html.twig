@@ -121,7 +121,7 @@
     {% endif %}
     {% for head in table.heads %}
         {% set attr = head.vars.attr %}
-        <th{{ block('attributes') }}>
+        <th{{ block('attributes') }} title="{{ block('table_head_column_label') }}">
             {% if head.vars.sort_link %}
                 <a href="{{ head.vars.sort_link.href }}" class="{{ head.vars.sort_link.dir }}">
                     {{- block('table_head_column_label') -}}
