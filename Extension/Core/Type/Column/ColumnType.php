@@ -30,7 +30,7 @@ class ColumnType extends AbstractColumnType
             ->setLabel($options['label'] ?: ucfirst($builder->getName()))
             ->setPosition($options['position'])
             ->setPropertyPath($propertyPath)
-            ->setSortable($options['sortable'] && !empty($propertyPath));
+            ->setSortable($options['sortable']);
     }
 
     /**
