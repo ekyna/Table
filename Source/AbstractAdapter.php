@@ -167,7 +167,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Returns the selected rows.
      *
-     * @return Row[]
+     * @return RowInterface[]
      */
     abstract protected function getSelectedRows();
 

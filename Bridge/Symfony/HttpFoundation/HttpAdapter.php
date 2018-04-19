@@ -8,6 +8,8 @@ use Ekyna\Component\Table\TableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class HttpAdapter
@@ -16,6 +18,29 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class HttpAdapter implements AdapterInterface
 {
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+
+    /**
+     * Constructor.
+     *
+     * @param FlashBagInterface   $flashBag
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(FlashBagInterface $flashBag, TranslatorInterface $translator)
+    {
+        $this->flashBag = $flashBag;
+        $this->translator = $translator;
+    }
+
     /**
      * @inheritDoc
      */
@@ -35,9 +60,33 @@ class HttpAdapter implements AdapterInterface
             return $helper;
         }
 
-        $helper->setData((array) $bag->get($table->getName()));
+        $helper->setData((array)$bag->get($table->getName()));
 
         return $helper;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function redirect(TableInterface $table)
+    {
+        foreach ($table->getErrors() as $error) {
+            $message = $error->getMessage();
+            if (null !== $error->getTranslationDomain()) {
+                $message = $this->translator->trans($message, $error->getParameters(), $error->getTranslationDomain());
+            }
+            $this->addFlash('danger', $message);
+        }
+
+        return $this->createRedirection($table->getConfig()->getUrl());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addFlash($type, $message)
+    {
+        $this->flashBag->add($type, $message);
     }
 
     /**

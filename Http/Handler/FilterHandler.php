@@ -31,9 +31,9 @@ class FilterHandler implements HandlerInterface
         if (!empty($id = $parameters->getRemoveFilterValue())) {
             if ($context->hasActiveFilter($id)) {
                 $context->removeActiveFilter($id);
-            }
 
-            return null;
+                return $table->getConfig()->getHttpAdapter()->redirect($table);
+            }
         }
 
         // Add filter request
@@ -60,9 +60,7 @@ class FilterHandler implements HandlerInterface
             if (!empty($activeFilter->getValue())) {
                 $context->addActiveFilter($activeFilter);
 
-                return $table->getConfig()->getHttpAdapter()->createRedirection(
-                    $table->getConfig()->getUrl()
-                );
+                return $table->getConfig()->getHttpAdapter()->redirect($table);
             }
 
             $form->get('value')->addError(new FormError('Please provide a value.'));

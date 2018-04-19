@@ -22,6 +22,23 @@ interface AdapterInterface
     public function loadParameters(TableInterface $table, $request = null);
 
     /**
+     * Creates and returns a redirection from the given table.
+     *
+     * @param TableInterface $table
+     *
+     * @return mixed
+     */
+    public function redirect(TableInterface $table);
+
+    /**
+     * Adds the flash message to the session.
+     *
+     * @param string $type
+     * @param string $message
+     */
+    public function addFlash($type, $message);
+
+    /**
      * Creates and returns a redirection.
      *
      * @param string|null $url

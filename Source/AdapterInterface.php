@@ -25,7 +25,7 @@ interface AdapterInterface
      *
      * @param ContextInterface $context
      *
-     * @return Row[]
+     * @return RowInterface[]
      */
     public function getSelection(ContextInterface $context);
 }

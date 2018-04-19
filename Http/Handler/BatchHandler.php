@@ -35,6 +35,8 @@ class BatchHandler implements HandlerInterface
                     return $result;
                 }
             }
+
+            return $table->getConfig()->getHttpAdapter()->redirect($table);
         }
 
         return null;
