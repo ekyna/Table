@@ -78,7 +78,15 @@ class HttpAdapter implements AdapterInterface
             $this->addFlash('danger', $message);
         }
 
-        return $this->createRedirection($table->getConfig()->getUrl());
+        // TODO Page num is neither initialized or passed through batch form action
+        $url = $table->getConfig()->getUrl();
+        $helper = $table->getParametersHelper();
+
+        if ($helper->getPageValue()) {
+            $url .= '?' . $helper->getPageName() . '=' . $helper->getPageValue();
+        }
+
+        return $this->createRedirection($url);
     }
 
     /**

@@ -61,7 +61,7 @@ interface TableConfigInterface
     /**
      * Returns the default sorts.
      *
-     * @return [propertyPath => direction] An array with property path as keys and direction as values.
+     * @return array ([propertyPath => direction]) An array with property path as keys and direction as values.
      */
     public function getDefaultSorts();
 

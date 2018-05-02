@@ -4,7 +4,6 @@ namespace Ekyna\Component\Table\Extension\Core\Type;
 
 use Ekyna\Component\Table\AbstractTableType;
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
-use Ekyna\Component\Table\Extension\Core\Export\CsvAdapter;
 use Ekyna\Component\Table\Extension\Core\Source\ArraySource;
 use Ekyna\Component\Table\Source;
 use Ekyna\Component\Table\TableBuilderInterface;
@@ -51,8 +50,7 @@ class TableType extends AbstractTableType
             ->setExportable($options['exportable'])
             ->setConfigurable($options['configurable'])
             ->setProfileable($options['profileable'])
-            ->setSelectionMode($options['selection_mode'])
-            ->addExportAdapter(new CsvAdapter());
+            ->setSelectionMode($options['selection_mode']);
 
         if (null !== $source = $options['source']) {
             if (is_array($source)) {

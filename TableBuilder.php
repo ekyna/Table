@@ -350,6 +350,8 @@ class TableBuilder extends TableConfigBuilder implements TableBuilderInterface
             $table->addAction($action->getAction());
         }
 
+        $table->sortElements();
+
         return $table;
     }
 

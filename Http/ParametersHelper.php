@@ -56,12 +56,12 @@ class ParametersHelper
      * Constructor.
      *
      * @param string $tableName
-     * @param bool   $selectionMode
+     * @param string $selectionMode
      */
     public function __construct($tableName, $selectionMode)
     {
         $this->tableName = $tableName;
-        $this->selectionMode = (bool)$selectionMode;
+        $this->selectionMode = $selectionMode;
 
         $this->setData();
     }

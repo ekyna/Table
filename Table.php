@@ -414,15 +414,7 @@ final class Table implements TableInterface
             return $this->parametersHelper;
         }
 
-        if (null === $mode = $this->config->getSelectionMode()) {
-            // If batch actions are enabled and table has at least one action
-            if ($this->config->isBatchable() && !empty($this->actions)) {
-                // Mode is multiple
-                $mode = Util\Config::SELECTION_MULTIPLE;
-            }
-        }
-
-        return $this->parametersHelper = new Http\ParametersHelper($this->getName(), $mode);
+        return $this->parametersHelper = new Http\ParametersHelper($this->getName(), $this->getSelectionMode());
     }
 
     /**
@@ -444,6 +436,31 @@ final class Table implements TableInterface
     }
 
     /**
+     * Sorts the columns and filers.
+     */
+    public function sortElements()
+    {
+        $sort = function ($a, $b) {
+            /**
+             * @var Column\ColumnInterface|Filter\FilterInterface $a
+             * @var Column\ColumnInterface|Filter\FilterInterface $b
+             */
+            $aPos = $a->getConfig()->getPosition();
+            $bPos = $b->getConfig()->getPosition();
+
+            if ($aPos == $bPos) {
+                return 0;
+            }
+
+            return $aPos > $bPos ? 1 : -1;
+        };
+
+        uasort($this->columns, $sort);
+        uasort($this->filters, $sort);
+        // TODO actions
+    }
+
+    /**
      * @inheritdoc
      */
     public function createView()
@@ -454,7 +471,7 @@ final class Table implements TableInterface
         $options = $this->config->getOptions();
 
         // Sort the columns, filters and actions
-        $this->sortElements();
+        //$this->sortElements();
 
         // Create the table view
         $tableView = $type->createView($this);
@@ -567,16 +584,7 @@ final class Table implements TableInterface
         ];
 
         // Select
-        $select = false;
-        if (null !== $mode = $this->config->getSelectionMode()) {
-            $select = true;
-        } elseif ($this->config->isBatchable() && !empty($this->actions)) {
-            $mode = Util\Config::SELECTION_MULTIPLE;
-            $select = true;
-        } elseif ($this->config->isExportable()) {
-            $mode = Util\Config::SELECTION_MULTIPLE;
-            $select = true;
-        }
+        $select = null !== $mode = $this->getSelectionMode();
 
         if ($select) {
             $vars['select'] = [
@@ -691,6 +699,28 @@ final class Table implements TableInterface
     }
 
     /**
+     * Returns the table's selection mode.
+     *
+     * @return null|string
+     */
+    private function getSelectionMode()
+    {
+        if (null !== $mode = $this->config->getSelectionMode()) {
+            return $mode;
+        }
+
+        if ($this->config->isBatchable() && !empty($this->actions)) {
+            return Util\Config::SELECTION_MULTIPLE;
+        }
+
+        if ($this->config->isExportable() && $this->config->hasExportAdapters()) {
+            return Util\Config::SELECTION_MULTIPLE;
+        }
+
+        return null;
+    }
+
+    /**
      * Creates the row view.
      *
      * @param View\TableView $view
@@ -700,30 +730,5 @@ final class Table implements TableInterface
     private function createRowView(View\TableView $view)
     {
         return new View\RowView($view);
-    }
-
-    /**
-     * Sorts the columns and filers.
-     */
-    private function sortElements()
-    {
-        $sort = function ($a, $b) {
-            /**
-             * @var Column\ColumnInterface|Filter\FilterInterface $a
-             * @var Column\ColumnInterface|Filter\FilterInterface $b
-             */
-            $aPos = $a->getConfig()->getPosition();
-            $bPos = $b->getConfig()->getPosition();
-
-            if ($aPos == $bPos) {
-                return 0;
-            }
-
-            return $aPos > $bPos ? 1 : -1;
-        };
-
-        uasort($this->columns, $sort);
-        uasort($this->filters, $sort);
-        // TODO actions
     }
 }

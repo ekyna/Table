@@ -9,8 +9,6 @@ use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\View\ActiveFilterView;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
