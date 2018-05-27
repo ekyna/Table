@@ -76,7 +76,7 @@ class EntityType extends AbstractColumnType
     {
         if ($adapter instanceof EntityAdapter) {
             /**
-             * 'entity_label' option should be a string a sorting is disabled
+             * 'entity_label' option should be a string, as sorting is disabled
              * if it is a callable {@see EntityType::buildColumn()}
              */
             $propertyPath = $column->getConfig()->getPropertyPath() . '.' . $options['entity_label'];
