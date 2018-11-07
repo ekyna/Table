@@ -5,7 +5,6 @@ namespace Ekyna\Component\Table\Http\Handler;
 use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Exception\LogicException;
 use Ekyna\Component\Table\TableInterface;
-use Symfony\Component\Form\FormError;
 
 /**
  * Class FilterHandler
@@ -57,13 +56,9 @@ class FilterHandler implements HandlerInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!empty($activeFilter->getValue())) {
-                $context->addActiveFilter($activeFilter);
+            $context->addActiveFilter($activeFilter);
 
-                return $table->getConfig()->getHttpAdapter()->redirect($table);
-            }
-
-            $form->get('value')->addError(new FormError('Please provide a value.'));
+            return $table->getConfig()->getHttpAdapter()->redirect($table);
         }
 
         $context->setFilterLabel($filter->getLabel());

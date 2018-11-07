@@ -6,13 +6,11 @@ use Ekyna\Component\Table\Context\ActiveFilter;
 use Ekyna\Component\Table\Exception\LogicException;
 use Ekyna\Component\Table\Exception\UnexpectedTypeException;
 use Ekyna\Component\Table\Extension\FilterTypeExtensionInterface;
-use Ekyna\Component\Table\Http\ParametersHelper;
+use Ekyna\Component\Table\Filter\Form\FilterType;
 use Ekyna\Component\Table\Source\AdapterInterface;
 use Ekyna\Component\Table\View;
 use Ekyna\Component\Table\View\ActiveFilterView;
 use Ekyna\Component\Table\View\AvailableFilterView;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -184,14 +182,7 @@ class ResolvedFilterType implements ResolvedFilterTypeInterface
         $builder = $filter
             ->getConfig()
             ->getFormFactory()
-            ->createNamedBuilder($filter->getTable()->getName(), FormType::class, null, [
-                'action'     => $filter->getTable()->getParametersHelper()->getAddFilterHref($filter),
-                'method'     => 'GET',
-                'data_class' => ActiveFilter::class,
-            ])
-            ->add(ParametersHelper::ADD_FILTER, HiddenType::class, [
-                'property_path' => 'filterName'
-            ]);
+            ->createNamedBuilder($filter->getTable()->getName() . '_filter', FilterType::class);
 
         foreach ($this->typeExtensions as $extension) {
             if ($extension->buildFilterForm($builder, $filter, $options)) {

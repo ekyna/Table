@@ -7,6 +7,7 @@ use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Util\FilterOperator;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class TextType
@@ -36,6 +37,9 @@ class TextType extends AbstractFilterType
             ->add('value', FormType\TextType::class, [
                 'label' => false,
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ]);
 
         return true;

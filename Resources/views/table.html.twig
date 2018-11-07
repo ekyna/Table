@@ -20,11 +20,13 @@
         <div class="col-md-9">
             <div class="filters-controls">
                 {{ form_start(table.filter_form) }}
+                <input type="hidden" value="{{ table.filter_form.vars.filter_param_value }}"
+                       name="{{ table.vars.name }}[{{ table.filter_form.vars.filter_param_name }}]">
                 <div class="row">
                     <div class="col-md-3">{{ form_row(table.filter_form.operator) }}</div>
                     <div class="col-md-6">{{ form_row(table.filter_form.value) }}</div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-success" style="margin-right:14px;">
+                        <button type="submit" class="btn btn-success">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <a href="#" class="btn btn-danger">

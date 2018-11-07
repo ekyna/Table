@@ -12,6 +12,7 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class BooleanType
@@ -54,6 +55,9 @@ class BooleanType extends AbstractFilterType
                     // TODO component's own translations
                     'ekyna_core.value.yes' => 'yes',
                     'ekyna_core.value.no'  => 'no',
+                ],
+                'constraints' => [
+                    new NotBlank()
                 ],
             ]);
 

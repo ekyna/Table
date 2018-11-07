@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class DateTimeType
@@ -48,10 +49,13 @@ class DateTimeType extends AbstractFilterType
                 ]),
             ])
             ->add('value', $options['time'] ? FormType\DateTimeType::class : FormType\DateType::class, [
-                'label'    => false,
-                'required' => true,
-                'input'    => 'datetime',
-                'widget'   => 'single_text',
+                'label'       => false,
+                'required'    => true,
+                'input'       => 'datetime',
+                'widget'      => 'single_text',
+                'constraints' => [
+                    new NotNull(),
+                ],
             ]);
 
         return true;

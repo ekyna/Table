@@ -10,6 +10,7 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type as Form;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class ChoiceType
@@ -33,10 +34,13 @@ class ChoiceType extends AbstractFilterType
                 ]),
             ])
             ->add('value', Form\ChoiceType::class, [
-                'label'    => false,
-                'multiple' => true,
-                'required' => true,
-                'choices'  => $options['choices'],
+                'label'       => false,
+                'multiple'    => true,
+                'required'    => true,
+                'choices'     => $options['choices'],
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ]);
 
         return true;
