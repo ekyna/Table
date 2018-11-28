@@ -133,12 +133,4 @@ class TableExtension extends \Twig_Extension
 
         return $this->viewFactory->get($viewName)->render($view->pager, $routeGenerator, $options);
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'ekyna_table';
-    }
 }
