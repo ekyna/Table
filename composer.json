@@ -13,8 +13,8 @@
     "require": {
         "php": ">=7.0",
         "psr/http-message": "^1.0",
-        "symfony/form": "~3.0",
-        "twig/twig": "~2.0",
+        "symfony/form": "^3.0",
+        "twig/twig": "^2.0",
         "pagerfanta/pagerfanta": "^1.0"
     },
     "suggest": {
