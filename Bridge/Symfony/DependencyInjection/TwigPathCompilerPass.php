@@ -20,7 +20,7 @@ class TwigPathCompilerPass implements CompilerPassInterface
         if ($container->hasDefinition('twig.loader.filesystem')) {
             $loader = $container->getDefinition('twig.loader.filesystem');
 
-            $path = realpath(__DIR__.'/../../../Resources/views');
+            $path = realpath(__DIR__.'/../../Twig/Resources/views');
             $loader->addMethodCall('addPath', [$path, 'table']);
         }
     }
