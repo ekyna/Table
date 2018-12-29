@@ -51,6 +51,10 @@ class EntityType extends AbstractColumnType
             $entityLabel = $options['entity_label'];
             if (is_callable($entityLabel)) {
                 $transform = $entityLabel;
+            } elseif (null === $entityLabel) {
+                $transform = function ($entity) {
+                    return (string)$entity;
+                };
             } else {
                 $accessor = $row->getPropertyAccessor();
                 $transform = function ($entity) use ($accessor, $entityLabel) {
@@ -99,8 +103,8 @@ class EntityType extends AbstractColumnType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired('entity_label')
-            ->setAllowedTypes('entity_label', ['string', 'callable']);
+            ->setDefault('entity_label', null)
+            ->setAllowedTypes('entity_label', ['null', 'string', 'callable']);
     }
 
     /**
