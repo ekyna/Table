@@ -23,15 +23,22 @@ class IdToObjectTransformer implements DataTransformerInterface
      */
     protected $repository;
 
+    /**
+     * @var string
+     */
+    protected $identifier;
+
 
     /**
      * Constructor.
      *
      * @param ObjectRepository $repository
+     * @param string           $identifier
      */
-    public function __construct(ObjectRepository $repository)
+    public function __construct(ObjectRepository $repository, string $identifier = 'id')
     {
         $this->repository = $repository;
+        $this->identifier = $identifier;
     }
 
     /**
@@ -44,22 +51,26 @@ class IdToObjectTransformer implements DataTransformerInterface
         }
 
         if (is_array($value)) {
-            if (null === $entities = $this->repository->findBy(['id' => $value])) {
+            if (null === $entities = $this->repository->findBy([$this->identifier => $value])) {
                 throw new TransformationFailedException(sprintf(
                     'Objects "%s" could not be converted from value "%".',
                     $this->repository->getClassName(),
                     implode(', ', $value)
                 ));
-            } elseif (count($entities) !== count($value)) {
+            }
+
+            if (count($entities) !== count($value)) {
                 throw new TransformationFailedException(sprintf(
                     'One or more objects "%s" could not be converted from value "%s".',
                     $this->repository->getClassName(),
                     implode(', ', $value)
                 ));
-            } else {
-                return $entities;
             }
-        } elseif (null === $entity = $this->repository->findOneBy(['id' => $value])) {
+
+            return $entities;
+        }
+
+        if (null === $entity = $this->repository->findOneBy([$this->identifier => $value])) {
             throw new TransformationFailedException(sprintf(
                 'Object "%s" with id "%s" does not exist.',
                 $this->repository->getClassName(),
@@ -92,14 +103,16 @@ class IdToObjectTransformer implements DataTransformerInterface
                 if (!$entity instanceof $class) {
                     throw new UnexpectedTypeException($entity, $class);
                 }
-                $identifiers[] = $accessor->getValue($entity, 'id');
+                $identifiers[] = $accessor->getValue($entity, $this->identifier);
             }
 
             return $identifiers;
-        } elseif (!$value instanceof $class) {
+        }
+
+        if (!$value instanceof $class) {
             throw new UnexpectedTypeException($value, $class);
         }
 
-        return $accessor->getValue($value, 'id');
+        return $accessor->getValue($value, $this->identifier);
     }
 }

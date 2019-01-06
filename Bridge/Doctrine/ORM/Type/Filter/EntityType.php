@@ -14,9 +14,10 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as FormEntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Count;
 
 /**
  * Class EntityType
@@ -29,6 +30,11 @@ class EntityType extends AbstractFilterType
      * @var ManagerRegistry
      */
     private $registry;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $repository;
 
     /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
@@ -51,26 +57,10 @@ class EntityType extends AbstractFilterType
      */
     public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options)
     {
-        $valueOptions = [
-            'label'       => false,
-            'class'       => $options['class'],
-            'required'    => true,
-            'multiple'    => true,
-            'constraints' => [
-                new NotNull(),
-            ],
-        ];
-        if ($options['entity_label']) {
-            $valueOptions['choice_label'] = $options['entity_label'];
-        }
-        if ($options['query_builder']) {
-            $valueOptions['query_builder'] = $options['query_builder'];
-        }
-
         $valueField = $builder
-            ->create('value', FormEntityType::class, $valueOptions)
+            ->create('value', $options['form_class'], $options['form_options'])
             ->addModelTransformer(
-                new IdToObjectTransformer($this->getRepository($options))
+                new IdToObjectTransformer($this->getRepository($options['class']), $options['identifier'])
             );
 
         if ($dataClass = $filter->getTable()->getConfig()->getDataClass()) {
@@ -95,10 +85,14 @@ class EntityType extends AbstractFilterType
     /**
      * @inheritDoc
      */
-    public function buildActiveView(ActiveFilterView $view, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function buildActiveView(
+        ActiveFilterView $view,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ) {
         $ids = $activeFilter->getValue();
-        $entities = $this->getRepository($options)->findBy(['id' => $ids]);
+        $entities = $this->getRepository($options['class'])->findBy(['id' => $ids]);
         $values = [];
 
         $choiceLabel = $options['entity_label'];
@@ -131,10 +125,43 @@ class EntityType extends AbstractFilterType
         $resolver
             ->setRequired('class')
             ->setDefaults([
+                'identifier'    => 'id',
+                'form_class'    => FormEntityType::class,
+                'form_options'  => function (Options $options, $value) {
+                    if (!empty($value)) {
+                        return $value;
+                    }
+
+                    $value = [
+                        'label'       => false,
+                        'required'    => false,
+                        'multiple'    => true,
+                        'constraints' => [
+                            new Count(['min' => 1]),
+                        ],
+                    ];
+
+                    if ($options['form_class'] !== FormEntityType::class) {
+                        return $value;
+                    }
+
+                    $value['class'] = $options['class'];
+                    if ($options['entity_label']) {
+                        $value['choice_label'] = $options['entity_label'];
+                    }
+                    if ($options['query_builder']) {
+                        $value['query_builder'] = $options['query_builder'];
+                    }
+
+                    return $value;
+                },
                 'entity_label'  => null,
                 'query_builder' => null,
             ])
             ->setAllowedTypes('class', 'string')
+            ->setAllowedTypes('identifier', 'string')
+            ->setAllowedTypes('form_class', 'string')
+            ->setAllowedTypes('form_options', ['null', 'array'])
             ->setAllowedTypes('entity_label', ['null', 'string', 'closure'])
             ->setAllowedTypes('query_builder', ['null', 'closure']);
     }
@@ -191,13 +218,17 @@ class EntityType extends AbstractFilterType
     /**
      * Returns the repository.
      *
-     * @param array $options
+     * @param string $class
      *
      * @return \Doctrine\Common\Persistence\ObjectRepository
      */
-    private function getRepository(array $options)
+    private function getRepository(string $class)
     {
-        return $this->registry->getRepository($options['class']);
+        if ($this->repository) {
+            return $this->repository;
+        }
+
+        return $this->repository = $this->registry->getRepository($class);
     }
 
     /**
@@ -207,7 +238,7 @@ class EntityType extends AbstractFilterType
      */
     private function getPropertyAccessor()
     {
-        if (null !== $this->propertyAccessor) {
+        if ($this->propertyAccessor) {
             return $this->propertyAccessor;
         }
 
