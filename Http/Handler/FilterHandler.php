@@ -45,7 +45,12 @@ class FilterHandler implements HandlerInterface
         }
 
         $filter = $table->getFilter($name);
-        $activeFilter = new ActiveFilter($name . '_' . count($context->getActiveFilters()), $name);
+        $index = count($context->getActiveFilters());
+        while ($context->hasActiveFilter($name . '_' . $index)) {
+            $index++;
+        }
+
+        $activeFilter = new ActiveFilter($name . '_' . $index, $name);
 
         $form = $filter->createForm();
         if (!isset($form['operator'], $form['value'])) {
