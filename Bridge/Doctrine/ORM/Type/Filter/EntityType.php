@@ -32,11 +32,6 @@ class EntityType extends AbstractFilterType
     private $registry;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository
-     */
-    private $repository;
-
-    /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     private $propertyAccessor;
@@ -60,7 +55,7 @@ class EntityType extends AbstractFilterType
         $valueField = $builder
             ->create('value', $options['form_class'], $options['form_options'])
             ->addModelTransformer(
-                new IdToObjectTransformer($this->getRepository($options['class']), $options['identifier'])
+                new IdToObjectTransformer($this->registry->getRepository($options['class']), $options['identifier'])
             );
 
         if ($dataClass = $filter->getTable()->getConfig()->getDataClass()) {
@@ -92,7 +87,7 @@ class EntityType extends AbstractFilterType
         array $options
     ) {
         $ids = $activeFilter->getValue();
-        $entities = $this->getRepository($options['class'])->findBy(['id' => $ids]);
+        $entities = $this->registry->getRepository($options['class'])->findBy(['id' => $ids]);
         $values = [];
 
         $choiceLabel = $options['entity_label'];
@@ -213,22 +208,6 @@ class EntityType extends AbstractFilterType
         }
 
         throw new InvalidArgumentException("Invalid property path '{$propertyPath}'.");
-    }
-
-    /**
-     * Returns the repository.
-     *
-     * @param string $class
-     *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
-     */
-    private function getRepository(string $class)
-    {
-        if ($this->repository) {
-            return $this->repository;
-        }
-
-        return $this->repository = $this->registry->getRepository($class);
     }
 
     /**
