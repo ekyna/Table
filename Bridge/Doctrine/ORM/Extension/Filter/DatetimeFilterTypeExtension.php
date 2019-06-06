@@ -36,11 +36,11 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
         if (in_array($operator, [FilterOperator::EQUAL, FilterOperator::NOT_EQUAL])) {
             /** @var \DateTime $start */
             $start = clone $activeFilter->getValue();
-            $start->setTime(0, 0, 0);
+            $start->setTime(0, 0, 0, 0);
 
             /** @var \DateTime $end */
             $end = clone $start;
-            $end->setTime(23, 59, 59);
+            $end->setTime(23, 59, 59, 999999);
 
             if ($operator === FilterOperator::EQUAL) {
                 $startOperator = FilterOperator::GREATER_THAN_OR_EQUAL;
@@ -79,9 +79,9 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
 
         if (!$options['time']) {
             if ($operator === FilterOperator::LOWER_THAN_OR_EQUAL) {
-                $date->setTime(23, 59, 59);
+                $date->setTime(23, 59, 59, 999999);
             } else {
-                $date->setTime(0, 0, 0);
+                $date->setTime(0, 0, 0, 0);
             }
         }
 
