@@ -62,9 +62,9 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $pager = new Pagerfanta($this->getPagerAdapter());
         $pager
+            ->setNormalizeOutOfRangePages(true)
             ->setMaxPerPage($context->getMaxPerPage())
-            ->setCurrentPage($context->getCurrentPage())
-            ->setNormalizeOutOfRangePages(true);
+            ->setCurrentPage($context->getCurrentPage());
 
         $grid = new Grid($pager);
 
