@@ -41,7 +41,7 @@ interface TableTypeInterface
     /**
      * Sets the default options.
      *
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver);
 

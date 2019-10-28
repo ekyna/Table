@@ -69,7 +69,11 @@ class Row implements RowInterface
             return $this->data;
         }
 
-        return $this->propertyAccessor->getValue($this->data, $propertyPath);
+        if ($this->propertyAccessor->isReadable($this->data, $propertyPath)) {
+            return $this->propertyAccessor->getValue($this->data, $propertyPath);
+        }
+
+        return null;
     }
 
     /**
