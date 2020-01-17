@@ -2,7 +2,7 @@
 
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Util\FilterUtil;
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -22,13 +22,17 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ) {
         if (!$adapter instanceof EntityAdapter) {
             return false;
         }
 
-        $qb = $adapter->getQueryBuilder();
+        $qb       = $adapter->getQueryBuilder();
         $property = $adapter->getQueryBuilderPath($filter->getConfig()->getPropertyPath());
 
         $operator = $activeFilter->getOperator();
@@ -44,16 +48,16 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
 
             if ($operator === FilterOperator::EQUAL) {
                 $startOperator = FilterOperator::GREATER_THAN_OR_EQUAL;
-                $endOperator = FilterOperator::LOWER_THAN_OR_EQUAL;
+                $endOperator   = FilterOperator::LOWER_THAN_OR_EQUAL;
             } else {
                 $startOperator = FilterOperator::LOWER_THAN;
-                $endOperator = FilterOperator::GREATER_THAN;
+                $endOperator   = FilterOperator::GREATER_THAN;
             }
 
-            $parameterStart = FilterUtil::buildParameterName($filter->getName() . '_start');
+            $parameterStart  = FilterUtil::buildParameterName($filter->getName() . '_start');
             $expressionStart = FilterUtil::buildExpression($property, $startOperator, $parameterStart);
 
-            $parameterEnd = FilterUtil::buildParameterName($filter->getName() . '_end');
+            $parameterEnd  = FilterUtil::buildParameterName($filter->getName() . '_end');
             $expressionEnd = FilterUtil::buildExpression($property, $endOperator, $parameterEnd);
 
             if ($operator === FilterOperator::EQUAL) {
@@ -65,13 +69,13 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
             $adapter
                 ->getQueryBuilder()
                 ->andWhere($expression)
-                ->setParameter($parameterStart, $start, Type::DATETIME)
-                ->setParameter($parameterEnd, $end, Type::DATETIME);
+                ->setParameter($parameterStart, $start, Types::DATETIME_MUTABLE)
+                ->setParameter($parameterEnd, $end, Types::DATETIME_MUTABLE);
 
             return true;
         }
 
-        $parameter = FilterUtil::buildParameterName($filter->getName());
+        $parameter  = FilterUtil::buildParameterName($filter->getName());
         $expression = FilterUtil::buildExpression($property, $operator = $activeFilter->getOperator(), $parameter);
 
         /** @var \DateTime $date */
@@ -87,7 +91,7 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
 
         $qb
             ->andWhere($expression)
-            ->setParameter($parameter, $date, Type::DATETIME);
+            ->setParameter($parameter, $date, Types::DATETIME_MUTABLE);
 
         return true;
     }

@@ -2,7 +2,7 @@
 
 namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Util\FilterUtil;
 use Ekyna\Component\Table\Context\ActiveFilter;
@@ -22,27 +22,31 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
     /**
      * @inheritDoc
      */
-    public function applyFilter(AdapterInterface $adapter, FilterInterface $filter, ActiveFilter $activeFilter, array $options)
-    {
+    public function applyFilter(
+        AdapterInterface $adapter,
+        FilterInterface $filter,
+        ActiveFilter $activeFilter,
+        array $options
+    ) {
         if (!$adapter instanceof EntityAdapter) {
             return false;
         }
 
         $property = $adapter->getQueryBuilderPath($filter->getConfig()->getPropertyPath());
         $operator = $activeFilter->getOperator();
-        $value = $activeFilter->getValue() === 'yes';
+        $value    = $activeFilter->getValue() === 'yes';
 
         if ($options['mode'] === BooleanType::MODE_DEFAULT) {
-            $parameter = FilterUtil::buildParameterName($filter->getName());
+            $parameter  = FilterUtil::buildParameterName($filter->getName());
             $expression = FilterUtil::buildExpression($property, $operator, $parameter);
 
             $adapter
                 ->getQueryBuilder()
                 ->andWhere($expression)
-                ->setParameter($parameter, $value, Type::BOOLEAN);
+                ->setParameter($parameter, $value, Types::BOOLEAN);
         } else {
-            $value = $options['mode'] === BooleanType::MODE_IS_NULL ? $value : !$value;
-            $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
+            $value      = $options['mode'] === BooleanType::MODE_IS_NULL ? $value : !$value;
+            $operator   = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
             $expression = FilterUtil::buildExpression($property, $operator);
 
             $adapter
