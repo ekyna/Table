@@ -1,5 +1,5 @@
 {% block table %}
-{% spaceless %}
+{% apply spaceless %}
 
 {% if table.available_filters|length > 0 %}
 <div class="table-filters">
@@ -71,7 +71,7 @@
 </div>
 {% endif %}
 
-{% endspaceless %}
+{% endapply %}
 {% endblock table %}
 
 
@@ -111,7 +111,7 @@
 
 
 {% block table_head %}
-{% spaceless %}
+{% apply spaceless %}
 <thead>
     <tr>
     {% if table.ui.select %}
@@ -135,7 +135,7 @@
     {% endfor %}
     </tr>
 </thead>
-{% endspaceless %}
+{% endapply %}
 {% endblock table_head %}
 
 {%- block table_head_column_label -%}
@@ -144,7 +144,7 @@
 
 
 {% block table_body %}
-{% spaceless %}
+{% apply spaceless %}
 <tbody>
 {% if table.rows|length > 0 %}
 {% for row in table.rows %}
@@ -162,12 +162,12 @@
     </tr>
 {% endif %}
 </tbody>
-{% endspaceless %}
+{% endapply %}
 {% endblock table_body %}
 
 
 {% block table_row %}
-{% spaceless %}
+{% apply spaceless %}
 {% set attr = row.vars.attr|default({})|merge({
     'id': table.vars.name ~ '_row_' ~ row.identifier,
     'data-id': row.identifier
@@ -188,7 +188,7 @@
     </td>
     {% endfor %}
 </tr>
-{% endspaceless %}
+{% endapply %}
 {% endblock table_row %}
 
 
@@ -201,7 +201,7 @@
 
 {%- block number_cell -%}
     {{- value|number_format(precision) -}}
-    {%- if append is not same as (null) %} {{ append }}{% endif -%}
+    {%- if append is not same as (null) %}&nbsp;{{ append }}{% endif -%}
 {%- endblock number_cell -%}
 
 

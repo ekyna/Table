@@ -32,8 +32,6 @@ class RequestHandler
      */
     public function handleRequest($request = null)
     {
-        $response = null;
-
         $config = $this->table->getConfig();
 
         // Load from the session
@@ -45,8 +43,10 @@ class RequestHandler
 
         // Abort if request is empty
         if ($parameters->isDefault()) {
-            return $response;
+            return null;
         }
+
+        $response = null;
 
         // Execute parameters handlers
         $classes = [

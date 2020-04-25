@@ -2,16 +2,15 @@
 
 namespace Ekyna\Component\Table\Bridge\Twig;
 
-use Ekyna\Component\Table\View\TableView;
-use Ekyna\Component\Table\View\CellView;
-use Pagerfanta\View\ViewFactoryInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class TableExtension
  * @package Ekyna\Component\Table\Bridge\Twig
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class TableExtension extends \Twig_Extension
+class TableExtension extends AbstractExtension
 {
     /**
      * @var TwigRenderer
@@ -35,17 +34,17 @@ class TableExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'ekyna_table_render',
                 [$this->renderer, 'render'],
                 ['is_safe' => ['html']]
             ),
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'ekyna_table_cell',
                 [$this->renderer, 'renderCell'],
                 ['is_safe' => ['html']]
             ),
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'ekyna_table_pager',
                 [$this->renderer, 'renderPager'],
                 ['is_safe' => ['html']]

@@ -5,6 +5,8 @@ namespace Ekyna\Component\Table\Bridge\Twig;
 use Ekyna\Component\Table\View\CellView;
 use Ekyna\Component\Table\View\TableView;
 use Pagerfanta\View\ViewFactoryInterface;
+use Twig\Environment;
+use Twig\TemplateWrapper;
 
 /**
  * Class TwigRenderer
@@ -14,7 +16,7 @@ use Pagerfanta\View\ViewFactoryInterface;
 class TwigRenderer
 {
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $environment;
 
@@ -37,11 +39,11 @@ class TwigRenderer
     /**
      * Constructor.
      *
-     * @param \Twig_Environment    $environment
+     * @param Environment          $environment
      * @param ViewFactoryInterface $viewFactory
      * @param string               $template
      */
-    public function __construct(\Twig_Environment $environment, ViewFactoryInterface $viewFactory, $template = null)
+    public function __construct(Environment $environment, ViewFactoryInterface $viewFactory, $template = null)
     {
         $this->environment = $environment;
         $this->viewFactory = $viewFactory;
@@ -69,7 +71,7 @@ class TwigRenderer
         $options = array_merge($this->defaults, $options);
 
         $template = $options['template'];
-        if ($template instanceof \Twig_TemplateWrapper) {
+        if ($template instanceof TemplateWrapper) {
             $this->template = $template;
         } else {
             $this->template = $this->environment->load($template);
