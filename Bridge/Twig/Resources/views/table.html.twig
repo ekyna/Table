@@ -226,7 +226,7 @@
 {% endblock choice_cell -%}
 
 {%- block choice_cell_value -%}
-    {{- choice.label|raw -}}
+    {%- if choice.label is defined %}{{ choice.label|raw }}{% else %}{{ choice.value }}{% endif -%}
 {%- endblock choice_cell_value -%}
 
 

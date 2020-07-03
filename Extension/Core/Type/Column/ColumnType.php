@@ -133,6 +133,7 @@ class ColumnType extends AbstractColumnType
             //'unique_block_prefix' => $uniqueBlockPrefix,
             //'cache_key'           => $cacheKey,
             'block_prefix' => $options['block_prefix'] ?: $column->getConfig()->getType()->getBlockPrefix(),
+            'translation_domain' => $options['translation_domain'],
         ]);
     }
 
