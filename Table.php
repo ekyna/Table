@@ -368,9 +368,11 @@ final class Table implements TableInterface
 
         $this->locked = true;
 
-        $handler = new Http\RequestHandler($this);
-        if (null !== $response = $handler->handleRequest($request)) {
-            return $response;
+        if ($request) {
+            $handler = new Http\RequestHandler($this);
+            if (null !== $response = $handler->handleRequest($request)) {
+                return $response;
+            }
         }
 
         return null;
