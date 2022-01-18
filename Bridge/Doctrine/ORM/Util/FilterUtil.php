@@ -87,9 +87,9 @@ final class FilterUtil
      * @param int $operator
      * @param mixed  $value
      *
-     * @return Expr\Literal|mixed
+     * @return mixed
      */
-    public static function buildParameterValue(int $operator, $value): Expr\Literal
+    public static function buildParameterValue(int $operator, $value)
     {
         FilterOperator::isValid($operator, true);
 
