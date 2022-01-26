@@ -14,7 +14,7 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 use function array_keys;
 
@@ -32,9 +32,9 @@ class BooleanType extends AbstractFilterType
 
     public function buildActiveView(
         ActiveFilterView $view,
-        FilterInterface $filter,
-        ActiveFilter $activeFilter,
-        array $options
+        FilterInterface  $filter,
+        ActiveFilter     $activeFilter,
+        array            $options
     ): void {
         $view->vars['value'] = array_keys($options['choices'])[$activeFilter->getValue() ? 1 : 0];
     }
@@ -55,7 +55,7 @@ class BooleanType extends AbstractFilterType
                 'required'    => true,
                 'choices'     => $options['choices'],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotNull(),
                 ],
             ]);
 
@@ -64,9 +64,9 @@ class BooleanType extends AbstractFilterType
 
     public function applyFilter(
         AdapterInterface $adapter,
-        FilterInterface $filter,
-        ActiveFilter $activeFilter,
-        array $options
+        FilterInterface  $filter,
+        ActiveFilter     $activeFilter,
+        array            $options
     ): bool {
         if (!$adapter instanceof ArrayAdapter) {
             return false;

@@ -21,14 +21,11 @@ use Ekyna\Component\Table\Util\FilterOperator;
  */
 class BooleanTypeExtension extends AbstractFilterTypeExtension
 {
-    /**
-     * @inheritDoc
-     */
     public function applyFilter(
         AdapterInterface $adapter,
-        FilterInterface $filter,
-        ActiveFilter $activeFilter,
-        array $options
+        FilterInterface  $filter,
+        ActiveFilter     $activeFilter,
+        array            $options
     ): bool {
         if (!$adapter instanceof EntityAdapter) {
             return false;
@@ -36,10 +33,10 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
 
         $property = $adapter->getQueryBuilderPath($filter->getConfig()->getPropertyPath());
         $operator = $activeFilter->getOperator();
-        $value    = $activeFilter->getValue() === 'yes';
+        $value = $activeFilter->getValue();
 
         if ($options['mode'] === BooleanType::MODE_DEFAULT) {
-            $parameter  = FilterUtil::buildParameterName($filter->getName());
+            $parameter = FilterUtil::buildParameterName($filter->getName());
             $expression = FilterUtil::buildExpression($property, $operator, $parameter);
 
             $adapter
@@ -47,8 +44,8 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
                 ->andWhere($expression)
                 ->setParameter($parameter, $value, Types::BOOLEAN);
         } else {
-            $value      = $options['mode'] === BooleanType::MODE_IS_NULL ? $value : !$value;
-            $operator   = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
+            $value = $options['mode'] === BooleanType::MODE_IS_NULL ? $value : !$value;
+            $operator = $value ? FilterOperator::IS_NULL : FilterOperator::IS_NOT_NULL;
             $expression = FilterUtil::buildExpression($property, $operator);
 
             $adapter
@@ -59,9 +56,6 @@ class BooleanTypeExtension extends AbstractFilterTypeExtension
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function getExtendedTypes(): array
     {
         return [BooleanType::class];
