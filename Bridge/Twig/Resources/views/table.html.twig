@@ -117,7 +117,7 @@
     {% if table.ui.select %}
         <th>
             {%- if table.ui.select.multiple -%}
-            <input type="checkbox" id="{{ table.vars.name }}_toggle_all" class="table-select-toggle">
+            <input type="checkbox" id="{{ table.vars.name }}_toggle_all" class="table-select-toggle" value="1">
             {%- endif -%}
         </th>
     {% endif %}

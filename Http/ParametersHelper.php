@@ -316,7 +316,7 @@ final class ParametersHelper
      */
     public function getAllValue(): bool
     {
-        return $this->data[self::ALL] ?: false;
+        return $this->data[self::ALL] ? (bool)$this->data[self::ALL] : false;
     }
 
     /**
