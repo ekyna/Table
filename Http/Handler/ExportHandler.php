@@ -31,7 +31,9 @@ final class ExportHandler implements HandlerInterface
         // If export button is clicked
         if ($parameters->isExportClicked()) {
             // Get selected format
-            $format = $parameters->getFormatValue();
+            if (null === $format = $parameters->getFormatValue()) {
+                return null;
+            }
 
             if (null === $adapter = $this->getAdapter($table, $format)) {
                 return null;

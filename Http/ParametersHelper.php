@@ -396,7 +396,7 @@ final class ParametersHelper
      */
     public function getFormatValue(): ?string
     {
-        return strtolower($this->data[self::FORMAT]);
+        return $this->data[self::FORMAT] ? strtolower($this->data[self::FORMAT]) : null;
     }
 
     /**
