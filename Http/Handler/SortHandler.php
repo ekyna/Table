@@ -6,6 +6,7 @@ namespace Ekyna\Component\Table\Http\Handler;
 
 use Ekyna\Component\Table\Context\ActiveSort;
 use Ekyna\Component\Table\TableInterface;
+use Ekyna\Component\Table\Util\ColumnSort;
 
 /**
  * Class SortHandler
@@ -39,7 +40,11 @@ final class SortHandler implements HandlerInterface
             return null;
         }
 
-        $sort = new ActiveSort($sort['by'], $sort['dir']);
+        if (ColumnSort::NONE === $sort['dir']) {
+            $sort = null;
+        } else {
+            $sort = new ActiveSort($sort['by'], $sort['dir']);
+        }
 
         $table->getContext()->setActiveSort($sort);
 

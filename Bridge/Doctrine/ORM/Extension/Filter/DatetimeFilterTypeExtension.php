@@ -42,7 +42,15 @@ class DatetimeFilterTypeExtension extends AbstractFilterTypeExtension
 
         $operator = $activeFilter->getOperator();
 
-        if (in_array($operator, [FilterOperator::EQUAL, FilterOperator::NOT_EQUAL])) {
+        if (in_array($operator, [FilterOperator::IS_NULL, FilterOperator::IS_NOT_NULL], true)) {
+            $adapter
+                ->getQueryBuilder()
+                ->andWhere(FilterUtil::buildExpression($property, $operator));
+
+            return true;
+        }
+
+        if (in_array($operator, [FilterOperator::EQUAL, FilterOperator::NOT_EQUAL], true)) {
             /** @var DateTime $start */
             $start = clone $activeFilter->getValue();
             $start->setTime(0, 0);

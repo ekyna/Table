@@ -6,6 +6,9 @@ namespace Ekyna\Component\Table\Util;
 
 use Ekyna\Component\Table\Exception;
 
+use function in_array;
+use function sprintf;
+
 /**
  * Class Config
  * @package Ekyna\Component\Table\Util
@@ -44,21 +47,18 @@ final class Config
      *
      * @param string $name The tested name
      *
-     * @throws Exception\UnexpectedTypeException If the name is not a string.
      * @throws Exception\InvalidArgumentException If the name contains invalid characters.
      */
     public static function validateName(string $name): void
     {
-        if (!is_null($name) && !is_string($name)) {
-            throw new Exception\UnexpectedTypeException($name, ['string', 'integer', 'null']);
+        if (preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+            return;
         }
 
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'The name "%s" contains illegal characters. Names should only contain letters, numbers and underscores.',
-                $name
-            ));
-        }
+        throw new Exception\InvalidArgumentException(sprintf(
+            'The name "%s" contains illegal characters. Names should only contain letters, numbers and underscores.',
+            $name
+        ));
     }
 
     /**

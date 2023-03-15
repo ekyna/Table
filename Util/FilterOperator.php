@@ -96,6 +96,10 @@ final class FilterOperator
                 return 'se termine par';
             case self::NOT_END_WITH:
                 return 'ne se termine pas par';
+            case self::IS_NULL:
+                return 'est indéfini';
+            case self::IS_NOT_NULL:
+                return 'est défini';
             default:
                 return 'est égal à';
         }

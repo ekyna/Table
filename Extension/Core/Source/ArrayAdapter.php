@@ -208,7 +208,7 @@ class ArrayAdapter extends Source\AbstractAdapter
             return;
         }
 
-        throw new Exception\InvalidArgumentException($source, ArraySource::class);
+        throw new Exception\UnexpectedTypeException($source, ArraySource::class);
     }
 
     /**

@@ -49,8 +49,6 @@ class RequestHandler
             return null;
         }
 
-        $response = null;
-
         // Execute parameters handlers
         $classes = [
             Handler\LoadHandler::class,

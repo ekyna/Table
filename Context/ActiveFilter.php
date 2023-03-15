@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ekyna\Component\Table\Context;
 
 use Ekyna\Component\Table\Exception\InvalidArgumentException;
+use Ekyna\Component\Table\Util\FilterOperator;
 
 use function count;
 use function serialize;
@@ -19,8 +20,8 @@ final class ActiveFilter
 {
     private string $id;
     private string $filterName;
-    private int $operator;
-    private $value;
+    private int    $operator = FilterOperator::EQUAL;
+    private mixed  $value    = null;
 
 
     /**

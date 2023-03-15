@@ -119,7 +119,7 @@ class TableRegistry implements RegistryInterface
 
         try {
             $this->getTableType($name);
-        } catch (Exception\ExceptionInterface $e) {
+        } catch (Exception\ExceptionInterface) {
             return false;
         }
 
@@ -195,7 +195,7 @@ class TableRegistry implements RegistryInterface
 
         try {
             $this->getColumnType($name);
-        } catch (Exception\ExceptionInterface $e) {
+        } catch (Exception\ExceptionInterface) {
             return false;
         }
 
@@ -271,7 +271,7 @@ class TableRegistry implements RegistryInterface
 
         try {
             $this->getFilterType($name);
-        } catch (Exception\ExceptionInterface $e) {
+        } catch (Exception\ExceptionInterface) {
             return false;
         }
 
@@ -347,7 +347,7 @@ class TableRegistry implements RegistryInterface
 
         try {
             $this->getActionType($name);
-        } catch (Exception\ExceptionInterface $e) {
+        } catch (Exception\ExceptionInterface) {
             return false;
         }
 
@@ -395,7 +395,7 @@ class TableRegistry implements RegistryInterface
 
         try {
             $this->getAdapterFactory($name);
-        } catch (Exception\ExceptionInterface $e) {
+        } catch (Exception\ExceptionInterface) {
             return false;
         }
 

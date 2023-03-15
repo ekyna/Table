@@ -33,7 +33,7 @@ class EntityType extends AbstractColumnType
      */
     public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
-        if (is_callable($options['entity_label'])) {
+        if (!is_string($options['entity_label'])) {
             $builder->setSortable(false);
         }
     }

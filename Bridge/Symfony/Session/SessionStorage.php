@@ -45,7 +45,7 @@ class SessionStorage implements Context\Session\StorageInterface
             try {
                 $data = json_decode($this->session->get($key));
                 $table->getContext()->fromArray($data);
-            } catch (Exception\InvalidArgumentException $e) {
+            } catch (Exception\InvalidArgumentException) {
                 $this->clear($table);
             }
         }

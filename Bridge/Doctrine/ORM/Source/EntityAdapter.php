@@ -223,7 +223,7 @@ class EntityAdapter extends AbstractAdapter
             return;
         }
 
-        throw new Exception\InvalidArgumentException($source, EntitySource::class);
+        throw new Exception\UnexpectedTypeException($source, EntitySource::class);
     }
 
     /**

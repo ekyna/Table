@@ -204,7 +204,12 @@ final class ParametersHelper
     public function getSortHref(ColumnInterface $column): string
     {
         $parameter = $this->getSortName();
-        $dir = ($column->getSortDirection() === ColumnSort::ASC ? ColumnSort::DESC : ColumnSort::ASC);
+
+        $dir = match ($column->getSortDirection()) {
+            ColumnSort::ASC => ColumnSort::DESC,
+            ColumnSort::DESC => ColumnSort::NONE,
+            default => ColumnSort::ASC,
+        };
 
         return '?' . $parameter . '[by]=' . $column->getName() . '&' . $parameter . '[dir]=' . $dir;
     }
@@ -316,7 +321,7 @@ final class ParametersHelper
      */
     public function getAllValue(): bool
     {
-        return $this->data[self::ALL] ? (bool)$this->data[self::ALL] : false;
+        return isset($this->data[self::ALL]) ? (bool)$this->data[self::ALL] : false;
     }
 
     /**
