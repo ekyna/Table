@@ -24,7 +24,8 @@ use function get_class;
  */
 final class ResolvedColumnType implements ResolvedColumnTypeInterface
 {
-    private ColumnTypeInterface          $innerType;
+    private ColumnTypeInterface $innerType;
+    /** @var array<int, ColumnTypeExtensionInterface> */
     private array                        $typeExtensions;
     private ?ResolvedColumnTypeInterface $parent          = null;
     private ?OptionsResolver             $optionsResolver = null;
@@ -33,9 +34,9 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * Constructor.
      *
-     * @param ColumnTypeInterface              $innerType
-     * @param array                            $typeExtensions
-     * @param ResolvedColumnTypeInterface|null $parent
+     * @param ColumnTypeInterface                      $innerType
+     * @param array<int, ColumnTypeExtensionInterface> $typeExtensions
+     * @param ResolvedColumnTypeInterface|null         $parent
      */
     public function __construct(
         ColumnTypeInterface $innerType,
@@ -103,9 +104,7 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function buildColumn(ColumnBuilderInterface $builder, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildColumn($builder, $options);
-        }
+        $this->parent?->buildColumn($builder, $options);
 
         $this->innerType->buildColumn($builder, $options);
 
@@ -127,9 +126,7 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function buildHeadView(View\HeadView $view, ColumnInterface $column, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildHeadView($view, $column, $options);
-        }
+        $this->parent?->buildHeadView($view, $column, $options);
 
         $this->innerType->buildHeadView($view, $column, $options);
 
@@ -151,9 +148,7 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function buildCellView(View\CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildCellView($view, $column, $row, $options);
-        }
+        $this->parent?->buildCellView($view, $column, $row, $options);
 
         $this->innerType->buildCellView($view, $column, $row, $options);
 

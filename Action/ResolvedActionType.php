@@ -89,9 +89,7 @@ final class ResolvedActionType implements ResolvedActionTypeInterface
      */
     public function buildAction(ActionBuilderInterface $builder, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildAction($builder, $options);
-        }
+        $this->parent?->buildAction($builder, $options);
 
         $this->innerType->buildAction($builder, $options);
 
@@ -103,7 +101,7 @@ final class ResolvedActionType implements ResolvedActionTypeInterface
     /**
      * @inheritDoc
      */
-    public function execute(ActionInterface $action, array $options)
+    public function execute(ActionInterface $action, array $options): object|bool
     {
         foreach ($this->typeExtensions as $extension) {
             if (false !== $response = $extension->execute($action, $options)) {

@@ -61,7 +61,7 @@ interface ResolvedActionTypeInterface
      *
      * @return bool|object The response object or whether the action has been executed
      */
-    public function execute(ActionInterface $action, array $options);
+    public function execute(ActionInterface $action, array $options): object|bool;
 
     /**
      * Returns the configured options resolver used for this type.

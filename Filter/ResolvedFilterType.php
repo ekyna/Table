@@ -28,7 +28,8 @@ use function get_class;
  */
 final class ResolvedFilterType implements ResolvedFilterTypeInterface
 {
-    private FilterTypeInterface          $innerType;
+    private FilterTypeInterface $innerType;
+    /** @var array<int, FilterTypeExtensionInterface> */
     private array                        $typeExtensions;
     private ?ResolvedFilterTypeInterface $parent;
     private ?OptionsResolver             $optionsResolver = null;
@@ -37,9 +38,9 @@ final class ResolvedFilterType implements ResolvedFilterTypeInterface
     /**
      * Constructor.
      *
-     * @param FilterTypeInterface              $innerType
-     * @param array                            $typeExtensions
-     * @param ResolvedFilterTypeInterface|null $parent
+     * @param FilterTypeInterface                      $innerType
+     * @param array<int, FilterTypeExtensionInterface> $typeExtensions
+     * @param ResolvedFilterTypeInterface|null         $parent
      */
     public function __construct(
         FilterTypeInterface $innerType,
@@ -110,9 +111,7 @@ final class ResolvedFilterType implements ResolvedFilterTypeInterface
      */
     public function buildFilter(FilterBuilderInterface $builder, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildFilter($builder, $options);
-        }
+        $this->parent?->buildFilter($builder, $options);
 
         $this->innerType->buildFilter($builder, $options);
 
@@ -134,9 +133,7 @@ final class ResolvedFilterType implements ResolvedFilterTypeInterface
      */
     public function buildAvailableView(AvailableFilterView $view, FilterInterface $filter, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildAvailableView($view, $filter, $options);
-        }
+        $this->parent?->buildAvailableView($view, $filter, $options);
 
         $this->innerType->buildAvailableView($view, $filter, $options);
 
@@ -162,9 +159,7 @@ final class ResolvedFilterType implements ResolvedFilterTypeInterface
         ActiveFilter $activeFilter,
         array $options
     ): void {
-        if (null !== $this->parent) {
-            $this->parent->buildActiveView($view, $filter, $activeFilter, $options);
-        }
+        $this->parent?->buildActiveView($view, $filter, $activeFilter, $options);
 
         $this->innerType->buildActiveView($view, $filter, $activeFilter, $options);
 

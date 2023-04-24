@@ -12,10 +12,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Ekyna\Component\Table
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class ResolvedTableType implements ResolvedTableTypeInterface
+final class ResolvedTableType implements ResolvedTableTypeInterface
 {
     private TableTypeInterface $innerType;
-    /** @var Extension\TableTypeExtensionInterface[] */
+    /** @var array<int, Extension\TableTypeExtensionInterface> */
     private array                       $typeExtensions;
     private ?ResolvedTableTypeInterface $parent;
     private ?OptionsResolver            $optionsResolver = null;
@@ -24,9 +24,9 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * Constructor.
      *
-     * @param TableTypeInterface              $innerType
-     * @param array                           $typeExtensions
-     * @param ResolvedTableTypeInterface|null $parent
+     * @param TableTypeInterface                                $innerType
+     * @param array<int, Extension\TableTypeExtensionInterface> $typeExtensions
+     * @param ResolvedTableTypeInterface|null                   $parent
      */
     public function __construct(
         TableTypeInterface $innerType,
@@ -71,8 +71,11 @@ class ResolvedTableType implements ResolvedTableTypeInterface
     /**
      * @inheritDoc
      */
-    public function createBuilder(TableFactoryInterface $factory, string $name, array $options = []): TableBuilderInterface
-    {
+    public function createBuilder(
+        TableFactoryInterface $factory,
+        string $name,
+        array $options = []
+    ): TableBuilderInterface {
         $options = $this->getOptionsResolver()->resolve($options);
 
         $builder = new TableBuilder($name, $factory, $options);
@@ -94,9 +97,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
      */
     public function buildTable(TableBuilderInterface $builder, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildTable($builder, $options);
-        }
+        $this->parent?->buildTable($builder, $options);
 
         $this->innerType->buildTable($builder, $options);
 
@@ -110,9 +111,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
      */
     public function buildView(View\TableView $view, TableInterface $table, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildView($view, $table, $options);
-        }
+        $this->parent?->buildView($view, $table, $options);
 
         $this->innerType->buildView($view, $table, $options);
 
@@ -126,9 +125,7 @@ class ResolvedTableType implements ResolvedTableTypeInterface
      */
     public function buildRowView(View\RowView $view, RowInterface $row, array $options): void
     {
-        if (null !== $this->parent) {
-            $this->parent->buildRowView($view, $row, $options);
-        }
+        $this->parent?->buildRowView($view, $row, $options);
 
         $this->innerType->buildRowView($view, $row, $options);
 
