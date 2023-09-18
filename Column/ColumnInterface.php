@@ -96,6 +96,12 @@ interface ColumnInterface
      */
     public function createCellView(View\RowView $rowView, RowInterface $row): View\CellView;
 
+    /**
+     * Configures the adapter.
+     *
+     * @param AdapterInterface $adapter
+     */
+    public function configureAdapter(AdapterInterface $adapter): void;
 
     /**
      * Applies the active sort to the adapter.

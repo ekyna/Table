@@ -7,10 +7,14 @@ namespace Ekyna\Component\Table\Source;
 use Ekyna\Component\Table\Context\ContextInterface;
 use Ekyna\Component\Table\Exception;
 use Ekyna\Component\Table\TableInterface;
-use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\AdapterInterface as PagerfantaAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+
+use function array_shift;
+use function is_array;
+use function is_object;
 
 /**
  * Class AbstractAdapter
@@ -19,7 +23,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 abstract class AbstractAdapter implements AdapterInterface
 {
-    protected TableInterface $table;
+    protected TableInterface            $table;
     protected PropertyAccessorInterface $propertyAccessor;
 
 
@@ -65,11 +69,21 @@ abstract class AbstractAdapter implements AdapterInterface
 
         $grid = new Grid($pager);
 
-        $data = $pager->getCurrentPageResults();
+        $results = $pager->getCurrentPageResults();
 
         // Build data rows
-        foreach ($data as $index => $datum) {
-            $grid->addRow($this->createRow((string)$index, $datum));
+        foreach ($results as $index => $result) {
+            if (is_object($result)) {
+                $data = $result;
+                $extra = [];
+            } elseif (is_array($result)) {
+                $data = array_shift($result);
+                $extra = $result;
+            } else {
+                throw new Exception\UnexpectedTypeException($result, ['object', 'array']);
+            }
+
+            $grid->addRow($this->createRow((string)$index, $data, $extra));
         }
 
         return $grid;
@@ -111,6 +125,9 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     protected function preInitialize(ContextInterface $context): void
     {
+        foreach ($this->table->getColumns() as $column) {
+            $column->configureAdapter($this);
+        }
     }
 
     /**
@@ -206,11 +223,12 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param string $identifier
      * @param object $data
+     * @param array  $extraData
      *
      * @return RowInterface
      */
-    protected function createRow(string $identifier, object $data): RowInterface
+    protected function createRow(string $identifier, object $data, array $extraData): RowInterface
     {
-        return new Row($identifier, $data, $this->propertyAccessor);
+        return new Row($identifier, $data, $extraData, $this->propertyAccessor);
     }
 }

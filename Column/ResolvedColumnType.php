@@ -160,6 +160,23 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
     /**
      * @inheritDoc
      */
+    public function configureAdapter(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        array $options
+    ): void {
+        foreach ($this->typeExtensions as $extension) {
+            $extension->configureAdapter($adapter, $column, $options);
+        }
+
+        $this->innerType->configureAdapter($adapter, $column, $options);
+
+        $this->parent?->configureAdapter($adapter, $column, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function applySort(
         AdapterInterface $adapter,
         ColumnInterface $column,

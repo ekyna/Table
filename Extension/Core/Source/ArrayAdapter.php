@@ -250,7 +250,7 @@ class ArrayAdapter extends Source\AbstractAdapter
 
         $rows = [];
         foreach ($results as $id => $result) {
-            $rows[] = $this->createRow((string)$id, $result);
+            $rows[] = $this->createRow((string)$id, $result, []);
         }
 
         return $rows;

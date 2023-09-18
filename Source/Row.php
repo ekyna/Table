@@ -17,24 +17,30 @@ class Row implements RowInterface
 {
     private string                    $identifier;
     private object                    $data;
+    private array                     $extra;
     private PropertyAccessorInterface $propertyAccessor;
 
 
     /**
      * Constructor.
      *
-     * @param string                         $identifier
-     * @param object                         $data
+     * @param string $identifier
+     * @param object $data
      * @param PropertyAccessorInterface|null $propertyAccessor
      */
-    public function __construct(string $identifier, object $data, PropertyAccessorInterface $propertyAccessor = null)
-    {
+    public function __construct(
+        string $identifier,
+        object $data,
+        array $extraData,
+        PropertyAccessorInterface $propertyAccessor = null
+    ) {
         if (('0' !== $identifier) && empty($identifier)) {
             throw new InvalidArgumentException('Empty identifier.');
         }
 
         $this->identifier = $identifier;
         $this->data = $data;
+        $this->extra = $extraData;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
     }
 
@@ -49,7 +55,7 @@ class Row implements RowInterface
     /**
      * @inheritDoc
      */
-    public function getData(?string $propertyPath)
+    public function getData(?string $propertyPath): mixed
     {
         if (is_null($propertyPath)) {
             return $this->data;
@@ -60,6 +66,18 @@ class Row implements RowInterface
         }
 
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExtra(?string $name): mixed
+    {
+        if (is_null($name)) {
+            return $this->extra;
+        }
+
+        return $this->extra[$name] ?? null;
     }
 
     /**

@@ -135,6 +135,14 @@ final class Column implements ColumnInterface
         return $view;
     }
 
+    public function configureAdapter(AdapterInterface $adapter): void
+    {
+        $type = $this->config->getType();
+        $options = $this->config->getOptions();
+
+        $type->configureAdapter($adapter, $this, $options);
+    }
+
     /**
      * @inheritDoc
      */

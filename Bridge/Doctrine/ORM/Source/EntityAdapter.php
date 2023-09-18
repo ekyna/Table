@@ -13,7 +13,6 @@ use Ekyna\Component\Table\Source\AbstractAdapter;
 use Ekyna\Component\Table\Source\SourceInterface;
 use Ekyna\Component\Table\TableInterface;
 use Pagerfanta\Adapter\AdapterInterface as PagerfantaAdapter;
-
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 use function array_pop;
@@ -22,6 +21,7 @@ use function chr;
 use function count;
 use function explode;
 use function implode;
+use function is_object;
 use function strpos;
 
 /**
@@ -34,11 +34,11 @@ use function strpos;
 class EntityAdapter extends AbstractAdapter
 {
     private EntityManagerInterface $manager;
-    private ?ClassMetadata $metadata = null;
-    private ?QueryBuilder $queryBuilder = null;
-    private string $alias;
-    private array $paths;
-    private array $aliases;
+    private ?ClassMetadata         $metadata     = null;
+    private ?QueryBuilder          $queryBuilder = null;
+    private string                 $alias;
+    private array                  $paths;
+    private array                  $aliases;
 
 
     /**
@@ -84,7 +84,7 @@ class EntityAdapter extends AbstractAdapter
     public function getQueryBuilderPath(string $propertyPath): string
     {
         if (false === strpos($propertyPath, '.')) {
-            return $this->alias . '.' . $propertyPath;
+            return $this->alias.'.'.$propertyPath;
         }
 
         if (isset($this->paths[$propertyPath])) {
@@ -112,7 +112,7 @@ class EntityAdapter extends AbstractAdapter
 
                 $alias = chr(98 + count($this->aliases));
 
-                $this->queryBuilder->leftJoin(($i == 0 ? $this->alias : $this->aliases[$path]) . '.' . $paths[$i], $alias);
+                $this->queryBuilder->leftJoin(($i == 0 ? $this->alias : $this->aliases[$path]).'.'.$paths[$i], $alias);
 
                 // Add select if manyToOne and lvl = 1 (ex: product.brand => b)
                 if ($i == 0 && $this->getClassMetadata()->isSingleValuedAssociation($paths[$i])) {
@@ -125,7 +125,7 @@ class EntityAdapter extends AbstractAdapter
             } while ($i < count($paths));
         }
 
-        return $this->paths[$propertyPath] = $this->aliases[$path] . '.' . $property;
+        return $this->paths[$propertyPath] = $this->aliases[$path].'.'.$property;
     }
 
     /**
@@ -138,12 +138,14 @@ class EntityAdapter extends AbstractAdapter
         $this
             ->queryBuilder
             ->select($this->alias)
-            ->from($this->getSource()->getClass(), $this->alias, $this->alias . '.id');
+            ->from($this->getSource()->getClass(), $this->alias, $this->alias.'.id');
 
         // Apply custom query builder initializer
         if (null !== $initializer = $this->getSource()->getQueryBuilderInitializer()) {
             $initializer($this->queryBuilder, $this->alias);
         }
+
+        parent::preInitialize($context);
     }
 
     /**
@@ -172,7 +174,7 @@ class EntityAdapter extends AbstractAdapter
     {
         $this->queryBuilder->andWhere(
             $this->queryBuilder->expr()->in(
-                $this->alias . '.id',
+                $this->alias.'.id',
                 $context->getSelectedIdentifiers()
             )
         );
@@ -187,7 +189,17 @@ class EntityAdapter extends AbstractAdapter
 
         $rows = [];
         foreach ($results as $id => $result) {
-            $rows[] = $this->createRow((string)$id, $result);
+            if (is_object($result)) {
+                $data = $result;
+                $extra = [];
+            } elseif (is_array($result)) {
+                $data = array_shift($result);
+                $extra = $result;
+            } else {
+                throw new Exception\UnexpectedTypeException($result, ['object', 'array']);
+            }
+
+            $rows[] = $this->createRow((string)$id, $data, $extra);
         }
 
         return $rows;

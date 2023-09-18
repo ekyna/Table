@@ -27,7 +27,16 @@ interface RowInterface
      *
      * @return mixed
      */
-    public function getData(?string $propertyPath);
+    public function getData(?string $propertyPath): mixed;
+
+    /**
+     * Returns the row extra data.
+     *
+     * @param string|null $name
+     *
+     * @return mixed
+     */
+    public function getExtra(?string $name): mixed;
 
     /**
      * Returns the property accessor.

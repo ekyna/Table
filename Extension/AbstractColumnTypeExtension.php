@@ -44,6 +44,17 @@ abstract class AbstractColumnTypeExtension implements ColumnTypeExtensionInterfa
     /**
      * @inheritDoc
      */
+    public function configureAdapter(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        array $options
+    ): void {
+
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function applySort(
         AdapterInterface $adapter,
         ColumnInterface $column,

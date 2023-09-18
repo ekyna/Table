@@ -113,6 +113,19 @@ interface ResolvedColumnTypeInterface
     ): void;
 
     /**
+     * Configures the adapter.
+     *
+     * @param AdapterInterface $adapter
+     * @param ColumnInterface  $column
+     * @param array            $options
+     */
+    public function configureAdapter(
+        AdapterInterface $adapter,
+        ColumnInterface $column,
+        array $options
+    ): void;
+
+    /**
      * Applies the sort to the adapter.
      *
      * @param AdapterInterface $adapter
