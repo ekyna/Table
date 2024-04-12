@@ -153,4 +153,23 @@ final class Column implements ColumnInterface
 
         $type->applySort($adapter, $this, $activeSort, $options);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function isExportable(): bool
+    {
+        return $this->config->isExportable();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function export(RowInterface $row): string
+    {
+        $type = $this->config->getType();
+        $options = $this->config->getOptions();
+
+        return $type->export($this, $row, $options);
+    }
 }

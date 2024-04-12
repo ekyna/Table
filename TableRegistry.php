@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ekyna\Component\Table;
 
+use Ekyna\Component\Table\Extension\Core\CoreExtension;
+
 use function array_merge;
 use function class_exists;
 use function get_class;
@@ -17,7 +19,7 @@ use function is_subclass_of;
 class TableRegistry implements RegistryInterface
 {
     /** @var Extension\TableExtensionInterface[] */
-    private array                        $extensions = [];
+    private array                        $extensions;
     private ResolvedTypeFactoryInterface $resolvedTypeFactory;
 
     /** @var ResolvedTableTypeInterface[] */
@@ -40,13 +42,16 @@ class TableRegistry implements RegistryInterface
      */
     public function __construct(array $extensions, ResolvedTypeFactoryInterface $resolvedTypeFactory)
     {
+        $this->extensions = [new CoreExtension()];
+
         foreach ($extensions as $extension) {
             if (!$extension instanceof Extension\TableExtensionInterface) {
                 throw new Exception\UnexpectedTypeException($extension, Extension\TableExtensionInterface::class);
             }
+
+            $this->extensions[] = $extension;
         }
 
-        $this->extensions = $extensions;
         $this->resolvedTypeFactory = $resolvedTypeFactory;
     }
 

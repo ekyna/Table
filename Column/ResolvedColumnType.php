@@ -39,8 +39,8 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      * @param ResolvedColumnTypeInterface|null         $parent
      */
     public function __construct(
-        ColumnTypeInterface $innerType,
-        array $typeExtensions = [],
+        ColumnTypeInterface         $innerType,
+        array                       $typeExtensions = [],
         ResolvedColumnTypeInterface $parent = null
     ) {
         foreach ($typeExtensions as $extension) {
@@ -162,8 +162,8 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function configureAdapter(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        array $options
+        ColumnInterface  $column,
+        array            $options
     ): void {
         foreach ($this->typeExtensions as $extension) {
             $extension->configureAdapter($adapter, $column, $options);
@@ -179,9 +179,9 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
      */
     public function applySort(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        ActiveSort $activeSort,
-        array $options
+        ColumnInterface  $column,
+        ActiveSort       $activeSort,
+        array            $options
     ): bool {
         foreach ($this->typeExtensions as $extension) {
             if ($extension->applySort($adapter, $column, $activeSort, $options)) {
@@ -201,6 +201,31 @@ final class ResolvedColumnType implements ResolvedColumnTypeInterface
             "None of the extensions, type or parent type were able to apply the sort to the adapter.\n" .
             "Did you forget to return true in some 'applySort' methods ? Or maybe you need to create " .
             'a filter type extension that supports the ' . get_class($adapter) . ' adapter.'
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function export(ColumnInterface $column, RowInterface $row, array $options): string
+    {
+        foreach ($this->typeExtensions as $extension) {
+            if (null !== $result = $extension->export($column, $row, $options)) {
+                return $result;
+            }
+        }
+
+        if (null !== $result = $this->innerType->export($column, $row, $options)) {
+            return $result;
+        }
+
+        if (null !== $this->parent) {
+            return $this->parent->export($column, $row, $options);
+        }
+
+        throw new LogicException(
+            "None of the extensions, type or parent type were able to export the data.\n" .
+            "Did you forget to return a string in some 'export' methods ?"
         );
     }
 

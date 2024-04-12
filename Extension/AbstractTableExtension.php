@@ -124,9 +124,7 @@ abstract class AbstractTableExtension implements TableExtensionInterface
             $this->initTableTypeExtensions();
         }
 
-        return isset($this->tableTypeExtensions[$name])
-            ? $this->tableTypeExtensions[$name]
-            : [];
+        return $this->tableTypeExtensions[$name] ?? [];
     }
 
     /**

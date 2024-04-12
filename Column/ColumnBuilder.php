@@ -23,6 +23,7 @@ final class ColumnBuilder implements ColumnBuilderInterface
     private int                         $position;
     private ?string                     $propertyPath = null;
     private bool                        $sortable;
+    private bool                        $exportable;
     private array                       $options;
 
 
@@ -86,6 +87,14 @@ final class ColumnBuilder implements ColumnBuilderInterface
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isExportable(): bool
+    {
+        return $this->exportable;
     }
 
     /**
@@ -164,6 +173,16 @@ final class ColumnBuilder implements ColumnBuilderInterface
     public function setSortable(bool $sortable): ColumnBuilderInterface
     {
         $this->sortable = $sortable;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExportable(bool $exportable): ColumnBuilderInterface
+    {
+        $this->exportable = $exportable;
 
         return $this;
     }

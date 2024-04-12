@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ekyna\Component\Table\Extension\Core\Type\Column;
 
+use DateTimeInterface;
 use Ekyna\Component\Table\Column\AbstractColumnType;
 use Ekyna\Component\Table\Column\ColumnInterface;
 use Ekyna\Component\Table\Source\RowInterface;
@@ -26,6 +27,25 @@ class DateTimeType extends AbstractColumnType
     {
         $view->vars['date_format'] = $options['date_format'];
         $view->vars['time_format'] = $options['time_format'];
+    }
+
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        $date = $row->getData($column->getConfig()->getPropertyPath());
+
+        if (!$date instanceof DateTimeInterface) {
+            return '';
+        }
+
+        $format = '';
+        if ('none' !== $options['date_format']) {
+            $format = 'Y-m-d';
+        }
+        if ('none' !== $options['time_format']) {
+            $format .= ' H-i-s';
+        }
+
+        return $date->format($format);
     }
 
     /**

@@ -52,6 +52,13 @@ class BooleanType extends AbstractColumnType
         $view->vars['parameters'] = $parameters;
     }
 
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        return $row->getData($column->getConfig()->getPropertyPath())
+            ? $options['true_label']
+            : $options['false_label'];
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver

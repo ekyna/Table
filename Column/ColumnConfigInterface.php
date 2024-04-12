@@ -54,6 +54,13 @@ interface ColumnConfigInterface
     public function isSortable(): bool;
 
     /**
+     * Returns whether the column is exportable.
+     *
+     * @return bool
+     */
+    public function isExportable(): bool;
+
+    /**
      * Returns all options passed during the construction of the column.
      *
      * @return array The passed options

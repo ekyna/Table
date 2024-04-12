@@ -587,12 +587,22 @@ final class Table implements TableInterface
 
         // Export
         if ($this->config->isExportable() && $this->config->hasExportAdapters()) {
+            $formats = ['csv', 'json', 'xml'];
+
             $exportChoices = [];
-            foreach (['csv', 'json', 'xml'] as $format) { // TODO formats from config or adapters
-                $exportChoices[] = [
-                    'value' => $format,
-                    'label' => strtoupper($format),
-                ];
+            foreach ($this->config->getExportAdapters() as $adapter) {
+                foreach ($formats as $index => $format) {
+                    if (!$adapter->supports($format)) {
+                        continue;
+                    }
+
+                    $exportChoices[] = [
+                        'value' => $format,
+                        'label' => strtoupper($format),
+                    ];
+
+                    unset($formats[$index]);
+                }
             }
 
             $vars['export'] = [

@@ -48,10 +48,9 @@ abstract class AbstractColumnType implements ColumnTypeInterface
      */
     public function configureAdapter(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        array $options
+        ColumnInterface  $column,
+        array            $options
     ): void {
-
     }
 
     /**
@@ -59,11 +58,19 @@ abstract class AbstractColumnType implements ColumnTypeInterface
      */
     public function applySort(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        ActiveSort $activeSort,
-        array $options
+        ColumnInterface  $column,
+        ActiveSort       $activeSort,
+        array            $options
     ): bool {
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        return null;
     }
 
     /**

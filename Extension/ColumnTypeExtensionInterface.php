@@ -26,8 +26,6 @@ interface ColumnTypeExtensionInterface
      * This method is called after the extended type has built the column to
      * further modify it.
      *
-     * @see ColumnTypeInterface::buildColumn()
-     *
      * @param ColumnBuilderInterface $builder The column builder
      * @param array                  $options The options
      */
@@ -38,8 +36,6 @@ interface ColumnTypeExtensionInterface
      *
      * This method is called after the extended type has built the view to
      * further modify it.
-     *
-     * @see ColumnTypeInterface::buildHeadView()
      *
      * @param HeadView        $view    The column head view
      * @param ColumnInterface $column  The column
@@ -52,8 +48,6 @@ interface ColumnTypeExtensionInterface
      *
      * This method is called after the extended type has built the view to
      * further modify it.
-     *
-     * @see ColumnTypeInterface::buildView()
      *
      * @param CellView        $view    The column cell view
      * @param ColumnInterface $column  The column
@@ -81,7 +75,22 @@ interface ColumnTypeExtensionInterface
      *
      * @return bool Whether the sort has been applied.
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool;
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface  $column,
+        ActiveSort       $activeSort,
+        array            $options
+    ): bool;
+
+    /**
+     * Exports the cell data.
+     *
+     * @param ColumnInterface $column  The column
+     * @param RowInterface    $row     The current row
+     * @param array           $options The options
+     * @return string|null
+     */
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string;
 
     /**
      * Configures the options for this type.

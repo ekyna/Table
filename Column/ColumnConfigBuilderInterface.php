@@ -57,6 +57,15 @@ interface ColumnConfigBuilderInterface extends ColumnConfigInterface
     public function setSortable(bool $sortable): ColumnConfigBuilderInterface;
 
     /**
+     * Sets whether the column is exportable.
+     *
+     * @param bool $exportable
+     *
+     * @return $this|ColumnConfigBuilderInterface
+     */
+    public function setExportable(bool $exportable): ColumnConfigBuilderInterface;
+
+    /**
      * Builds and returns the column configuration.
      *
      * @return ColumnConfigInterface

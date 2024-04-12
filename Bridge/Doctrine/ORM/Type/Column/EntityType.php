@@ -16,6 +16,7 @@ use Ekyna\Component\Table\View\CellView;
 use IteratorAggregate;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function implode;
 use function is_array;
 use function is_callable;
 use function is_null;
@@ -42,6 +43,45 @@ class EntityType extends AbstractColumnType
      * @inheritDoc
      */
     public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
+    {
+        $view->vars['value'] = $this->getEntities($column, $row, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool
+    {
+        if ($adapter instanceof EntityAdapter) {
+            /**
+             * 'entity_label' option should be a string, as sorting is disabled
+             * if it is a callable {@see EntityType::buildColumn()}
+             */
+            $propertyPath = $column->getConfig()->getPropertyPath() . '.' . $options['entity_label'];
+
+            $property = $adapter->getQueryBuilderPath($propertyPath);
+
+            $adapter
+                ->getQueryBuilder()
+                ->addOrderBy($property, $activeSort->getDirection());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        $result = array_map(
+            fn (array $e): string => $e['label'],
+            $this->getEntities($column, $row,$options)
+        );
+
+        return implode(', ', $result);
+    }
+
+    private function getEntities(ColumnInterface $column, RowInterface $row, array $options): array
     {
         $value = $row->getData($column->getConfig()->getPropertyPath());
 
@@ -79,31 +119,7 @@ class EntityType extends AbstractColumnType
             }
         }
 
-        $view->vars['value'] = $entities;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool
-    {
-        if ($adapter instanceof EntityAdapter) {
-            /**
-             * 'entity_label' option should be a string, as sorting is disabled
-             * if it is a callable {@see EntityType::buildColumn()}
-             */
-            $propertyPath = $column->getConfig()->getPropertyPath() . '.' . $options['entity_label'];
-
-            $property = $adapter->getQueryBuilderPath($propertyPath);
-
-            $adapter
-                ->getQueryBuilder()
-                ->addOrderBy($property, $activeSort->getDirection());
-
-            return true;
-        }
-
-        return false;
+        return $entities;
     }
 
     /**

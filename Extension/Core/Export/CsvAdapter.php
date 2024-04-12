@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Ekyna\Component\Table\Extension\Core\Export;
 
-use Ekyna\Component\Table\Exception\InvalidArgumentException;
 use Ekyna\Component\Table\Export\AdapterInterface;
 use Ekyna\Component\Table\TableInterface;
-use Exception;
 
-use function array_keys;
 use function array_replace;
 use function fclose;
 use function fopen;
 use function fputcsv;
-use function in_array;
 use function rewind;
 use function stream_get_contents;
 
@@ -38,35 +34,31 @@ class CsvAdapter implements AdapterInterface
 
     public function export(TableInterface $table, string $format): ?string
     {
+        $headers = [];
+        foreach ($table->getColumns() as $column) {
+            if (!$column->isExportable()) {
+                continue;
+            }
+
+            $headers[] = $column->getLabel();
+        }
+
+        $data = [$headers];
+
         $rows = $table->getSourceAdapter()->getSelection($table->getContext());
 
-        $data = [];
-
-        $visibleColumns = $table->getContext()->getVisibleColumns();
         foreach ($rows as $row) {
             $datum = [];
 
             foreach ($table->getColumns() as $column) {
-                if (in_array($column->getName(), $visibleColumns, true)) {
-                    if (empty($propertyPath = $column->getConfig()->getPropertyPath())) {
-                        continue;
-                    }
-
-                    $value = $row->getData($propertyPath);
-
-                    try {
-                        $toString = (string)$value;
-                    } catch (Exception $e) {
-                        $toString = null;
-                    }
-
-                    $datum[$column->getName()] = $toString;
+                if (!$column->isExportable()) {
+                    continue;
                 }
+
+                $datum[] = $column->export($row);
             }
 
-            if (!empty($datum)) {
-                $data[] = $datum;
-            }
+            $data[] = $datum;
         }
 
         if (empty($data)) {
@@ -75,21 +67,7 @@ class CsvAdapter implements AdapterInterface
 
         $handle = fopen('php://temp,', 'w+');
 
-        $headers = null;
         foreach ($data as $datum) {
-            if (null === $headers) {
-                $headers = array_keys($datum);
-                fputcsv(
-                    $handle,
-                    $headers,
-                    $this->options['delimiter'],
-                    $this->options['enclosure'],
-                    $this->options['escape_char']
-                );
-            } elseif (array_keys($datum) !== $headers) {
-                throw new InvalidArgumentException('Unexpected data');
-            }
-
             fputcsv(
                 $handle,
                 $datum,

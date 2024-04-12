@@ -143,6 +143,20 @@ interface ResolvedColumnTypeInterface
     ): bool;
 
     /**
+     * Exports the cell data as string.
+     *
+     * @param ColumnInterface $column
+     * @param RowInterface    $row
+     * @param array           $options
+     * @return string
+     */
+    public function export(
+        ColumnInterface $column,
+        RowInterface $row,
+        array $options
+    ): string;
+
+    /**
      * Returns the configured options resolver used for this type.
      *
      * @return OptionsResolver The options resolver

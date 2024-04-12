@@ -54,8 +54,8 @@ interface ColumnTypeInterface
      */
     public function configureAdapter(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        array $options
+        ColumnInterface  $column,
+        array            $options
     ): void;
 
     /**
@@ -70,10 +70,20 @@ interface ColumnTypeInterface
      */
     public function applySort(
         AdapterInterface $adapter,
-        ColumnInterface $column,
-        ActiveSort $activeSort,
-        array $options
+        ColumnInterface  $column,
+        ActiveSort       $activeSort,
+        array            $options
     ): bool;
+
+    /**
+     * Exports the cell data.
+     *
+     * @param ColumnInterface $column
+     * @param RowInterface    $row
+     * @param array           $options
+     * @return string|null
+     */
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string;
 
     /**
      * Configures the options.

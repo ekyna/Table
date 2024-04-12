@@ -67,6 +67,14 @@ abstract class AbstractColumnTypeExtension implements ColumnTypeExtensionInterfa
     /**
      * @inheritDoc
      */
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
     }

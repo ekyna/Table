@@ -110,4 +110,17 @@ interface ColumnInterface
      * @param ActiveSort       $activeSort
      */
     public function applySort(AdapterInterface $adapter, ActiveSort $activeSort): void;
+
+    /**
+     * @return bool
+     */
+    public function isExportable(): bool;
+
+    /**
+     * Applies the active sort to the adapter.
+     *
+     * @param RowInterface $row
+     * @return string
+     */
+    public function export(RowInterface $row): string;
 }

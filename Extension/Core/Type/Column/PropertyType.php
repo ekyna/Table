@@ -53,6 +53,13 @@ class PropertyType extends AbstractColumnType
         return true;
     }
 
+    public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
+    {
+        $data = $row->getData($column->getConfig()->getPropertyPath());
+
+        return (string)$data;
+    }
+
     /**
      * @inheritDoc
      */

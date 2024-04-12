@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ekyna\Component\Table\Extension\Core;
 
 use Ekyna\Component\Table\Extension\AbstractTableExtension;
+use Ekyna\Component\Table\Extension\Core\Type\Extension\ExportTypeExtension;
 
 /**
  * Class CoreExtension
@@ -48,6 +49,16 @@ class CoreExtension extends AbstractTableExtension
             new Type\Filter\DateTimeType(),
             new Type\Filter\NumberType(),
             new Type\Filter\TextType(),
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function loadTableTypeExtensions(): array
+    {
+        return [
+            new ExportTypeExtension(),
         ];
     }
 
