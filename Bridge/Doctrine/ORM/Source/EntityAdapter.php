@@ -210,7 +210,7 @@ class EntityAdapter extends AbstractAdapter
      */
     protected function getPagerAdapter(): PagerfantaAdapter
     {
-        return new QueryAdapter($this->queryBuilder);
+        return new QueryAdapter($this->queryBuilder, false);
     }
 
     /**
