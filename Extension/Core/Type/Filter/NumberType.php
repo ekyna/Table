@@ -33,6 +33,8 @@ class NumberType extends AbstractFilterType
                     FilterOperator::LOWER_THAN_OR_EQUAL,
                     FilterOperator::GREATER_THAN,
                     FilterOperator::GREATER_THAN_OR_EQUAL,
+                    FilterOperator::IS_NULL,
+                    FilterOperator::IS_NOT_NULL,
                 ]),
             ])
             ->add('value', FormType\NumberType::class, [

@@ -19,8 +19,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-use function in_array;
-
 /**
  * Class DateTimeType
  * @package Ekyna\Component\Table\Extension\Core\Type\Filter
@@ -77,7 +75,7 @@ class DateTimeType extends AbstractFilterType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($valueType) {
             $operator = (int)$event->getData()['operator'] ?? null;
 
-            $required = !in_array($operator, [FilterOperator::IS_NULL, FilterOperator::IS_NOT_NULL], true);
+            $required = FilterOperator::isValueNeeded($operator);
 
             $this->addValueField($event->getForm(), $valueType, $required);
         });

@@ -10,6 +10,8 @@ use Ekyna\Component\Table\Exception\InvalidArgumentException;
  * Class FilterOperator
  * @package Ekyna\Component\Table\Util
  * @author  Étienne Dauvergne <contact@ekyna.com>
+ *
+ * @TODO    Turn into Enum
  */
 final class FilterOperator
 {
@@ -31,6 +33,8 @@ final class FilterOperator
     public const NOT_END_WITH          = 16;
     public const IS_NULL               = 17;
     public const IS_NOT_NULL           = 18;
+    public const IS_EMPTY              = 19;
+    public const IS_NOT_EMPTY          = 20;
 
 
     /**
@@ -43,7 +47,6 @@ final class FilterOperator
      */
     public static function isValid(int $operator, bool $throwException = false): bool
     {
-        $operator = intval($operator);
         if ($operator > 0 && $operator <= self::IS_NOT_NULL) {
             return true;
         }
@@ -53,6 +56,24 @@ final class FilterOperator
         }
 
         return false;
+    }
+
+    /**
+     * Returns whether a value is needed for the given operator.
+     *
+     * @param int $operator
+     *
+     * @return bool
+     */
+    public static function isValueNeeded(int $operator): bool
+    {
+        return match ($operator) {
+            self::IS_NULL,
+            self::IS_NOT_NULL,
+            self::IS_EMPTY,
+            self::IS_NOT_EMPTY => false,
+            default            => true,
+        };
     }
 
     /**
@@ -67,42 +88,24 @@ final class FilterOperator
         self::isValid($operator, true);
 
         // TODO translations
-        switch (intval($operator)) {
-            case self::NOT_EQUAL:
-                return 'est différent de';
-            case self::LOWER_THAN:
-                return 'est inférieur à';
-            case self::LOWER_THAN_OR_EQUAL:
-                return 'est inférieur ou égal à';
-            case self::GREATER_THAN:
-                return 'est supérieur à';
-            case self::GREATER_THAN_OR_EQUAL:
-                return 'est supérieur ou égal à';
-            case self::IN:
-            case self::MEMBER:
-                return 'est parmi';
-            case self::NOT_IN:
-            case self::NOT_MEMBER:
-                return 'n\'est pas parmi';
-            case self::LIKE:
-                return 'contient';
-            case self::NOT_LIKE:
-                return 'ne contient pas';
-            case self::START_WITH:
-                return 'commence par';
-            case self::NOT_START_WITH:
-                return 'ne commence pas par';
-            case self::END_WITH:
-                return 'se termine par';
-            case self::NOT_END_WITH:
-                return 'ne se termine pas par';
-            case self::IS_NULL:
-                return 'est indéfini';
-            case self::IS_NOT_NULL:
-                return 'est défini';
-            default:
-                return 'est égal à';
-        }
+        return match ($operator) {
+            self::NOT_EQUAL                => 'est différent de',
+            self::LOWER_THAN               => 'est inférieur à',
+            self::LOWER_THAN_OR_EQUAL      => 'est inférieur ou égal à',
+            self::GREATER_THAN             => 'est supérieur à',
+            self::GREATER_THAN_OR_EQUAL    => 'est supérieur ou égal à',
+            self::IN, self::MEMBER         => 'est parmi',
+            self::NOT_IN, self::NOT_MEMBER => 'n\'est pas parmi',
+            self::LIKE                     => 'contient',
+            self::NOT_LIKE                 => 'ne contient pas',
+            self::START_WITH               => 'commence par',
+            self::NOT_START_WITH           => 'ne commence pas par',
+            self::END_WITH                 => 'se termine par',
+            self::NOT_END_WITH             => 'ne se termine pas par',
+            self::IS_NULL                  => 'est indéfini',
+            self::IS_NOT_NULL              => 'est défini',
+            default                        => 'est égal à',
+        };
     }
 
     /**

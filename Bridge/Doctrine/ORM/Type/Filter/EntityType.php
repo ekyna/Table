@@ -17,6 +17,10 @@ use Ekyna\Component\Table\View\ActiveFilterView;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as FormEntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -27,7 +31,7 @@ use function array_shift;
 use function explode;
 use function implode;
 use function is_string;
-use function strpos;
+use function str_contains;
 
 /**
  * Class EntityType
@@ -36,7 +40,7 @@ use function strpos;
  */
 class EntityType extends AbstractFilterType
 {
-    private ManagerRegistry $registry;
+    private ManagerRegistry            $registry;
     private ?PropertyAccessorInterface $propertyAccessor = null;
 
 
@@ -55,29 +59,64 @@ class EntityType extends AbstractFilterType
      */
     public function buildForm(FormBuilderInterface $builder, FilterInterface $filter, array $options): bool
     {
-        $valueField = $builder
-            ->create('value', $options['form_class'], $options['form_options'])
-            ->addModelTransformer(
-                new IdToObjectTransformer($this->registry->getRepository($options['class']), $options['identifier'])
-            );
-
         if ($dataClass = $filter->getTable()->getConfig()->getDataClass()) {
             $operators = $this->getOperators($dataClass, $filter->getConfig()->getPropertyPath());
         } else {
             $operators = [
                 FilterOperator::IN,
                 FilterOperator::NOT_IN,
+                FilterOperator::IS_NULL,
+                FilterOperator::IS_NOT_NULL,
             ];
         }
 
-        $builder
-            ->add('operator', ChoiceType::class, [
-                'label'   => false,
-                'choices' => FilterOperator::getChoices($operators),
-            ])
-            ->add($valueField);
+        $builder->add('operator', ChoiceType::class, [
+            'label'   => false,
+            'choices' => FilterOperator::getChoices($operators),
+        ]);
+
+        $factory = $builder->getFormFactory();
+
+        $this->addValueField($builder, $factory, $options, false);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($factory, $options) {
+            $operator = (int)$event->getData()['operator'] ?? null;
+
+            $required = FilterOperator::isValueNeeded($operator);
+
+            $this->addValueField($event->getForm(), $factory, $options, $required);
+        });
 
         return true;
+    }
+
+    private function addValueField(
+        FormInterface|FormBuilderInterface $form,
+        FormFactoryInterface               $factory,
+        array                              $options,
+        bool                               $required
+    ): void {
+        $constraints = $required
+            ? ['constraints' => [new Count(['min' => 1]),]]
+            : ['constraints' => [new Count(['max' => 0]),]];
+
+        $formOptions = array_replace($options['form_options'], $constraints, [
+            'auto_initialize' => false,
+        ]);
+
+        $field = $factory
+            ->createNamedBuilder('value', $options['form_class'], null, $formOptions)
+            ->addModelTransformer(
+                new IdToObjectTransformer($this->registry->getRepository($options['class']), $options['identifier'])
+            );
+
+        if ($form instanceof FormInterface) {
+            $field = $field->getForm();
+        }
+
+        $form
+            ->remove('value')
+            ->add($field);
     }
 
     /**
@@ -85,10 +124,14 @@ class EntityType extends AbstractFilterType
      */
     public function buildActiveView(
         ActiveFilterView $view,
-        FilterInterface $filter,
-        ActiveFilter $activeFilter,
-        array $options
+        FilterInterface  $filter,
+        ActiveFilter     $activeFilter,
+        array            $options
     ): void {
+        if (!FilterOperator::isValueNeeded($activeFilter->getOperator())) {
+            return;
+        }
+
         $ids = $activeFilter->getValue();
         $entities = $this->registry->getRepository($options['class'])->findBy(['id' => $ids]);
         $values = [];
@@ -184,7 +227,7 @@ class EntityType extends AbstractFilterType
     {
         $metadata = $this->registry->getManagerForClass($dataClass)->getClassMetadata($dataClass);
 
-        if (false === strpos($propertyPath, '.')) {
+        if (!str_contains($propertyPath, '.')) {
             if ($metadata->hasAssociation($propertyPath)) {
                 if ($metadata->isCollectionValuedAssociation($propertyPath)) {
                     return [
@@ -195,6 +238,8 @@ class EntityType extends AbstractFilterType
                     return [
                         FilterOperator::IN,
                         FilterOperator::NOT_IN,
+                        FilterOperator::IS_NULL,
+                        FilterOperator::IS_NOT_NULL,
                     ];
                 }
             }
@@ -210,7 +255,7 @@ class EntityType extends AbstractFilterType
             }
         }
 
-        throw new InvalidArgumentException("Invalid property path '{$propertyPath}'.");
+        throw new InvalidArgumentException("Invalid property path '$propertyPath'.");
     }
 
     /**

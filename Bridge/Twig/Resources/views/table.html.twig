@@ -90,9 +90,11 @@
 {% for filter in table.active_filters %}
 <a href="{{ filter.vars.remove_filter_href }}"
    class="btn btn-xs btn-success">
-    <strong>{{ filter.vars.field }}</strong>&nbsp;
-    {{ filter.vars.operator }}&nbsp;
-    &laquo;&nbsp;{{ block('active_filter_value') }}&nbsp;&raquo;
+    <strong>{{ filter.vars.field }}</strong>
+    &nbsp;{{ filter.vars.operator }}
+    {% if filter.vars.value is not empty %}
+    &nbsp;&laquo;&nbsp;{{ block('active_filter_value') }}&nbsp;&raquo;
+    {% endif %}
     <span class="glyphicon glyphicon-minus-sign"></span>
 </a>
 {% endfor %}

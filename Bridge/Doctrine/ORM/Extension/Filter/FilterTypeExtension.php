@@ -7,10 +7,12 @@ namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Extension\Filter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Util\FilterUtil;
 use Ekyna\Component\Table\Context\ActiveFilter;
+use Ekyna\Component\Table\Exception\RuntimeException;
 use Ekyna\Component\Table\Extension\AbstractFilterTypeExtension;
 use Ekyna\Component\Table\Extension\Core\Type\Filter\FilterType;
 use Ekyna\Component\Table\Filter\FilterInterface;
 use Ekyna\Component\Table\Source\AdapterInterface;
+use Ekyna\Component\Table\Util\FilterOperator;
 
 /**
  * Class FilterTypeExtension
@@ -34,10 +36,18 @@ class FilterTypeExtension extends AbstractFilterTypeExtension
         $expression = FilterUtil::buildExpression($property, $operator, $parameter);
         $value = FilterUtil::buildParameterValue($operator, $activeFilter->getValue());
 
-        $adapter
-            ->getQueryBuilder()
-            ->andWhere($expression)
-            ->setParameter($parameter, $value);
+        $qb = $adapter->getQueryBuilder();
+        $qb->andWhere($expression);
+
+        if (!FilterOperator::isValueNeeded($operator)) {
+            if (!empty($value)) {
+                throw new RuntimeException('Value should be empty.');
+            }
+
+            return true;
+        }
+
+        $qb->setParameter($parameter, $value);
 
         return true;
     }
