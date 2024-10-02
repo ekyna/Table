@@ -55,6 +55,13 @@ interface ColumnInterface
     public function getConfig(): ColumnConfigInterface;
 
     /**
+     * Returns whether the column is visible by default.
+     *
+     * @return bool
+     */
+    public function isVisible(): bool;
+
+    /**
      * Returns whether the column is sorted.
      *
      * @return bool

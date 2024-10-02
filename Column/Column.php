@@ -80,6 +80,14 @@ final class Column implements ColumnInterface
     /**
      * @inheritDoc
      */
+    public function isVisible(): bool
+    {
+        return $this->config->isVisible();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isSorted(): bool
     {
         return $this->config->isSortable() && ($this->sortDirection !== ColumnSort::NONE);

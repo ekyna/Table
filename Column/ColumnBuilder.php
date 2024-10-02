@@ -22,6 +22,7 @@ final class ColumnBuilder implements ColumnBuilderInterface
     private string                      $label;
     private int                         $position;
     private ?string                     $propertyPath = null;
+    private bool                        $visible;
     private bool                        $sortable;
     private bool                        $exportable;
     private array                       $options;
@@ -79,6 +80,14 @@ final class ColumnBuilder implements ColumnBuilderInterface
     public function getPropertyPath(): ?string
     {
         return $this->propertyPath;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isVisible(): bool
+    {
+        return $this->visible;
     }
 
     /**
@@ -163,6 +172,16 @@ final class ColumnBuilder implements ColumnBuilderInterface
     public function setPropertyPath(?string $path): ColumnBuilderInterface
     {
         $this->propertyPath = $path;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setVisible(bool $visible): ColumnBuilderInterface
+    {
+        $this->visible = $visible;
 
         return $this;
     }

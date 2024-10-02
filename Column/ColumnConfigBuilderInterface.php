@@ -48,6 +48,15 @@ interface ColumnConfigBuilderInterface extends ColumnConfigInterface
     public function setPropertyPath(?string $path): ColumnConfigBuilderInterface;
 
     /**
+     * Sets whether the column is visible.
+     *
+     * @param bool $visible
+     *
+     * @return $this|ColumnConfigBuilderInterface
+     */
+    public function setVisible(bool $visible): ColumnConfigBuilderInterface;
+
+    /**
      * Sets whether the column is sortable.
      *
      * @param bool $sortable

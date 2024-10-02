@@ -191,8 +191,6 @@ final class Table implements TableInterface
         }
 
         if (isset($this->filters[$name])) {
-            $this->filters[$name]->setTable(null);
-
             unset($this->filters[$name]);
         }
 
@@ -362,9 +360,18 @@ final class Table implements TableInterface
         }
 
         if (null === $this->context) {
+            $visibleColumns = [];
+            foreach ($this->columns as $name => $column) {
+                if (!$column->isVisible()) {
+                    continue;
+                }
+
+                $visibleColumns[] = $name;
+            }
+
             $this->context = new Context\Context();
             $this->context
-                ->setVisibleColumns(array_keys($this->columns))
+                ->setVisibleColumns($visibleColumns)
                 ->setMaxPerPage($this->config->getPerPageChoices()[0]);
         }
 

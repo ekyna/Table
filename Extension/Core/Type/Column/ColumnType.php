@@ -41,6 +41,7 @@ class ColumnType extends AbstractColumnType
             ->setLabel($options['label'] ?: ucfirst($builder->getName()))
             ->setPosition($options['position'])
             ->setPropertyPath($propertyPath)
+            ->setVisible($options['visible'])
             ->setSortable($options['sortable'])
             ->setExportable($options['exportable']);
     }
@@ -156,6 +157,7 @@ class ColumnType extends AbstractColumnType
                 'block_prefix'  => null,
                 'position'      => 0,
                 'property_path' => null,
+                'visible'       => true,
                 'sortable'      => true,
                 'exportable'    => true,
                 'label'         => null,

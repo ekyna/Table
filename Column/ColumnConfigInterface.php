@@ -47,6 +47,13 @@ interface ColumnConfigInterface
     public function getPropertyPath(): ?string;
 
     /**
+     * Returns whether the column is visible.
+     *
+     * @return bool
+     */
+    public function isVisible(): bool;
+
+    /**
      * Returns whether the column is sortable.
      *
      * @return bool
