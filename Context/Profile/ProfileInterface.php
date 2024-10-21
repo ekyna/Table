@@ -19,31 +19,6 @@ interface ProfileInterface
     public function getKey(): string;
 
     /**
-     * Sets the table hash.
-     *
-     * @param string $hash
-     *
-     * @return $this|ProfileInterface
-     */
-    public function setTableHash(string $hash): ProfileInterface;
-
-    /**
-     * Returns the table hash.
-     *
-     * @return string
-     */
-    public function getTableHash(): string;
-
-    /**
-     * Sets the name.
-     *
-     * @param string $name
-     *
-     * @return $this|ProfileInterface
-     */
-    public function setName(string $name): ProfileInterface;
-
-    /**
      * Returns the name.
      *
      * @return string

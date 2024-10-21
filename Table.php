@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ekyna\Component\Table;
 
 use Ekyna\Component\Table\Action\ActionInterface;
+use Ekyna\Component\Table\Exception\RuntimeException;
 use Ekyna\Component\Table\Filter\FilterInterface;
 
 use function array_keys;
@@ -482,6 +483,8 @@ final class Table implements TableInterface
                             continue 2;
                         }
                     }
+
+                    throw new RuntimeException('Filter not found');
                 }
             }
         }
@@ -554,6 +557,7 @@ final class Table implements TableInterface
         $params = $this->getParametersHelper();
 
         $vars = [
+            'form'      => false,
             'select'    => false,
             'config'    => false,
             'batch'     => false,
@@ -566,6 +570,7 @@ final class Table implements TableInterface
         $select = null !== $mode = $this->getSelectionMode();
 
         if ($select) {
+            $vars['form'] = true;
             $vars['select'] = [
                 'multiple' => $mode === Util\Config::SELECTION_MULTIPLE,
                 'name'     => $params->getIdentifiersName(),
@@ -585,6 +590,7 @@ final class Table implements TableInterface
                 ];
             }
 
+            $vars['form'] = true;
             $vars['batch'] = [
                 'choices' => $actionChoices,
                 'name'    => $params->getActionName(),
@@ -612,6 +618,7 @@ final class Table implements TableInterface
                 }
             }
 
+            $vars['form'] = true;
             $vars['export'] = [
                 'choices' => $exportChoices,
                 'name'    => $params->getFormatName(),
@@ -643,6 +650,7 @@ final class Table implements TableInterface
                 ];
             }
 
+            $vars['form'] = true;
             $vars['config'] = [
                 'column'       => [
                     'choices' => $columnChoices,
@@ -667,6 +675,13 @@ final class Table implements TableInterface
                     ];
                 }
             }
+            foreach ($this->getConfig()->getProfiles() as $profile) {
+                $profileChoices[] = [
+                    'value' => $profile->getKey(),
+                    'label' => $profile->getName(),
+                ];
+            }
+            $vars['form'] = true;
             $vars['profile'] = [
                 'select' => [
                     'name'          => $params->getProfileChoiceName(),

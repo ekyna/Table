@@ -36,7 +36,16 @@ final class ProfileHandler implements HandlerInterface
                 return null;
             }
 
-            $table->getContext()->fromArray($storage->get($key)->getData());
+            if ($storage->has($key)) {
+                $profile = $storage->get($key);
+            } elseif ($table->getConfig()->hasProfile($key)) {
+                $profile = $table->getConfig()->getProfile($key);
+            } else {
+                // TODO Profile not found exception.
+                return null;
+            }
+
+            $table->getContext()->fromArray($profile->getData());
 
             return null;
         }
@@ -48,7 +57,10 @@ final class ProfileHandler implements HandlerInterface
                 return null;
             }
 
-            // TODO Not found error
+            if (!$storage->has($key)) {
+                return null;
+            }
+
             $profile = $storage->get($key);
             $profile->setData($table->getContext()->toArray());
             $storage->save($profile);
@@ -60,6 +72,10 @@ final class ProfileHandler implements HandlerInterface
             if (empty($key = $parameters->getProfileChoiceValue())) {
                 $table->addError(new TableError('error.profile_required', [], 'EkynaTable'));
 
+                return null;
+            }
+
+            if (!$storage->has($key)) {
                 return null;
             }
 

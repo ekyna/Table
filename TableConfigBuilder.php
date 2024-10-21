@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Ekyna\Component\Table;
 
+use Ekyna\Component\Table\Exception\RuntimeException;
 use Ekyna\Component\Table\Util\ColumnSort;
 use Symfony\Component\Form\Util\StringUtil;
+
+use function array_key_exists;
 
 /**
  * Class TableConfigBuilder
@@ -33,6 +36,8 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     private Http\AdapterInterface             $httpAdapter;
     private Context\Session\StorageInterface  $sessionStorage;
     private ?Context\Profile\StorageInterface $profileStorage = null;
+    /** @var array<string, Context\Profile\Profile> */
+    private array $profiles = [];
     /** @var Export\AdapterInterface[] */
     private array                 $exportAdapters = [];
     private TableFactoryInterface $factory;
@@ -163,6 +168,24 @@ class TableConfigBuilder implements TableConfigBuilderInterface
     public function isProfileable(): bool
     {
         return $this->profileable;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProfiles(): array
+    {
+        return $this->profiles;
+    }
+
+    public function hasProfile(string $key): bool
+    {
+        return array_key_exists($key, $this->profiles);
+    }
+
+    public function getProfile(string $key): Context\Profile\Profile
+    {
+        return $this->profiles[$key];
     }
 
     /**
@@ -391,6 +414,19 @@ class TableConfigBuilder implements TableConfigBuilderInterface
         $this->preventIfLocked();
 
         $this->profileable = $enabled;
+
+        return $this;
+    }
+
+    public function addProfile(Context\Profile\Profile $profile): TableConfigBuilderInterface
+    {
+        $this->preventIfLocked();
+
+        if (isset($this->profiles[$key = $profile->getKey()])) {
+            throw new RuntimeException("Profile with key '$key' is already defined.");
+        }
+
+        $this->profiles[$key] = $profile;
 
         return $this;
     }

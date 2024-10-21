@@ -110,6 +110,29 @@ interface TableConfigInterface
     public function isProfileable(): bool;
 
     /**
+     * @return array<string, Context\Profile\Profile>
+     */
+    public function getProfiles(): array;
+
+    /**
+     * Returns whether a profile exists for the given key.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasProfile(string $key): bool;
+
+    /**
+     * Returns the profile for the given key.
+     *
+     * @param string $key
+     *
+     * @return Context\Profile\Profile
+     */
+    public function getProfile(string $key): Context\Profile\Profile;
+
+    /**
      * Returns the selection mode.
      *
      * @return string|null

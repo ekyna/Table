@@ -121,6 +121,15 @@ interface TableConfigBuilderInterface extends TableConfigInterface
     public function setProfileable(bool $enabled): TableConfigBuilderInterface;
 
     /**
+     * Adds a profile.
+     *
+     * @param Context\Profile\Profile $profile
+     *
+     * @return $this|TableConfigBuilderInterface
+     */
+    public function addProfile(Context\Profile\Profile $profile): TableConfigBuilderInterface;
+
+    /**
      * Sets the selection mode.
      *
      * @param string|null $mode

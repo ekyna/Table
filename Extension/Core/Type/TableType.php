@@ -69,6 +69,10 @@ class TableType extends AbstractTableType
                 $builder->setDataClass($source->getClass());
             }
         }
+
+        // TODO Load profile
+
+        // TODO Toggle visible columns
     }
 
     /**

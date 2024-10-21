@@ -27,9 +27,9 @@ interface StorageInterface
      *
      * @param string $key
      *
-     * @return ProfileInterface
+     * @return ProfileInterface|null
      */
-    public function get(string $key): ProfileInterface;
+    public function get(string $key): ?ProfileInterface;
 
     /**
      * Returns all the profiles for the given table.
