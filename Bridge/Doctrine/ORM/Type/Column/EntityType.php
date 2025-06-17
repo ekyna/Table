@@ -6,7 +6,6 @@ namespace Ekyna\Component\Table\Bridge\Doctrine\ORM\Type\Column;
 
 use Ekyna\Component\Table\Bridge\Doctrine\ORM\Source\EntityAdapter;
 use Ekyna\Component\Table\Column\AbstractColumnType;
-use Ekyna\Component\Table\Column\ColumnBuilderInterface;
 use Ekyna\Component\Table\Column\ColumnInterface;
 use Ekyna\Component\Table\Context\ActiveSort;
 use Ekyna\Component\Table\Extension\Core\Type\Column\PropertyType;
@@ -16,6 +15,7 @@ use Ekyna\Component\Table\View\CellView;
 use IteratorAggregate;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function array_map;
 use function implode;
 use function is_array;
 use function is_callable;
@@ -32,16 +32,6 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function buildColumn(ColumnBuilderInterface $builder, array $options): void
-    {
-        if (!is_string($options['entity_label'])) {
-            $builder->setSortable(false);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function buildCellView(CellView $view, ColumnInterface $column, RowInterface $row, array $options): void
     {
         $view->vars['value'] = $this->getEntities($column, $row, $options);
@@ -50,32 +40,49 @@ class EntityType extends AbstractColumnType
     /**
      * @inheritDoc
      */
-    public function applySort(AdapterInterface $adapter, ColumnInterface $column, ActiveSort $activeSort, array $options): bool
-    {
-        if ($adapter instanceof EntityAdapter) {
-            /**
-             * 'entity_label' option should be a string, as sorting is disabled
-             * if it is a callable {@see EntityType::buildColumn()}
-             */
-            $propertyPath = $column->getConfig()->getPropertyPath() . '.' . $options['entity_label'];
-
-            $property = $adapter->getQueryBuilderPath($propertyPath);
-
-            $adapter
-                ->getQueryBuilder()
-                ->addOrderBy($property, $activeSort->getDirection());
-
-            return true;
+    public function applySort(
+        AdapterInterface $adapter,
+        ColumnInterface  $column,
+        ActiveSort       $activeSort,
+        array            $options
+    ): bool {
+        if (!$adapter instanceof EntityAdapter) {
+            return false;
         }
 
-        return false;
+        /**
+         * 'entity_label' option should be a string, as sorting is disabled
+         * if it is a callable {@see EntityType::buildColumn()}
+         */
+
+        $property = (string)$column->getConfig()->getPropertyPath();
+        $addPrefix = function (array $properties) use ($property) {
+            return array_map(fn(string $p) => trim($property . '.' . $p, '.'), $properties);
+        };
+
+        if (!empty($options['sort_property'])) {
+            $properties = $addPrefix((array)$options['sort_property']);
+        } elseif (!empty($options['entity_label'])) {
+            $properties = $addPrefix([$options['entity_label']]);
+        } else {
+            $properties = [$property . '.id'];
+        }
+
+        $qb = $adapter->getQueryBuilder();
+        foreach ($properties as $property) {
+            $sort = $adapter->getQueryBuilderPath($property);
+
+            $qb->addOrderBy($sort, $activeSort->getDirection());
+        }
+
+        return true;
     }
 
     public function export(ColumnInterface $column, RowInterface $row, array $options): ?string
     {
         $result = array_map(
-            fn (array $e): string => $e['label'],
-            $this->getEntities($column, $row,$options)
+            fn(array $e): string => $e['label'],
+            $this->getEntities($column, $row, $options)
         );
 
         return implode(', ', $result);
@@ -128,8 +135,12 @@ class EntityType extends AbstractColumnType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefault('entity_label', null)
-            ->setAllowedTypes('entity_label', ['null', 'string', 'callable']);
+            ->setDefaults([
+                'entity_label'  => null,
+                'sort_property' => null,
+            ])
+            ->setAllowedTypes('entity_label', ['null', 'string', 'callable'])
+            ->setAllowedTypes('sort_property', ['null', 'string', 'array']);
     }
 
     /**
