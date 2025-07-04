@@ -6,6 +6,7 @@ namespace Ekyna\Component\Table\Extension\Core\Type\Extension;
 
 use Ekyna\Component\Table\Extension\AbstractTableTypeExtension;
 use Ekyna\Component\Table\Extension\Core\Export\CsvAdapter;
+use Ekyna\Component\Table\Extension\Core\Export\XlsAdapter;
 use Ekyna\Component\Table\Extension\Core\Type\TableType;
 use Ekyna\Component\Table\TableBuilderInterface;
 
@@ -19,6 +20,10 @@ class ExportTypeExtension extends AbstractTableTypeExtension
     public function buildTable(TableBuilderInterface $builder, array $options): void
     {
         $builder->addExportAdapter(new CsvAdapter());
+
+        if (class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet')) {
+            $builder->addExportAdapter(new XlsAdapter());
+        }
     }
 
     public static function getExtendedTypes(): array

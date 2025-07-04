@@ -19,7 +19,8 @@
         "pagerfanta/pagerfanta": "^3.0"
     },
     "suggest": {
-        "symfony/doctrine-bridge": "To use entity filter"
+        "symfony/doctrine-bridge": "To use entity filter",
+        "phpoffice/phpspreadsheet": "To export to XLS"
     },
     "autoload": {
         "psr-4": {

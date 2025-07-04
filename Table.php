@@ -600,7 +600,7 @@ final class Table implements TableInterface
 
         // Export
         if ($this->config->isExportable() && $this->config->hasExportAdapters()) {
-            $formats = ['csv', 'json', 'xml'];
+            $formats = ['csv', 'xls', 'json', 'xml'];
 
             $exportChoices = [];
             foreach ($this->config->getExportAdapters() as $adapter) {
