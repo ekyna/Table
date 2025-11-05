@@ -32,6 +32,10 @@ class BooleanType extends AbstractColumnType
             return;
         }
 
+        if ($options['disabled']) {
+            return;
+        }
+
         if (null !== $disablePath = $options['disable_property_path']) {
             if ($row->getData($disablePath)) {
                 return;
@@ -83,6 +87,7 @@ class BooleanType extends AbstractColumnType
                 'route'                 => null,
                 'parameters'            => [],
                 'parameters_map'        => [],
+                'disabled'              => false,
                 'disable_property_path' => null,
             ])
             ->setAllowedTypes('null_label', 'string')
@@ -94,6 +99,7 @@ class BooleanType extends AbstractColumnType
             ->setAllowedTypes('route', ['null', 'string'])
             ->setAllowedTypes('parameters', 'array')
             ->setAllowedTypes('parameters_map', 'array')
+            ->setAllowedTypes('disabled', 'bool')
             ->setAllowedTypes('disable_property_path', ['null', 'string']);
     }
 
